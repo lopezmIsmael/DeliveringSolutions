@@ -11,11 +11,11 @@ Pueden buscar y listar los restaurantes disponibles sin autenticarse.
 Los responsables de los restaurantes pueden gestionar el menú de comidas y sus precios.
 Pueden modificar el menú en cualquier momento.
 
--Clientes:
+- Clientes:
 Pueden realizar pedidos de comida, seleccionar un restaurante, añadirlo como favorito y definir la dirección de entrega.
 El sistema selecciona automáticamente al repartidor más adecuado para entregar el pedido.
 
--Repartidores:
+- Repartidores:
 Reciben notificaciones de los servicios de entrega.
 Registran tanto la recogida del pedido en el restaurante como la entrega en la dirección del cliente.
 Se les evalúa según su eficiencia y rapidez.
