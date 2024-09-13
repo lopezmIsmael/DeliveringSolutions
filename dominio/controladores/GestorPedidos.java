@@ -1,7 +1,8 @@
-package dominio.controladores;
+//package dominio.controladores;
 
-import persistencia.*;
-import dominio.entidades.*;
+//import persistencia.*;
+import java.util.List;
+//import dominio.entidades.*;
 
 public class GestorPedidos {
 
@@ -43,8 +44,8 @@ public class GestorPedidos {
 	 * 
 	 * @param item
 	 */
-	public void añadirItemMenu(itemMenu item) {
-		// TODO - implement GestorPedidos.añadirItemMenu
+	public void aÃ±adirItemMenu(ItemMenu item) {
+		// TODO - implement GestorPedidos.aï¿½adirItemMenu
 		throw new UnsupportedOperationException();
 	}
 
@@ -52,7 +53,7 @@ public class GestorPedidos {
 	 * 
 	 * @param item
 	 */
-	public void eliminarItemMenu(itemMenu item) {
+	public void eliminarItemMenu(ItemMenu item) {
 		// TODO - implement GestorPedidos.eliminarItemMenu
 		throw new UnsupportedOperationException();
 	}

@@ -1,4 +1,7 @@
-package dominio.entidades;
+//package dominio.entidades;
+
+import java.sql.Date;
+import java.util.UUID;
 
 public class Pago {
 

@@ -1,4 +1,6 @@
-package persistencia;
+//package persistencia;
+
+import java.sql.ResultSet;
 
 public class GestorBaseDatos {
 

@@ -1,11 +1,13 @@
-package dominio.entidades;
+//package dominio.entidades;
+
+import java.util.*;
 
 public class ServicioEntrega {
 
 	Pedido pedido;
 	Direccion direccion;
 	Repartidor repartidor;
-	private DateTime fechaRecepcion;
-	private DateTime fechaEntrega;
+	private Date fechaRecepcion;
+	private Date fechaEntrega;
 
 }

@@ -1,6 +1,6 @@
-package persistencia;
+//package persistencia;
 
-public abstract class EntityDAO {
+public abstract class EntityDAO<E> {
 
 	/**
 	 * 

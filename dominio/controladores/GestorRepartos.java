@@ -1,6 +1,8 @@
-package dominio.controladores;
+//package dominio.controladores;
 
-import dominio.entidades.*;
+import java.util.List;
+
+//import dominio.entidades.*;
 
 public class GestorRepartos {
 

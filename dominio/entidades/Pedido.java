@@ -1,4 +1,4 @@
-package dominio.entidades;
+//package dominio.entidades;
 
 import java.util.*;
 
@@ -16,7 +16,7 @@ public class Pedido {
 	 * 
 	 * @param itemMenu
 	 */
-	public void add(iItemMenu itemMenu) {
+	public void add(ItemMenu itemMenu) {
 		// TODO - implement Pedido.add
 		throw new UnsupportedOperationException();
 	}

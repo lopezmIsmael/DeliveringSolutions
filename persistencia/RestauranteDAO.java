@@ -1,6 +1,6 @@
-package persistencia;
+//package persistencia;
 
-import dominio.entidades.*;
+//import dominio.entidades.*;
 
 public class RestauranteDAO extends EntityDAO {
 

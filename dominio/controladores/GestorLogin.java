@@ -1,4 +1,4 @@
-package dominio.controladores;
+//package dominio.controladores;
 
 public class GestorLogin {
 
