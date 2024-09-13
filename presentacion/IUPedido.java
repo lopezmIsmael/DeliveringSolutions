@@ -1,6 +1,6 @@
-package presentacion;
+//package presentacion;
 
-import dominio.entidades.*;
+//import dominio.entidades.*;
 
 public class IUPedido {
 
@@ -9,8 +9,8 @@ public class IUPedido {
 	 * @param pedido
 	 * @param item
 	 */
-	public void añadirItemMenu(Pedido pedido, ItemMenu item) {
-		// TODO - implement IUPedido.añadirItemMenu
+	public void aÃ±adirItemMenu(Pedido pedido, ItemMenu item) {
+		// TODO - implement IUPedido.aï¿½adirItemMenu
 		throw new UnsupportedOperationException();
 	}
 

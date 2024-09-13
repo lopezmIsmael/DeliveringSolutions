@@ -1,6 +1,8 @@
-package presentacion;
+//package presentacion;
 
-import dominio.entidades.*;
+//import dominio.entidades.*;
+
+import java.util.List;
 
 public class IUBusqueda {
 
