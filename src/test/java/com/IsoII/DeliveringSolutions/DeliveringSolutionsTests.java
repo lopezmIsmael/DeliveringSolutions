@@ -1,10 +1,12 @@
-package com.example.demo;
+package com.IsoII.DeliveringSolutions;
+
+
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DemoApplicationTests {
+class DeliveringSolutionsTests {
 
 	@Test
 	void contextLoads() {
