@@ -21,4 +21,9 @@ public class GestorLogin {
     public String aboutUs() {
         return "aboutUs"; // Busca aboutUs.html en src/main/resources/templates
     }
+
+    @GetMapping("/register")
+    public String register() {
+        return "register"; // Busca register.html en src/main/resources/templates
+    }
 }

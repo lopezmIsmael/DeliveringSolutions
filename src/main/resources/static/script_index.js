@@ -42,4 +42,8 @@ window.onload = function() {
     }
 
     animate();
+
+    document.getElementById("registerButton").onclick = function () {
+        window.location.href = "/register";
+    };
 };

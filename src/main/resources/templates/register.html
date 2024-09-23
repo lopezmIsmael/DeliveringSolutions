@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Lobster&family=Pacifico&family=Montserrat&family=Open+Sans&family=Raleway&family=Playfair+Display&family=Merriweather&family=Lato&family=Oswald&display=swap" rel="stylesheet">
+
+  <style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        display: flex;
+        justify-content: center; /* Centra el contenido horizontalmente */
+        align-items: center; /* Centra el contenido verticalmente */
+        font-family: 'Playfair Display', serif; /* Aplica la fuente Playfair Display */
+        background-color: #f1c778; /* Color de fondo claro */
+    }
+    
+    .container {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        width: 100%;
+        max-width: 600px; /* Limita el ancho máximo del formulario */
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Añade sombra para mejor efecto */
+        background-color: #f8f8f8; /* Color de fondo claro */
+        border-radius: 10px; /* Bordes redondeados */
+    }
+    
+    .tabs {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+    }
+    
+    .tab {
+        flex: 1;
+        padding: 10px;
+        background-color: #333;
+        color: #ffffff;
+        font-family: 'Playfair Display', serif;
+        font-size: large; /* Tamaño de fuente grande */
+        text-align: center;
+        cursor: pointer;
+        border-radius: 10px; /* Bordes redondeados */
+        margin: 0 5px; /* Espacio entre las pestañas */
+    }
+    
+    .tab.active {
+        background-color: #636363;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: large; /* Tamaño de fuente grande */
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        font-size: large; /* Tamaño de fuente grande */
+        border: 1px solid #ccc;
+        border-radius: 5px; /* Bordes redondeados */
+    }
+    
+    button {
+        width: 100%;
+        padding: 15px;
+        font-size: large; /* Tamaño de fuente grande */
+        background-color: #333;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px; /* Bordes redondeados */
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Añade sombra para mejor efecto */
+    }
+    
+    button:hover {
+        background-color: #636363;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+  <!-- Pestañas para seleccionar el rol -->
+  <div class="tabs">
+    <div class="tab active" data-role="cliente">Cliente <br>🍕</div>
+    <div class="tab" data-role="restaurante">Restaurante 🍴</div>
+    <div class="tab" data-role="repartidor">Repartidor 🚚</div>
+  </div>
+
+  <!-- Formulario -->
+  <form id="registroForm">
+
+    <!-- Sección Cliente -->
+    <div id="cliente" class="tab-content active">
+      <div class="form-group">
+        <label for="nombreCliente">Nombre:</label>
+        <input type="text" id="nombreCliente" name="nombreCliente" required>
+      </div>
+      <div class="form-group">
+        <label for="apellidosCliente">Apellidos:</label>
+        <input type="text" id="apellidosCliente" name="apellidosCliente" required>
+      </div>
+      <!-- Campos comunes para dirección -->
+      <div id="direccionCliente">
+        <div class="form-group">
+          <label for="calleCliente">Calle:</label>
+          <input type="text" id="calleCliente" name="calleCliente" required>
+        </div>
+        <div class="form-group">
+          <label for="numeroCliente">Número:</label>
+          <input type="text" id="numeroCliente" name="numeroCliente" required>
+        </div>
+        <div class="form-group">
+          <label for="codigoPostalCliente">Código Postal:</label>
+          <input type="text" id="codigoPostalCliente" name="codigoPostalCliente" required>
+        </div>
+        <div class="form-group">
+          <label for="municipioCliente">Municipio:</label>
+          <input type="text" id="municipioCliente" name="municipioCliente" required>
+        </div>
+        <div class="form-group">
+          <label for="comentarioCliente">Comentario (opcional):</label>
+          <textarea id="comentarioCliente" name="comentarioCliente"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección Restaurante -->
+    <div id="restaurante" class="tab-content">
+      <div class="form-group">
+        <label for="nombreRestaurante">Nombre del Restaurante:</label>
+        <input type="text" id="nombreRestaurante" name="nombreRestaurante" required>
+      </div>
+      <div class="form-group">
+        <label for="cifRestaurante">CIF:</label>
+        <input type="text" id="cifRestaurante" name="cifRestaurante" required>
+      </div>
+      <!-- Campos comunes para dirección -->
+      <div id="direccionRestaurante">
+        <div class="form-group">
+          <label for="calleRestaurante">Calle:</label>
+          <input type="text" id="calleRestaurante" name="calleRestaurante" required>
+        </div>
+        <div class="form-group">
+          <label for="numeroRestaurante">Número:</label>
+          <input type="text" id="numeroRestaurante" name="numeroRestaurante" required>
+        </div>
+        <div class="form-group">
+          <label for="codigoPostalRestaurante">Código Postal:</label>
+          <input type="text" id="codigoPostalRestaurante" name="codigoPostalRestaurante" required>
+        </div>
+        <div class="form-group">
+          <label for="municipioRestaurante">Municipio:</label>
+          <input type="text" id="municipioRestaurante" name="municipioRestaurante" required>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección Repartidor -->
+    <div id="repartidor" class="tab-content">
+      <div class="form-group">
+        <label for="nombreRepartidor">Nombre:</label>
+        <input type="text" id="nombreRepartidor" name="nombreRepartidor" required>
+      </div>
+      <div class="form-group">
+        <label for="apellidosRepartidor">Apellidos:</label>
+        <input type="text" id="apellidosRepartidor" name="apellidosRepartidor" required>
+      </div>
+      <div class="form-group">
+        <label for="dniRepartidor">DNI:</label>
+        <input type="text" id="dniRepartidor" name="dniRepartidor" required>
+      </div>
+      <div class="form-group">
+        <label for="codigosPostales">Códigos postales donde quiere repartir:</label>
+        <div id="codigosPostales"></div>
+        <button type="button" id="agregarCodigoPostal">Agregar Código Postal</button>
+      </div>
+    </div>
+
+    <button type="submit">Registrarse</button>
+  </form>
+  </div>
+  <script>
+    // Seleccionar las pestañas
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Quitar clase 'active' de todas las pestañas
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        // Añadir clase 'active' a la pestaña seleccionada
+        this.classList.add('active');
+        const selectedRole = this.getAttribute('data-role');
+        
+        // Mostrar el contenido correspondiente a la pestaña
+        document.getElementById(selectedRole).classList.add('active');
+      });
+    });
+
+    // Funcionalidad para agregar y eliminar códigos postales en la sección de repartidor
+    const codigosPostalesDiv = document.getElementById('codigosPostales');
+    const agregarCodigoPostalBtn = document.getElementById('agregarCodigoPostal');
+
+    agregarCodigoPostalBtn.addEventListener('click', function() {
+      const nuevoCodigo = document.createElement('div');
+      nuevoCodigo.classList.add('form-group');
+      
+      const inputCodigoPostal = document.createElement('input');
+      inputCodigoPostal.type = 'text';
+      inputCodigoPostal.name = 'codigosPostales[]';
+      inputCodigoPostal.placeholder = 'Código Postal';
+      
+      const eliminarBtn = document.createElement('button');
+      eliminarBtn.type = 'button';
+      eliminarBtn.textContent = 'Eliminar';
+      eliminarBtn.addEventListener('click', function() {
+        nuevoCodigo.remove();
+      });
+      
+      nuevoCodigo.appendChild(inputCodigoPostal);
+      nuevoCodigo.appendChild(eliminarBtn);
+      codigosPostalesDiv.appendChild(nuevoCodigo);
+    });
+  </script>
+</body>
+</html>
