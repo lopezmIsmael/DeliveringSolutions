@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Usuario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+        }
+        button {
+            font-size: 18px;
+            padding: 15px 30px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Seleccione el tipo de usuario</h1>
+    <button onclick="window.location.href='restaurante.html'">Restaurante</button>
+    <button onclick="window.location.href='repartidor.html'">Repartidor</button>
+    <button onclick="window.location.href='/login'">Cliente</button>
+    <button onclick="window.location.href='anonimo.html'">Anónimo</button>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <!-- Aquí puedes añadir tus hojas de estilo, fuentes, etc. -->
+</head>
+<body>
+    <div th:if="${mensajeExito}">
+        <h2 th:text="${mensajeExito}"></h2>
+    </div>
+
+    <div th:if="${mensajeError}">
+        <h2 th:text="${mensajeError}" style="color: red;"></h2>
+    </div>
+
+    <a href="/anadirClase">Volver a Crear Clase</a>
+    <br/>
+    <a href="/">Inicio</a>
+</body>
+</html>
