@@ -1,6 +1,17 @@
 //package dominio.entidades;
 
+/**
+ * Enumeración que representa los diferentes métodos de pago disponibles.
+ */
 public enum MetodoPago {
-	PAYPAL,
-	CREDIT_CARD
+    
+    /**
+     * Pago a través de PayPal.
+     */
+    PAYPAL,
+    
+    /**
+     * Pago a través de tarjeta de crédito.
+     */
+    CREDIT_CARD
 }
