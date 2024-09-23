@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página Web con Desplazamiento Horizontal</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    /* Contenedor para el scroll horizontal */
+    .contenedor {
+      display: flex;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+      width: 100vw;
+      height: 100vh;
+      scroll-behavior: smooth;
+    }
+
+    /* Cada pestaña será una sección */
+    .seccion {
+      min-width: 100vw;
+      height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2em;
+      color: white;
+      padding: 20px;
+    }
+
+    /* Estilos para cada sección */
+    .seccion1 { background-color: #3498db; }
+    .seccion2 { background-color: #2ecc71; }
+    .seccion3 { background-color: #e74c3c; }
+    .seccion4 { background-color: #f39c12; }
+
+    /* Estilos para la barra de navegación */
+    nav {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.2em;
+      padding: 10px 20px;
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: background-color 0.3s;
+    }
+
+    nav a:hover, nav a.active {
+      background-color: rgba(255, 255, 255, 0.8); /* Color destacado para la pestaña activa */
+      color: black;
+    }
+
+    /* Botones para avanzar/retroceder */
+    .boton {
+      position: fixed;
+      top: 0;
+      width: 60px;
+      height: 100vh;
+      font-size: 2.5em;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.3); /* Color sólido más oscuro que el fondo */
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+      transition: background-color 0.3s, transform 0.3s;
+      border-radius: 30px; /* Botón redondeado */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .boton:hover {
+      background-color: rgba(0, 0, 0, 0.5);
+      transform: scale(1.05); /* Efecto de agrandado al pasar el mouse */
+    }
+
+    /* Botón de retroceder */
+    .retroceder {
+      left: 10px;
+    }
+
+    /* Botón de avanzar */
+    .avanzar {
+      right: 10px;
+    }
+
+    /* Estilos para el contenido dentro de las secciones */
+    .contenido {
+      display: flex;
+      width: 90%;
+      height: 70%;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .texto {
+      width: 45%;
+      font-size: 1.5em;
+      text-align: center;
+    }
+
+    .imagen {
+      width: 45%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .imagen img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Alternar el orden de las columnas en las secciones */
+    .seccion:nth-child(odd) .contenido {
+      flex-direction: row; /* Texto a la izquierda en secciones impares */
+    }
+
+    .seccion:nth-child(even) .contenido {
+      flex-direction: row-reverse; /* Texto a la derecha en secciones pares */
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#seccion1" class="nav-link">Jorge</a>
+    <a href="#seccion2" class="nav-link">Pablo</a>
+    <a href="#seccion3" class="nav-link">Marco</a>
+    <a href="#seccion4" class="nav-link">Ismael</a>
+  </nav>
+
+  <!-- Botón para avanzar -->
+  <button class="boton avanzar">→</button>
+
+  <!-- Botón para retroceder -->
+  <button class="boton retroceder">←</button>
+
+  <div class="contenedor" id="contenedor">
+    <section id="seccion1" class="seccion seccion1">
+      <div class="contenido">
+        <div class="texto">
+          <h1>Jorge López Gómez</h1>
+          <p>jorge.lopez32@alu.uclm.es</p>
+        </div>
+        <div class="imagen">
+          <img src="https://via.placeholder.com/400x300" alt="Imagen Pestaña 1">
+        </div>
+      </div>
+    </section>
+
+    <section id="seccion2" class="seccion seccion2">
+      <div class="contenido">
+        <div class="texto">
+          <h1>Pablo Verdúguez Gervaso</h1>
+          <p>pablo.verduguez@alu.uclm.es</p>
+        </div>
+        <div class="imagen">
+          <img src="https://via.placeholder.com/400x300" alt="Imagen Pestaña 2">
+        </div>
+      </div>
+    </section>
+
+    <section id="seccion3" class="seccion seccion3">
+      <div class="contenido">
+        <div class="texto">
+          <h1>Marco Muñoz García</h1>
+          <p>marco.munoz@alu.uclm.es</p>
+        </div>
+        <div class="imagen">
+          <img src="https://via.placeholder.com/400x300" alt="Imagen Pestaña 3">
+        </div>
+      </div>
+    </section>
+
+    <section id="seccion4" class="seccion seccion4">
+      <div class="contenido">
+        <div class="texto">
+          <h1>Ismael López Marín</h1>
+          <p>ismael.lopez6@alu.uclm.es</p>
+        </div>
+        <div class="imagen">
+          <img src="https://via.placeholder.com/400x300" alt="Imagen Pestaña 4">
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Seleccionar el contenedor y las secciones
+    const contenedor = document.getElementById('contenedor');
+    const secciones = document.querySelectorAll('.seccion');
+    const navLinks = document.querySelectorAll('.nav-link');
+    let indiceActual = 0;
+
+    // Función para avanzar a la siguiente pestaña
+    function avanzar() {
+      if (indiceActual < secciones.length - 1) {
+        indiceActual++;
+        secciones[indiceActual].scrollIntoView({ behavior: 'smooth' });
+        actualizarPestañaActiva();
+      }
+    }
+
+    // Función para retroceder a la pestaña anterior
+    function retroceder() {
+      if (indiceActual > 0) {
+        indiceActual--;
+        secciones[indiceActual].scrollIntoView({ behavior: 'smooth' });
+        actualizarPestañaActiva();
+      }
+    }
+
+    // Actualizar la pestaña activa en la barra de navegación
+    function actualizarPestañaActiva() {
+      navLinks.forEach((link, index) => {
+        if (index === indiceActual) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+
+    // Detectar cuando se hace scroll manual para actualizar el índice actual
+    contenedor.addEventListener('scroll', () => {
+      const scrollPosition = contenedor.scrollLeft;
+      const sectionWidth = window.innerWidth;
+      indiceActual = Math.round(scrollPosition / sectionWidth);
+      actualizarPestañaActiva(); // Actualizar la pestaña activa en función de la sección visible
+    });
+
+    // Añadir eventos a los botones
+    document.querySelector('.avanzar').addEventListener('click', avanzar);
+    document.querySelector('.retroceder').addEventListener('click', retroceder);
+
+    // Actualizar la pestaña activa al cargar la página
+    actualizarPestañaActiva();
+  </script>
+
+</body>
+</html>

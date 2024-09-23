@@ -1,0 +1,106 @@
+/* style.css */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Playfair Display'; /* Aplica la fuente Pacifico */
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.header {
+    background-color: #333; 
+    color: #ffffff; 
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    position: relative;
+}
+
+.header h3 {
+    color: #ffffff;
+    padding: 10px;
+    flex: 1; /* Permite que los textos ocupen el espacio disponible */
+    text-align: center; /* Centra el texto dentro de su contenedor */
+}
+
+.header .header-icon-container {
+    flex: 0; /* No permite que el contenedor de la imagen crezca */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-icon {
+    width: 250px;
+    height: 250px;
+    object-fit: cover; /* Ajusta la imagen para cubrir el contenedor */
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+}
+
+.left-side {
+    background-color: #f1c778;
+    border: 3px solid #333; /* Línea fina en gris medio */
+    flex: 1;
+    display: flex;
+    justify-content: flex-start; /* Alinea el contenido a la izquierda */
+    align-items: center; /* Centra verticalmente */
+    padding: 20px; /* Añadir un poco de padding para mejor apariencia */
+}
+
+.right-side {
+    flex: 1;
+    background-color: #f8f8f8; /* Color de fondo gris claro */
+    border: 3px solid #333; /* Línea fina en gris medio */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; /* Añadir un poco de padding para mejor apariencia */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Opcional: Añadir sombra para mejor efecto */
+}
+
+.input-field {
+    width: 200px;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.btn {
+    width: 200px;
+    padding: 15px;
+    margin: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 10px;
+    border-color: #333;
+    background-color: #646161;
+    font-weight: bold;
+    color: #000000;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+}
+.no-underline {
+    text-decoration: none; /* Elimina el subrayado del enlace */
+    color: rgb(78, 78, 158); /* Mantiene el color del texto */
+}
+
+.tlf{
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif /* Aplica la fuente Pacifico */
+}

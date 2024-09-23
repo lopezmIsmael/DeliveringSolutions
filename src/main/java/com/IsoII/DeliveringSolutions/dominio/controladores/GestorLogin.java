@@ -12,25 +12,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 public class GestorLogin {
 	RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
-	@GetMapping("/login")
-	public String login(Model model) {
-		// TODO - implement GestorLogin.login
-		model.addAttribute("name", "password");
-		return "/login";
-	}
+	@GetMapping("/")
+    public String index() {
+        return "index"; // Busca index.html en src/main/resources/templates
+    }
 
-	@PostMapping("/login")
-	public String loginPost(@ModelAttribute("name") String name, @ModelAttribute("password") String password) {
-		System.out.println("name: " + name);
-		System.out.println("password: " + password);
-		
-		redirectAttributes.addFlashAttribute("mensajeExito", "Exito");
-		// TODO - implement GestorLogin.loginPost
-		return "redirect:/resultadoLogin";
-	}
-
-	@GetMapping("/resultadoLogin")
-	public String resultadoLogin() {
-		return "/resultadoLogin";
-	}
+    @GetMapping("/aboutUs")
+    public String aboutUs() {
+        return "aboutUs"; // Busca aboutUs.html en src/main/resources/templates
+    }
 }

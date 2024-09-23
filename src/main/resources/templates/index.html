@@ -1,28 +1,35 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selección de Usuario</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 100px;
-        }
-        button {
-            font-size: 18px;
-            padding: 15px 30px;
-            margin: 10px;
-            cursor: pointer;
-        }
-    </style>
+    <title>DS</title>
+    <link rel="stylesheet" href="style_index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Lobster&family=Pacifico&family=Montserrat&family=Open+Sans&family=Raleway&family=Playfair+Display&family=Merriweather&family=Lato&family=Oswald&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Seleccione el tipo de usuario</h1>
-    <button onclick="window.location.href='restaurante.html'">Restaurante</button>
-    <button onclick="window.location.href='repartidor.html'">Repartidor</button>
-    <button onclick="window.location.href='/login'">Cliente</button>
-    <button onclick="window.location.href='anonimo.html'">Anónimo</button>
+    <div class="container">
+        <div class="header">
+            <h3 class="tlf" style="text-align: left;">+34 350--8690</h3>
+            <div class="header-icon-container">
+                <img src="icono.png" alt="Icono" class="header-icon">
+            </div>
+            <h3 style="text-align: right;">DeliveringSolutionsSL@gmail.com</h3>
+        </div>
+        <div class="main-content">
+            <div class="left-side">
+                <canvas id="animationCanvas"></canvas>
+            </div>
+            <div class="right-side">
+                <h1 style="text-align: right;" >LOGIN</h1>
+                <input type="text" placeholder="User" class="input-field">
+                <input type="password" placeholder="Password" class="input-field">
+                <button class="btn" id="loginButton">Login</button>
+                <h4>¿Don't have account?</h4>
+                <button class="btn" id="registerButton">Sign up</button>
+                <p><a href="/aboutUs" class="no-underline">About us</a></p>
+            </div>
+        </div>
+    </div>
+    <script src="script_index.js"></script>
 </body>
 </html>
