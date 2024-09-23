@@ -12,9 +12,9 @@ public class GestorClientes {
 
 	/**
 	 * 
-	 * @param zona
+	 * @param codigoPostal
 	 */
-	public List<Restaurante> buscarRestaurante(CodigoPostal zona) {
+	public List<Restaurante> buscarRestaurante(int codigoPostal) {
 		// TODO - implement GestorClientes.buscarRestaurante
 		throw new UnsupportedOperationException();
 	}
@@ -57,7 +57,7 @@ public class GestorClientes {
 	 * @param cp
 	 * @param municipio
 	 */
-	private Direccion altaDirecion(String calle, String numeero, String complemento, CodigoPostal cp, String municipio) {
+	private Direccion altaDirecion(String calle, String numeero, String complemento, int cp, String municipio) {
 		// TODO - implement GestorClientes.altaDirecion
 		throw new UnsupportedOperationException();
 	}

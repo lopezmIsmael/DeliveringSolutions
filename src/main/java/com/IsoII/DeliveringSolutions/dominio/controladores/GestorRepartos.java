@@ -32,7 +32,7 @@ public class GestorRepartos {
 	 * @param nif
 	 * @param zonas
 	 */
-	public void registrarRepartidor(String nombre, String apellidos, String nif, List<CodigoPostal> zonas) {
+	public void registrarRepartidor(String nombre, String apellidos, String nif, List<Integer> zonas) {
 		// TODO - implement GestorRepartos.registrarRepartidor
 		throw new UnsupportedOperationException();
 	}
