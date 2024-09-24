@@ -1,10 +1,15 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
-
 import java.util.*;
 
 /**
  * Representa a un cliente que extiende la clase Usuario y contiene información sobre sus restaurantes favoritos, pedidos, direcciones y datos personales.
+ * 
+ * @author Jorge López Gómez
+ * @author Ismael López Marín
+ * @author Pablo Verdúguez Gervaso
+ * @author Marco Muñoz García
+ * @version 1.0
  */
 public class Cliente extends Usuario {
 

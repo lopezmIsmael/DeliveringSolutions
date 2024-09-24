@@ -5,6 +5,12 @@ import java.util.UUID;
 
 /**
  * Representa un pago asociado a un pedido, incluyendo el método de pago, identificador de transacción y fecha de transacción.
+ * 
+ * @author Jorge López Gómez
+ * @author Ismael López Marín
+ * @author Pablo Verdúguez Gervaso
+ * @author Marco Muñoz García
+ * @version 1.0
  */
 public class Pago {
 

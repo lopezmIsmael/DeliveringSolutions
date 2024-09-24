@@ -2,6 +2,12 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 /**
  * Enumeración que representa los posibles estados de un pedido.
+ * 
+ * @author Jorge López Gómez
+ * @author Ismael López Marín
+ * @author Pablo Verdúguez Gervaso
+ * @author Marco Muñoz García
+ * @version 1.0
  */
 public enum EstadoPedido {
     

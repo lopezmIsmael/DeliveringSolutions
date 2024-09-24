@@ -5,6 +5,12 @@ import java.util.Date;
 
 /**
  * Representa un pedido realizado por un cliente en un restaurante, incluyendo detalles como el pago, los ítems del menú, el estado del pedido y la fecha.
+ * 
+ * @author Jorge López Gómez
+ * @author Ismael López Marín
+ * @author Pablo Verdúguez Gervaso
+ * @author Marco Muñoz García
+ * @version 1.0
  */
 public class Pedido {
 

@@ -1,10 +1,15 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
-import java.util.*;
 import java.util.Date;
 
 /**
  * Representa un servicio de entrega para un pedido, incluyendo información sobre el pedido, dirección, repartidor y fechas de recepción y entrega.
+ * 
+ * @author Jorge López Gómez
+ * @author Ismael López Marín
+ * @author Pablo Verdúguez Gervaso
+ * @author Marco Muñoz García
+ * @version 1.0
  */
 public class ServicioEntrega {
 
@@ -17,11 +22,11 @@ public class ServicioEntrega {
     /**
      * Constructor para crear un servicio de entrega con los detalles específicos.
      *
-     * @param pedido          El pedido asociado al servicio de entrega.
-     * @param direccion       La dirección de entrega.
-     * @param repartidor      El repartidor asignado al servicio.
-     * @param fechaRecepcion  La fecha en que se recibió el pedido para entrega.
-     * @param fechaEntrega    La fecha en que se realizó la entrega al cliente.
+     * @param pedido         El pedido asociado al servicio de entrega.
+     * @param direccion      La dirección de entrega.
+     * @param repartidor     El repartidor asignado al servicio.
+     * @param fechaRecepcion La fecha en que se recibió el pedido para entrega.
+     * @param fechaEntrega   La fecha en que se realizó la entrega al cliente.
      */
     public ServicioEntrega(Pedido pedido, Direccion direccion, Repartidor repartidor, Date fechaRecepcion, Date fechaEntrega) {
         this.pedido = pedido;

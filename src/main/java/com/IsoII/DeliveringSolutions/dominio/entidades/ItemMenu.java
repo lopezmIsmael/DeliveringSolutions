@@ -2,6 +2,12 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 /**
  * Representa un ítem del menú en un restaurante, incluyendo su tipo, nombre y precio.
+ * 
+ * @author Jorge López Gómez
+ * @author Ismael López Marín
+ * @author Pablo Verdúguez Gervaso
+ * @author Marco Muñoz García
+ * @version 1.0
  */
 public class ItemMenu {
 

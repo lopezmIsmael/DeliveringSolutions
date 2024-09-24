@@ -4,6 +4,12 @@ import java.util.*;
 
 /**
  * Representa un repartidor que extiende la clase Usuario, incluyendo información sobre los servicios de entrega que realiza, las zonas donde trabaja y sus datos personales.
+ * 
+ * @author Jorge López Gómez
+ * @author Ismael López Marín
+ * @author Pablo Verdúguez Gervaso
+ * @author Marco Muñoz García
+ * @version 1.0
  */
 public class Repartidor extends Usuario {
 

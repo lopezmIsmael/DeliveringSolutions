@@ -4,6 +4,12 @@ import java.util.*;
 
 /**
  * Representa una carta de menú en un restaurante, que contiene una colección de ítems de menú.
+ * 
+ * @author Jorge López Gómez
+ * @author Ismael López Marín 
+ * @author Pablo Verdúguez Gervaso
+ * @author Marco Muñoz García
+ * @version 1.0
  */
 public class CartaMenu {
 

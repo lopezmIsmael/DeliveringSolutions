@@ -4,6 +4,12 @@ import java.util.*;
 
 /**
  * Representa un restaurante que extiende la clase Usuario, incluyendo información sobre pedidos, cartas de menú, dirección y datos del restaurante.
+ * 
+ * @author Jorge López Gómez
+ * @author Ismael López Marín
+ * @author Pablo Verdúguez Gervaso
+ * @author Marco Muñoz García
+ * @version 1.0
  */
 public class Restaurante extends Usuario {
 
@@ -16,13 +22,18 @@ public class Restaurante extends Usuario {
     /**
      * Constructor para crear un restaurante con sus datos específicos.
      *
-     * @param pedidos     Colección de pedidos asociados al restaurante.
-     * @param cartasMenu  Colección de cartas de menú del restaurante.
-     * @param direccion   Dirección del restaurante.
-     * @param nombre      Nombre del restaurante.
-     * @param cif         CIF del restaurante.
+     * @param idUsuario  El identificador único del usuario.
+     * @param pass       La contraseña del usuario.
+     * @param rol        El rol del usuario en el sistema.
+     * @param pedidos    Colección de pedidos asociados al restaurante.
+     * @param cartasMenu Colección de cartas de menú del restaurante.
+     * @param direccion  Dirección del restaurante.
+     * @param nombre     Nombre del restaurante.
+     * @param cif        CIF del restaurante.
      */
-    public Restaurante(String idUsuario, String pass, String rol, Collection<Pedido> pedidos, Collection<CartaMenu> cartasMenu, Direccion direccion, String nombre, String cif) {
+    public Restaurante(String idUsuario, String pass, String rol,
+                       Collection<Pedido> pedidos, Collection<CartaMenu> cartasMenu,
+                       Direccion direccion, String nombre, String cif) {
         super(idUsuario, pass, rol);
         this.pedidos = (pedidos != null) ? pedidos : new ArrayList<>();
         this.cartasMenu = (cartasMenu != null) ? cartasMenu : new ArrayList<>();
@@ -146,11 +157,12 @@ public class Restaurante extends Usuario {
     @Override
     public String toString() {
         return "Restaurante{" +
-                "pedidos=" + pedidos +
-                ", cartasMenu=" + cartasMenu +
-                ", direccion=" + direccion +
+                "idUsuario='" + idUsuario + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", cif='" + cif + '\'' +
+                ", direccion=" + direccion +
+                ", pedidos=" + pedidos +
+                ", cartasMenu=" + cartasMenu +
                 '}';
     }
 }

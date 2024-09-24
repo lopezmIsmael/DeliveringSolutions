@@ -2,12 +2,18 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 /**
  * Representa un usuario genérico en el sistema con un identificador, contraseña y rol.
+ * 
+ * @author Jorge López Gómez
+ * @author Ismael López Marín
+ * @author Pablo Verdúguez Gervaso
+ * @author Marco Muñoz García
+ * @version 1.0
  */
-public class Usuario {
+public abstract class Usuario {
 
-    private String idUsuario;
-    private String pass;
-    private String rol;
+    protected String idUsuario;
+    protected String pass;
+    protected String rol;
 
     /**
      * Constructor para crear un usuario con un identificador, contraseña y rol específicos.
