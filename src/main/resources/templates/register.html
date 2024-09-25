@@ -7,6 +7,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Lobster&family=Pacifico&family=Montserrat&family=Open+Sans&family=Raleway&family=Playfair+Display&family=Merriweather&family=Lato&family=Oswald&display=swap" rel="stylesheet">
 
   <style>
+
+    
+
+   
+    /* Botón para volver al index */
+    .boton-index {
+      position: fixed;
+      top: 20px; /* Lo coloca en la parte superior */
+      left: 20px; /* Lo coloca a la izquierda */
+      padding: 10px 20px;
+      font-size: 1em;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+      z-index: 1000; /* Asegura que esté por encima del resto del contenido */
+      width: auto; /* Hace el botón de tamaño ajustado a su contenido */
+    }
+
+    .boton-index:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+      color: black;
+      transform: scale(1.05);
+    }
+
+    
     body, html {
         margin: 0;
         padding: 0;
@@ -98,6 +125,10 @@
   </style>
 </head>
 <body>
+
+  <!-- Botón para volver al index -->
+  <button class="boton-index" onclick="volverAlInicio()">Volver al Inicio</button>
+
   <div class="container">
   <!-- Pestañas para seleccionar el rol -->
   <div class="tabs">
@@ -243,6 +274,11 @@
       nuevoCodigo.appendChild(eliminarBtn);
       codigosPostalesDiv.appendChild(nuevoCodigo);
     });
+
+    // Función para volver al inicio
+    function volverAlInicio() {
+      window.location.href = '/';
+    }
   </script>
 </body>
 </html>

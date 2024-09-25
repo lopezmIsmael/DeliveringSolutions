@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,10 +40,21 @@
     }
 
     /* Estilos para cada sección */
-    .seccion1 { background-color: #3498db; }
-    .seccion2 { background-color: #2ecc71; }
-    .seccion3 { background-color: #e74c3c; }
-    .seccion4 { background-color: #f39c12; }
+    .seccion1 {
+      background-color: #3498db;
+    }
+
+    .seccion2 {
+      background-color: #2ecc71;
+    }
+
+    .seccion3 {
+      background-color: #e74c3c;
+    }
+
+    .seccion4 {
+      background-color: #f39c12;
+    }
 
     /* Estilos para la barra de navegación */
     nav {
@@ -65,8 +77,10 @@
       transition: background-color 0.3s;
     }
 
-    nav a:hover, nav a.active {
-      background-color: rgba(255, 255, 255, 0.8); /* Color destacado para la pestaña activa */
+    nav a:hover,
+    nav a.active {
+      background-color: rgba(255, 255, 255, 0.8);
+      /* Color destacado para la pestaña activa */
       color: black;
     }
 
@@ -78,12 +92,14 @@
       height: 100vh;
       font-size: 2.5em;
       color: white;
-      background-color: rgba(0, 0, 0, 0.3); /* Color sólido más oscuro que el fondo */
+      background-color: rgba(0, 0, 0, 0.3);
+      /* Color sólido más oscuro que el fondo */
       border: none;
       cursor: pointer;
       z-index: 10;
       transition: background-color 0.3s, transform 0.3s;
-      border-radius: 30px; /* Botón redondeado */
+      border-radius: 30px;
+      /* Botón redondeado */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -91,7 +107,8 @@
 
     .boton:hover {
       background-color: rgba(0, 0, 0, 0.5);
-      transform: scale(1.05); /* Efecto de agrandado al pasar el mouse */
+      transform: scale(1.05);
+      /* Efecto de agrandado al pasar el mouse */
     }
 
     /* Botón de retroceder */
@@ -103,6 +120,27 @@
     .avanzar {
       right: 10px;
     }
+
+    /* Botón para volver al index */
+    .boton-index {
+      position: fixed;
+      bottom: 20px;
+      left: 46%;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .boton-index:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+      color: black;
+      transform: scale(1.05);
+    }
+
 
     /* Estilos para el contenido dentro de las secciones */
     .contenido {
@@ -135,16 +173,21 @@
 
     /* Alternar el orden de las columnas en las secciones */
     .seccion:nth-child(odd) .contenido {
-      flex-direction: row; /* Texto a la izquierda en secciones impares */
+      flex-direction: row;
+      /* Texto a la izquierda en secciones impares */
     }
 
     .seccion:nth-child(even) .contenido {
-      flex-direction: row-reverse; /* Texto a la derecha en secciones pares */
+      flex-direction: row-reverse;
+      /* Texto a la derecha en secciones pares */
     }
-
   </style>
 </head>
+
 <body>
+
+  <!-- Botón para volver al index -->
+  <button class="boton-index" onclick="volverAlInicio()">Volver al Inicio</button>
 
   <nav>
     <a href="#seccion1" class="nav-link">Jorge</a>
@@ -259,7 +302,14 @@
 
     // Actualizar la pestaña activa al cargar la página
     actualizarPestañaActiva();
+
+    // Función para volver al inicio
+    function volverAlInicio() {
+      window.location.href = '/';
+    }
+
   </script>
 
 </body>
+
 </html>
