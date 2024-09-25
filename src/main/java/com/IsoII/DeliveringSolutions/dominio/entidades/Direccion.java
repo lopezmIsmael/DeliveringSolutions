@@ -15,6 +15,7 @@ public class Direccion {
     private String numero;
     private String complemento;
     private String municipio;
+    private CodigoPostal codigoPostal;
 
     /**
      * Constructor para crear una dirección con los detalles específicos.
@@ -23,12 +24,14 @@ public class Direccion {
      * @param numero       El número de la calle.
      * @param complemento  Información adicional sobre la dirección (ej. piso, departamento).
      * @param municipio    El nombre del municipio.
+     * @param codigoPostal El código postal de la dirección.
      */
-    public Direccion(String calle, String numero, String complemento, String municipio) {
+    public Direccion(String calle, String numero, String complemento, String municipio, CodigoPostal codigoPostal) {
         this.calle = calle;
         this.numero = numero;
         this.complemento = complemento;
         this.municipio = municipio;
+        this.codigoPostal = codigoPostal;
     }
 
     /**
@@ -103,6 +106,7 @@ public class Direccion {
         this.municipio = municipio;
     }
 
+
     /**
      * Devuelve una representación en formato de cadena de esta dirección.
      *
@@ -115,6 +119,7 @@ public class Direccion {
                 ", numero='" + numero + '\'' +
                 ", complemento='" + complemento + '\'' +
                 ", municipio='" + municipio + '\'' +
+                ", codigoPostal=" + codigoPostal +
                 '}';
     }
 }

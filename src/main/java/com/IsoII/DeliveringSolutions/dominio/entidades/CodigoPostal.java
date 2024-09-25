@@ -33,4 +33,13 @@ public enum CodigoPostal {
         this.codigo = codigo;
     }
 
+    /**
+     * Obtiene el valor del código postal.
+     *
+     * @return El valor del código postal.
+     */
+    public String getCodigo() {
+        return codigo;
+    }
+
 }
