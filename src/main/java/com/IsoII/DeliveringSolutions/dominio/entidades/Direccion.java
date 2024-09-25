@@ -11,7 +11,6 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
  */
 public class Direccion {
 
-    private int codigoPostal;
     private String calle;
     private String numero;
     private String complemento;
@@ -20,36 +19,16 @@ public class Direccion {
     /**
      * Constructor para crear una dirección con los detalles específicos.
      *
-     * @param codigoPostal El código postal en formato numérico.
      * @param calle        El nombre de la calle.
      * @param numero       El número de la calle.
      * @param complemento  Información adicional sobre la dirección (ej. piso, departamento).
      * @param municipio    El nombre del municipio.
      */
-    public Direccion(int codigoPostal, String calle, String numero, String complemento, String municipio) {
-        this.codigoPostal = codigoPostal;
+    public Direccion(String calle, String numero, String complemento, String municipio) {
         this.calle = calle;
         this.numero = numero;
         this.complemento = complemento;
         this.municipio = municipio;
-    }
-
-    /**
-     * Obtiene el código postal en formato numérico.
-     *
-     * @return El código postal.
-     */
-    public int getCodigoPostal() {
-        return codigoPostal;
-    }
-
-    /**
-     * Establece el código postal en formato numérico.
-     *
-     * @param codigoPostal El código postal a establecer.
-     */
-    public void setCodigoPostal(int codigoPostal) {
-        this.codigoPostal = codigoPostal;
     }
 
     /**
@@ -132,8 +111,7 @@ public class Direccion {
     @Override
     public String toString() {
         return "Direccion{" +
-                "codigoPostal=" + codigoPostal +
-                ", calle='" + calle + '\'' +
+                "calle='" + calle + '\'' +
                 ", numero='" + numero + '\'' +
                 ", complemento='" + complemento + '\'' +
                 ", municipio='" + municipio + '\'' +
