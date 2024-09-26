@@ -71,6 +71,13 @@
 		<version>6.2.6.Final</version>
 	</dependency>
 
+	<dependency>
+		<groupId>jakarta.persistence</groupId>
+		<artifactId>jakarta.persistence-api</artifactId>
+		<version>3.1.0</version> <!-- Ensure this version matches the one supported by Hibernate -->
+	</dependency>
+
+
 
 </dependencies>
 

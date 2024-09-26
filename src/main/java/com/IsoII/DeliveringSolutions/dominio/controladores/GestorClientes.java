@@ -57,7 +57,7 @@ public class GestorClientes {
 	 * @param cp
 	 * @param municipio
 	 */
-	private Direccion altaDirecion(String calle, String numeero, String complemento, int cp, String municipio) {
+	private Direccion altaDirecion(String calle, String numero, String complemento, int cp, String municipio) {
 		// TODO - implement GestorClientes.altaDirecion
 		throw new UnsupportedOperationException();
 	}

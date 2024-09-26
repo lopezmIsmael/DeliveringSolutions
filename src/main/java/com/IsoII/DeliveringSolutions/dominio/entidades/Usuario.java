@@ -1,7 +1,11 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+
 
 /**
- * Representa un usuario genérico en el sistema con un identificador, contraseña y rol.
+ * Representa un usuario genérico en el sistema con un identificador, contraseña y tipoUsuario.
  * 
  * @author Jorge López Gómez
  * @author Ismael López Marín
@@ -9,23 +13,31 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
  * @author Marco Muñoz García
  * @version 1.0
  */
-public abstract class Usuario {
 
+@Entity
+public class Usuario {
+
+    @Id ()
     protected String idUsuario;
+    @Column (name = "pass", nullable = false)
     protected String pass;
-    protected String rol;
+    @Column (name = "tipoUsuario", nullable = false)
+    protected String tipoUsuario;
+    
+
+    public Usuario() {}
 
     /**
-     * Constructor para crear un usuario con un identificador, contraseña y rol específicos.
+     * Constructor para crear un usuario con un identificador, contraseña y tipoUsuario específicos.
      *
      * @param idUsuario El identificador único del usuario.
      * @param pass      La contraseña del usuario.
-     * @param rol       El rol del usuario en el sistema.
+     * @param tipoUsuario       El tipoUsuario del usuario en el sistema.
      */
-    public Usuario(String idUsuario, String pass, String rol) {
+    public Usuario(String idUsuario, String pass, String tipoUsuario) {
         this.idUsuario = idUsuario;
         this.pass = pass;
-        this.rol = rol;
+        this.tipoUsuario = tipoUsuario;
     }
 
     /**
@@ -65,34 +77,20 @@ public abstract class Usuario {
     }
 
     /**
-     * Obtiene el rol del usuario en el sistema.
+     * Obtiene el tipoUsuario del usuario en el sistema.
      *
-     * @return El rol del usuario.
+     * @return El tipoUsuario del usuario.
      */
-    public String getRol() {
-        return rol;
+    public String gettipoUsuario() {
+        return tipoUsuario;
     }
 
     /**
-     * Establece el rol del usuario en el sistema.
+     * Establece el tipoUsuario del usuario en el sistema.
      *
-     * @param rol El rol a establecer.
+     * @param tipoUsuario El tipoUsuario a establecer.
      */
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-
-    /**
-     * Devuelve una representación en formato de cadena de este usuario.
-     *
-     * @return Una cadena que representa al usuario.
-     */
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "idUsuario='" + idUsuario + '\'' +
-                ", pass='" + pass + '\'' +
-                ", rol='" + rol + '\'' +
-                '}';
+    public void settipoUsuario(String tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 }
