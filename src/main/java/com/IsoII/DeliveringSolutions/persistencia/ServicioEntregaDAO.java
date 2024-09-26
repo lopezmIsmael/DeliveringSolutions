@@ -1,4 +1,9 @@
 package com.IsoII.DeliveringSolutions.persistencia;
 
-public class ServicioEntregaDAO extends EntityDAO {
+import org.springframework.stereotype.Repository;
+import com.IsoII.DeliveringSolutions.dominio.entidades.ServicioEntrega;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+@Repository
+public interface ServicioEntregaDAO extends JpaRepository<ServicioEntrega, Long> {    
 }

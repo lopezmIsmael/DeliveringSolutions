@@ -1,4 +1,10 @@
 package com.IsoII.DeliveringSolutions.persistencia;
 
-public class PedidoDAO extends EntityDAO {
+import org.springframework.stereotype.Repository;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Pedido;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+@Repository
+public interface PedidoDAO extends JpaRepository<Pedido, Long> {
+
 }

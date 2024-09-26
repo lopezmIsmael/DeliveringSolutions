@@ -1,26 +1,9 @@
 package com.IsoII.DeliveringSolutions.persistencia;
 
-import com.IsoII.DeliveringSolutions.dominio.entidades.*;
+import org.springframework.stereotype.Repository;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public class RestauranteDAO extends EntityDAO {
-
-	/**
-	 * 
-	 * @param codigoPostal
-	 */
-	public void selectPorCodigoPostal(Integer codigoPostal) {
-		// TODO - implement RestauranteDAO.selectPorCodigoPostal
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * 
-	 * @param codigoPostal
-	 * @param texto
-	 */
-	public void selectPorCodigoPostalYTextoLibre(Integer codigoPostal, String texto) {
-		// TODO - implement RestauranteDAO.selectPorCodigoPostalYTextoLibre
-		throw new UnsupportedOperationException();
-	}
-
+@Repository
+public interface RestauranteDAO extends JpaRepository<Restaurante, Long> {
 }
