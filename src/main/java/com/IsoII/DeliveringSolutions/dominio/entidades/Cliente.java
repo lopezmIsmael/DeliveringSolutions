@@ -2,6 +2,9 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import java.util.*;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 /**
  * Representa a un cliente que extiende la clase Usuario y contiene información sobre sus restaurantes favoritos, pedidos, direcciones y datos personales.
  * 
@@ -11,13 +14,21 @@ import java.util.*;
  * @author Marco Muñoz García
  * @version 1.0
  */
+
+ @Entity
 public class Cliente extends Usuario {
 
     private Collection<Restaurante> favoritos;
     private Collection<Pedido> pedidos;
     private Collection<Direccion> direcciones;
+
+    
     private String nombre;
+
+
     private String apellidos;
+
+    @Id ()
     private String dni;
 
     /**
