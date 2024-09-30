@@ -1,0 +1,30 @@
+package com.IsoII.DeliveringSolutions.dominio.service;
+
+import com.IsoII.DeliveringSolutions.dominio.entidades.Zona;
+import com.IsoII.DeliveringSolutions.persistencia.ZonaDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ServiceZona {
+    @Autowired
+    private ZonaDAO zonaDAO;
+
+    public List<Zona> findAll(){
+        return zonaDAO.findAll();
+    }
+
+    public Optional<Zona> findById(Long id){
+        return zonaDAO.findById(id);
+    }
+
+    public Zona save(Zona zona){
+        return zonaDAO.save(zona);
+    }
+
+    public void deleteById(Long id){
+        zonaDAO.deleteById(id);
+    }
+}
