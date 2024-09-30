@@ -1,9 +1,10 @@
 package com.IsoII.DeliveringSolutions.persistencia;
 
 import org.springframework.stereotype.Repository;
-import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
+import com.IsoII.DeliveringSolutions.dominio.entidades.MetodoPago;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
-public interface ClienteDAO extends JpaRepository<Cliente, Long> {
+public interface MetodoPagoDAO extends JpaRepository<MetodoPago, Long> {
+
 }
