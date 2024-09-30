@@ -6,11 +6,11 @@ import jakarta.persistence.*;
 @Table(name = "Zona")
 public class Zona {
     @Column(name = "nombre", nullable = false, length = 50)
-    private String nombre;
+    protected String nombre;
 
     @Id
     @Column(name = "id", nullable = false)
-    private int id;
+    protected int id;
 
     public Zona(String nombre, int id) {
         this.nombre = nombre;
