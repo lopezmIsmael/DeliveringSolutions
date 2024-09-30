@@ -1,170 +1,119 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
+import jakarta.persistence.*;
 import java.util.*;
 
 /**
  * Representa un repartidor que extiende la clase Usuario, incluyendo información sobre los servicios de entrega que realiza, las zonas donde trabaja y sus datos personales.
  * 
  * @author Jorge López Gómez
- * @author Ismael López Marín
- * @author Pablo Verdúguez Gervaso
- * @author Marco Muñoz García
  * @version 1.0
  */
-public class Repartidor extends Usuario {
+@Entity
+@Table(name = "Repartidor")
+public class Repartidor {
 
-    private Collection<ServicioEntrega> servicios;
-    private Collection<Integer> zonas;
-    private String nombre;
-    private String apellidos;
+    @Id
+    @Column(name = "dni", nullable = false, unique = true, length = 9)
     private String nif;
+
+    @Column(name = "nombre", nullable = false, length = 50)
+    private String nombre;
+
+    @Column(name = "apellidos", nullable = false, length = 50)
+    private String apellidos;
+
+    @Column(name = "eficiencia")
     private int eficiencia;
 
+    @ManyToOne
+    @JoinColumn(name = "zona_id", referencedColumnName = "id")
+    private Zona zona; // Zona sería otra entidad mapeada.
+
+    @OneToOne
+    @JoinColumn(name = "idUsuario", referencedColumnName = "idUsuario", nullable = false)
+    private Usuario usuario;
+
     /**
-     * Constructor para crear un repartidor con sus datos personales, servicios de entrega y zonas de trabajo.
+     * Constructor para crear un repartidor con sus datos personales.
      *
-     * @param idUsuario El identificador único del usuario.
-     * @param pass      La contraseña del usuario.
-     * @param rol       El rol del usuario en el sistema.
-     * @param servicios  Colección de servicios de entrega asociados al repartidor.
-     * @param zonas      Colección de códigos postales donde el repartidor realiza entregas.
+     * @param nif        NIF del repartidor.
      * @param nombre     Nombre del repartidor.
      * @param apellidos  Apellidos del repartidor.
-     * @param nif        NIF del repartidor.
      * @param eficiencia Nivel de eficiencia del repartidor.
+     * @param zona       Zona de entrega asignada al repartidor.
+     * @param usuario    Usuario asociado al repartidor (relación uno a uno).
      */
-    public Repartidor(String idUsuario, String pass, String rol, Collection<ServicioEntrega> servicios, Collection<Integer> zonas, String nombre, String apellidos, String nif, int eficiencia) {
-        super(idUsuario, pass, rol);
-        this.servicios = (servicios != null) ? servicios : new ArrayList<>();
-        this.zonas = (zonas != null) ? zonas : new ArrayList<>();
-        this.nombre = nombre;
-        this.apellidos = apellidos;
+    public Repartidor(String nif, String nombre, String apellidos, int eficiencia, Zona zona, Usuario usuario) {
         this.nif = nif;
-        this.eficiencia = eficiencia;
-    }
-
-    /**
-     * Obtiene la colección de servicios de entrega asociados al repartidor.
-     *
-     * @return Colección de servicios de entrega.
-     */
-    public Collection<ServicioEntrega> getServicios() {
-        return servicios;
-    }
-
-    /**
-     * Establece la colección de servicios de entrega asociados al repartidor.
-     *
-     * @param servicios Colección de servicios de entrega a establecer.
-     */
-    public void setServicios(Collection<ServicioEntrega> servicios) {
-        this.servicios = (servicios != null) ? servicios : new ArrayList<>();
-    }
-
-    /**
-     * Obtiene la colección de códigos postales donde el repartidor realiza entregas.
-     *
-     * @return Colección de códigos postales.
-     */
-    public Collection<Integer> getZonas() {
-        return zonas;
-    }
-
-    /**
-     * Establece la colección de códigos postales donde el repartidor realiza entregas.
-     *
-     * @param zonas Colección de códigos postales a establecer.
-     */
-    public void setZonas(Collection<Integer> zonas) {
-        this.zonas = (zonas != null) ? zonas : new ArrayList<>();
-    }
-
-    /**
-     * Obtiene el nombre del repartidor.
-     *
-     * @return El nombre del repartidor.
-     */
-    public String getNombre() {
-        return nombre;
-    }
-
-    /**
-     * Establece el nombre del repartidor.
-     *
-     * @param nombre El nombre a establecer.
-     */
-    public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    /**
-     * Obtiene los apellidos del repartidor.
-     *
-     * @return Los apellidos del repartidor.
-     */
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    /**
-     * Establece los apellidos del repartidor.
-     *
-     * @param apellidos Los apellidos a establecer.
-     */
-    public void setApellidos(String apellidos) {
         this.apellidos = apellidos;
+        this.eficiencia = eficiencia;
+        this.zona = zona;
+        this.usuario = usuario;
     }
 
-    /**
-     * Obtiene el NIF del repartidor.
-     *
-     * @return El NIF del repartidor.
-     */
+    public Repartidor() {}
+
+    // Getters y setters...
+
     public String getNif() {
         return nif;
     }
 
-    /**
-     * Establece el NIF del repartidor.
-     *
-     * @param nif El NIF a establecer.
-     */
     public void setNif(String nif) {
         this.nif = nif;
     }
 
-    /**
-     * Obtiene el nivel de eficiencia del repartidor.
-     *
-     * @return El nivel de eficiencia.
-     */
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
     public int getEficiencia() {
         return eficiencia;
     }
 
-    /**
-     * Establece el nivel de eficiencia del repartidor.
-     *
-     * @param eficiencia El nivel de eficiencia a establecer.
-     */
     public void setEficiencia(int eficiencia) {
         this.eficiencia = eficiencia;
     }
 
-    /**
-     * Devuelve una representación en formato de cadena de este repartidor.
-     *
-     * @return Una cadena que representa al repartidor.
-     */
+    public Zona getZona() {
+        return zona;
+    }
+
+    public void setZona(Zona zona) {
+        this.zona = zona;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
     @Override
     public String toString() {
         return "Repartidor{" +
-                "servicios=" + servicios +
-                ", zonas=" + zonas +
+                "nif='" + nif + '\'' +
                 ", nombre='" + nombre + '\'' +
                 ", apellidos='" + apellidos + '\'' +
-                ", nif='" + nif + '\'' +
                 ", eficiencia=" + eficiencia +
+                ", zona=" + zona +
+                ", usuario=" + usuario +
                 '}';
     }
 }
