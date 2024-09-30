@@ -1,0 +1,30 @@
+package com.IsoII.DeliveringSolutions.dominio.service;
+
+import com.IsoII.DeliveringSolutions.dominio.entidades.ServicioEntrega;
+import com.IsoII.DeliveringSolutions.persistencia.ServicioEntregaDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ServiceServicioEntrega{
+    @Autowired
+    private ServicioEntregaDAO servicioEntregaDAO;
+
+    public List<ServicioEntrega> findAll(){
+        return servicioEntregaDAO.findAll();
+    }
+
+    public Optional<ServicioEntrega> findById(Long id){
+        return servicioEntregaDAO.findById(id);
+    }
+
+    public ServicioEntrega save(ServicioEntrega servicioEntrega){
+        return servicioEntregaDAO.save(servicioEntrega);
+    }
+
+    public void deleteById(Long id){
+        servicioEntregaDAO.deleteById(id);
+    }
+}
