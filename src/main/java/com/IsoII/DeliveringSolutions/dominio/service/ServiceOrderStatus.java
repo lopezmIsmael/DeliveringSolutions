@@ -9,23 +9,23 @@ import java.util.Optional;
 
 @Service
 public class ServiceOrderStatus {
-
+    
     @Autowired
     private EstadoPedidoDAO estadoPedidoDAO;
 
-    public List<EstadoPedido> getAllOrderStatus() {
+    public List<EstadoPedido> findAll() {
         return estadoPedidoDAO.findAll();
     }
 
-    public EstadoPedido getOrderStatusById(Long id) {
-        return estadoPedidoDAO.findById(id).orElse(null);
+    public Optional<EstadoPedido> findById(Long id) {
+        return estadoPedidoDAO.findById(id);
     }
 
-    public EstadoPedido saveOrderStatus(EstadoPedido estadoPedido) {
+    public EstadoPedido save(EstadoPedido estadoPedido) {
         return estadoPedidoDAO.save(estadoPedido);
     }
 
-    public void deleteOrderStatus(Long id) {
+    public void deleteById(Long id) {
         estadoPedidoDAO.deleteById(id);
     }
 }
