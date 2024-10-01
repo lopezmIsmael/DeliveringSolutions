@@ -2,8 +2,14 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+
 /**
- * Representa un servicio de entrega para un pedido, incluyendo información sobre el pedido, dirección, repartidor y fechas de recepción y entrega.
+ * Representa un servicio de entrega para un pedido, incluyendo información
+ * sobre el pedido, dirección, repartidor y fechas de recepción y entrega.
  * 
  * @author Jorge López Gómez
  * @author Ismael López Marín
@@ -13,11 +19,20 @@ import java.util.Date;
  */
 public class ServicioEntrega {
 
+    @Id
+    private int id;
+
+    @OneToOne
+    @JoinColumn(name = "pedido_id", referencedColumnName = "pedido_id")
     private Pedido pedido;
-    private Direccion direccion;
-    private Repartidor repartidor;
+
+    @Column(name = "fecha_Recepcion", nullable = false)
     private Date fechaRecepcion;
+
+    @Column(name = "fecha_Entrega", nullable = false)
     private Date fechaEntrega;
+
+    public ServicioEntrega() {}
 
     /**
      * Constructor para crear un servicio de entrega con los detalles específicos.
@@ -28,14 +43,33 @@ public class ServicioEntrega {
      * @param fechaRecepcion La fecha en que se recibió el pedido para entrega.
      * @param fechaEntrega   La fecha en que se realizó la entrega al cliente.
      */
-    public ServicioEntrega(Pedido pedido, Direccion direccion, Repartidor repartidor, Date fechaRecepcion, Date fechaEntrega) {
+    public ServicioEntrega(int id, Pedido pedido, Date fechaRecepcion, Date fechaEntrega) {
+        this.id = id;
         this.pedido = pedido;
-        this.direccion = direccion;
-        this.repartidor = repartidor;
         this.fechaRecepcion = fechaRecepcion;
         this.fechaEntrega = fechaEntrega;
     }
 
+
+
+    /**
+     * Obtiene el identificador del servicio de entrega.
+     *
+     * @return El identificador del servicio.
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Establece el identificador del servicio de entrega.
+     *
+     * @param id El identificador a establecer.
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     /**
      * Obtiene el pedido asociado al servicio de entrega.
      *
@@ -52,42 +86,6 @@ public class ServicioEntrega {
      */
     public void setPedido(Pedido pedido) {
         this.pedido = pedido;
-    }
-
-    /**
-     * Obtiene la dirección de entrega.
-     *
-     * @return La dirección de entrega.
-     */
-    public Direccion getDireccion() {
-        return direccion;
-    }
-
-    /**
-     * Establece la dirección de entrega.
-     *
-     * @param direccion La dirección a establecer.
-     */
-    public void setDireccion(Direccion direccion) {
-        this.direccion = direccion;
-    }
-
-    /**
-     * Obtiene el repartidor asignado al servicio de entrega.
-     *
-     * @return El repartidor asignado.
-     */
-    public Repartidor getRepartidor() {
-        return repartidor;
-    }
-
-    /**
-     * Establece el repartidor asignado al servicio de entrega.
-     *
-     * @param repartidor El repartidor a establecer.
-     */
-    public void setRepartidor(Repartidor repartidor) {
-        this.repartidor = repartidor;
     }
 
     /**
@@ -134,9 +132,8 @@ public class ServicioEntrega {
     @Override
     public String toString() {
         return "ServicioEntrega{" +
+                "id=" + id +
                 "pedido=" + pedido +
-                ", direccion=" + direccion +
-                ", repartidor=" + repartidor +
                 ", fechaRecepcion=" + fechaRecepcion +
                 ", fechaEntrega=" + fechaEntrega +
                 '}';
