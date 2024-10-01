@@ -3,9 +3,11 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 import java.util.Date;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 /**
  * Representa un servicio de entrega para un pedido, incluyendo información
@@ -17,6 +19,8 @@ import jakarta.persistence.OneToOne;
  * @author Marco Muñoz García
  * @version 1.0
  */
+@Entity
+@Table(name = "ServicioEntrega")
 public class ServicioEntrega {
 
     @Id

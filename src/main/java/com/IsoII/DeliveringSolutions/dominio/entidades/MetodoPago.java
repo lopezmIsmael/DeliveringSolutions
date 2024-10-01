@@ -1,23 +1,59 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
+import jakarta.persistence.*;
+import java.util.*;
+
 /**
- * Enumeración que representa los diferentes métodos de pago disponibles.
+ * Representa un método de pago que puede ser utilizado por los clientes para realizar sus pedidos.
  * 
- * @author Jorge López Gómez
- * @author Ismael López Marín
- * @author Pablo Verdúguez Gervaso
- * @author Marco Muñoz García
  * @version 1.0
  */
-public enum MetodoPago {
-    
+
+@Entity
+@Table(name = "MetodoPago")
+public class MetodoPago {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "nombre", nullable = false, length = 50)
+    private String nombre;
+
+    public MetodoPago() {}
+
     /**
-     * Pago a través de PayPal.
+     * Constructor para crear un método de pago con un nombre específico.
+     *
+     * @param nombre El nombre del método de pago.
      */
-    PAYPAL,
-    
+    public MetodoPago(String nombre) {
+        this.nombre = nombre;
+    }
+
     /**
-     * Pago a través de tarjeta de crédito.
+     * Obtiene el identificador del método de pago.
+     *
+     * @return El identificador del método de pago.
      */
-    CREDIT_CARD
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Obtiene el nombre del método de pago.
+     *
+     * @return El nombre del método de pago.
+     */
+    public String getNombre() {
+        return nombre;
+    }
+
+    /**
+     * Establece el nombre del método de pago.
+     *
+     * @param nombre El nombre del método de pago.
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 }
