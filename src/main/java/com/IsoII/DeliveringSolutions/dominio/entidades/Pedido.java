@@ -3,6 +3,20 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 import java.util.*;
 import java.util.Date;
 
+import jakarta.annotation.Generated;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+
 /**
  * Representa un pedido realizado por un cliente en un restaurante, incluyendo detalles como el pago, los ítems del menú, el estado del pedido y la fecha.
  * 
@@ -12,19 +26,48 @@ import java.util.Date;
  * @author Marco Muñoz García
  * @version 1.0
  */
+
+ @Entity
 public class Pedido {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idPedido;
+
+    @ManyToOne
+    @JoinColumn (name = "cliente_id", nullable = false)
     private Cliente cliente;
+
+    @ManyToOne
+    @JoinColumn (name = "id_transaccion", nullable = false)
     private Pago pago;
+
+    @ManyToOne
+    @JoinColumn (name = "repartidor_id", nullable = false)
+    private Repartidor repartidor;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Collection<ItemMenu> items;
+
+    @ManyToOne
+    @JoinColumn (name = "restaurante_id", nullable = false)
     private Restaurante restaurante;
+
+    @ManyToOne
+    @JoinColumn (name = "idEntrega", nullable = false)
     private ServicioEntrega entrega;
+
+    @Enumerated(EnumType.STRING)
+    @Column (name = "estado", nullable = false)
     private EstadoPedido estado;
+
+    @Column (name = "fecha", nullable = false)
     private Date fecha;
 
     /**
      * Constructor para crear un pedido con los detalles específicos.
      *
+     * @param idPedido    El identificador único del pedido.
      * @param cliente     El cliente que realiza el pedido.
      * @param pago        El pago asociado al pedido.
      * @param items       La colección de ítems del menú incluidos en el pedido.
@@ -33,15 +76,38 @@ public class Pedido {
      * @param estado      El estado actual del pedido.
      * @param fecha       La fecha en que se realizó el pedido.
      */
-    public Pedido(Cliente cliente, Pago pago, Collection<ItemMenu> items, Restaurante restaurante, ServicioEntrega entrega, EstadoPedido estado, Date fecha) {
+    public Pedido(int idPedido, Cliente cliente, Pago pago, Collection<ItemMenu> items, Restaurante restaurante, Repartidor repartidor, ServicioEntrega entrega, EstadoPedido estado, Date fecha) {
+        this.idPedido = idPedido;
         this.cliente = cliente;
         this.pago = pago;
         this.items = (items != null) ? items : new ArrayList<>();
         this.restaurante = restaurante;
+        this.repartidor = repartidor;
         this.entrega = entrega;
         this.estado = estado;
         this.fecha = fecha;
     }
+
+    /**
+     * Obtiene el identificador único del pedido.
+     *
+     * @return El identificador del pedido.
+     */
+
+    public int getIdPedido() {
+        return idPedido;
+    }
+
+    /**
+     * Establece el identificador único del pedido.
+     *
+     * @param idPedido El identificador del pedido a establecer.
+     */
+
+    public void setIdPedido(int idPedido) {
+        this.idPedido = idPedido;
+    }
+
 
     /**
      * Obtiene el cliente que realizó el pedido.
@@ -104,6 +170,26 @@ public class Pedido {
      */
     public Restaurante getRestaurante() {
         return restaurante;
+    }
+
+    /**
+     * Obtiene el repartidor asignado al pedido.
+     *
+     * @return El repartidor asignado.
+     */
+
+    public Repartidor getRepartidor() {
+        return repartidor;
+    }
+    
+    /**
+     * Obtiene el repartidor asignado al pedido.
+     *
+     * @return El repartidor asignado.
+     */
+
+    public void setRepartidor(Repartidor repartidor) {
+        this.repartidor = repartidor;
     }
 
     /**
