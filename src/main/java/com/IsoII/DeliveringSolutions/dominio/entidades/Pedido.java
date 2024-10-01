@@ -4,18 +4,7 @@ import java.util.*;
 import java.util.Date;
 
 import jakarta.annotation.Generated;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 /**
  * Representa un pedido realizado por un cliente en un restaurante, incluyendo detalles como el pago, los ítems del menú, el estado del pedido y la fecha.
@@ -57,7 +46,7 @@ public class Pedido {
     @JoinColumn (name = "idEntrega", nullable = false)
     private ServicioEntrega entrega;
 
-    @Enumerated(EnumType.STRING)
+
     @Column (name = "estado", nullable = false)
     private EstadoPedido estado;
 

@@ -13,16 +13,16 @@ import java.util.List;
 @RequestMapping("/usuarios")
 public class GestorUsuario{
     @Autowired
-    private UsuarioDAO usuarioDAO;
+    private UsuarioDAO UsuarioDAO;
 
     @GetMapping
     public List<Usuario> findAll(){
-        return usuarioDAO.findAll();
+        return UsuarioDAO.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> findById(@PathVariable Long id){
-        Usuario usuario = usuarioDAO.findById(id).orElse(null);
+        Usuario usuario = UsuarioDAO.findById(id).orElse(null);
         if(usuario == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -31,12 +31,12 @@ public class GestorUsuario{
 
     @PostMapping
     public ResponseEntity<Usuario> save(@RequestBody Usuario usuario){
-        return new ResponseEntity<>(usuarioDAO.save(usuario), HttpStatus.CREATED);
+        return new ResponseEntity<>(UsuarioDAO.save(usuario), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id){
-        usuarioDAO.deleteById(id);
+        UsuarioDAO.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

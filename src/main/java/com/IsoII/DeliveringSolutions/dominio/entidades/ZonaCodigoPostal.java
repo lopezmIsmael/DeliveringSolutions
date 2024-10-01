@@ -7,11 +7,11 @@ import jakarta.persistence.*;
 public class ZonaCodigoPostal extends Zona {
 
     @OneToOne
-    @Column(name = "codigo_postal_id", nullable = false)
+    @JoinColumn(name = "codigo_postal_id")
     private CodigoPostal codigoPostalId;
     
     @OneToOne
-    @Column(name = "zona_id", nullable = false)
+    @JoinColumn(name = "zona_id")
     private Zona zonaId;
 
     public ZonaCodigoPostal(String nombre, int id, CodigoPostal codigoPostalId, Zona zonaId) {

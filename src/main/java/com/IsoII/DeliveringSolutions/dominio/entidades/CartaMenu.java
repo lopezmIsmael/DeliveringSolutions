@@ -15,13 +15,14 @@ import jakarta.persistence.*;
 @Table(name = "CartaMenu")
 public class CartaMenu {
 
-    @ManyToOne
-    @Column(name = "restaurante_id", nullable = false, length = 50)
-    private Restaurante restaurante;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "restaurante_id") // Cambia @Column a @JoinColumn
+    private Restaurante restaurante;
+
     
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
