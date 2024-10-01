@@ -1,166 +1,118 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
+import jakarta.persistence.*;
 import java.util.*;
 
 /**
  * Representa un restaurante que extiende la clase Usuario, incluyendo información sobre pedidos, cartas de menú, dirección y datos del restaurante.
  * 
  * @author Jorge López Gómez
- * @author Ismael López Marín
- * @author Pablo Verdúguez Gervaso
- * @author Marco Muñoz García
  * @version 1.0
  */
-public class Restaurante extends Usuario {
+@Entity
+@Table(name = "Restaurante")
+public class Restaurante {
 
-    private Collection<Pedido> pedidos;
-    private Collection<CartaMenu> cartasMenu;
-    private Direccion direccion;
-    private String nombre;
+    @Id
+    @Column(name = "cif", nullable = false, unique = true, length = 50)
     private String cif;
+
+    @Column(name = "nombre", nullable = false, length = 50)
+    private String nombre;
+
+    @ManyToOne
+    @JoinColumn(name = "direccion_id", referencedColumnName = "id") // Si la tabla Dirección tiene un campo id
+    private Direccion direccion;
+
+    @OneToOne
+    @JoinColumn(name = "idUsuario", referencedColumnName = "idUsuario", nullable = false)
+    private Usuario usuario;
+
+    @OneToMany(mappedBy = "restaurante") // Relación uno a muchos con Pedido
+    private Collection<Pedido> pedidos;
+
+    @OneToMany(mappedBy = "restaurante") // Relación uno a muchos con CartaMenu
+    private Collection<CartaMenu> cartasMenu;
 
     /**
      * Constructor para crear un restaurante con sus datos específicos.
      *
-     * @param idUsuario  El identificador único del usuario.
-     * @param pass       La contraseña del usuario.
-     * @param rol        El rol del usuario en el sistema.
+     * @param cif        CIF del restaurante.
+     * @param nombre     Nombre del restaurante.
+     * @param direccion  Dirección del restaurante.
+     * @param usuario    Usuario asociado al restaurante (relación uno a uno).
      * @param pedidos    Colección de pedidos asociados al restaurante.
      * @param cartasMenu Colección de cartas de menú del restaurante.
-     * @param direccion  Dirección del restaurante.
-     * @param nombre     Nombre del restaurante.
-     * @param cif        CIF del restaurante.
      */
-    public Restaurante(String idUsuario, String pass, String rol,
-                       Collection<Pedido> pedidos, Collection<CartaMenu> cartasMenu,
-                       Direccion direccion, String nombre, String cif) {
-        super(idUsuario, pass, rol);
-        this.pedidos = (pedidos != null) ? pedidos : new ArrayList<>();
-        this.cartasMenu = (cartasMenu != null) ? cartasMenu : new ArrayList<>();
-        this.direccion = direccion;
-        this.nombre = nombre;
+    public Restaurante(String cif, String nombre, Direccion direccion, Usuario usuario,
+                       Collection<Pedido> pedidos, Collection<CartaMenu> cartasMenu) {
         this.cif = cif;
-    }
-
-    /**
-     * Obtiene la colección de pedidos del restaurante.
-     *
-     * @return Colección de pedidos.
-     */
-    public Collection<Pedido> getPedidos() {
-        return pedidos;
-    }
-
-    /**
-     * Establece la colección de pedidos del restaurante.
-     *
-     * @param pedidos Colección de pedidos a establecer.
-     */
-    public void setPedidos(Collection<Pedido> pedidos) {
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.usuario = usuario;
         this.pedidos = (pedidos != null) ? pedidos : new ArrayList<>();
-    }
-
-    /**
-     * Obtiene la colección de cartas de menú del restaurante.
-     *
-     * @return Colección de cartas de menú.
-     */
-    public Collection<CartaMenu> getCartasMenu() {
-        return cartasMenu;
-    }
-
-    /**
-     * Establece la colección de cartas de menú del restaurante.
-     *
-     * @param cartasMenu Colección de cartas de menú a establecer.
-     */
-    public void setCartasMenu(Collection<CartaMenu> cartasMenu) {
         this.cartasMenu = (cartasMenu != null) ? cartasMenu : new ArrayList<>();
     }
 
-    /**
-     * Obtiene la dirección del restaurante.
-     *
-     * @return Dirección del restaurante.
-     */
-    public Direccion getDireccion() {
-        return direccion;
-    }
+    public Restaurante() {}
 
-    /**
-     * Establece la dirección del restaurante.
-     *
-     * @param direccion Dirección a establecer.
-     */
-    public void setDireccion(Direccion direccion) {
-        this.direccion = direccion;
-    }
+    // Getters y setters...
 
-    /**
-     * Obtiene el nombre del restaurante.
-     *
-     * @return Nombre del restaurante.
-     */
-    public String getNombre() {
-        return nombre;
-    }
-
-    /**
-     * Establece el nombre del restaurante.
-     *
-     * @param nombre Nombre a establecer.
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    /**
-     * Obtiene el CIF del restaurante.
-     *
-     * @return CIF del restaurante.
-     */
     public String getCif() {
         return cif;
     }
 
-    /**
-     * Establece el CIF del restaurante.
-     *
-     * @param cif CIF a establecer.
-     */
     public void setCif(String cif) {
         this.cif = cif;
     }
 
-    /**
-     * Lista los ítems del menú del restaurante sin requerir un identificador de restaurante.
-     *
-     * @return Lista de ítems del menú.
-     */
-    public List<ItemMenu> listarMenu() {
-        List<ItemMenu> listaItems = new ArrayList<>();
-        if (cartasMenu != null) {
-            for (CartaMenu carta : cartasMenu) {
-                if (carta.getItems() != null) {
-                    listaItems.addAll(carta.getItems());
-                }
-            }
-        }
-        return listaItems;
+    public String getNombre() {
+        return nombre;
     }
 
-    /**
-     * Devuelve una representación en formato de cadena de este restaurante.
-     *
-     * @return Una cadena que representa al restaurante.
-     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Direccion getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(Direccion direccion) {
+        this.direccion = direccion;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Collection<Pedido> getPedidos() {
+        return pedidos;
+    }
+
+    public void setPedidos(Collection<Pedido> pedidos) {
+        this.pedidos = (pedidos != null) ? pedidos : new ArrayList<>();
+    }
+
+    public Collection<CartaMenu> getCartasMenu() {
+        return cartasMenu;
+    }
+
+    public void setCartasMenu(Collection<CartaMenu> cartasMenu) {
+        this.cartasMenu = (cartasMenu != null) ? cartasMenu : new ArrayList<>();
+    }
+
     @Override
     public String toString() {
         return "Restaurante{" +
-                "idUsuario='" + idUsuario + '\'' +
+                "cif='" + cif + '\'' +
                 ", nombre='" + nombre + '\'' +
-                ", cif='" + cif + '\'' +
                 ", direccion=" + direccion +
+                ", usuario=" + usuario +
                 ", pedidos=" + pedidos +
                 ", cartasMenu=" + cartasMenu +
                 '}';

@@ -1,33 +1,15 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
-/**
- * Enumeración que representa los posibles estados de un pedido.
- * 
- * @author Jorge López Gómez
- * @author Ismael López Marín
- * @author Pablo Verdúguez Gervaso
- * @author Marco Muñoz García
- * @version 1.0
- */
-public enum EstadoPedido {
-    
-    /**
-     * Estado cuando el pedido ha sido realizado pero aún no ha sido pagado.
-     */
-    PEDIDO,
-    
-    /**
-     * Estado cuando el pedido ha sido pagado pero aún no ha sido recogido ni entregado.
-     */
-    PAGADO,
-    
-    /**
-     * Estado cuando el pedido ha sido recogido pero aún no ha sido entregado al cliente.
-     */
-    RECOGIDO,
-    
-    /**
-     * Estado cuando el pedido ha sido entregado al cliente.
-     */
-    ENTREGADO
+import jakarta.persistence.*;
+import java.util.*;
+
+@Entity
+@Table(name = "EstadoPedido")
+public class EstadoPedido {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "estado", nullable = false)
+    private String estado;
 }

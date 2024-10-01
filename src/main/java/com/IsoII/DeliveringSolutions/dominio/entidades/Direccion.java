@@ -1,5 +1,14 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
+import jakarta.annotation.Generated;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
 /**
  * Representa una dirección física, incluyendo detalles como la calle, número, complemento, código postal y municipio.
  * 
@@ -9,12 +18,28 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
  * @author Marco Muñoz García
  * @version 1.0
  */
+
+ @Entity
 public class Direccion {
 
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column (name = "calle", nullable = false)
     private String calle;
+
+    @Column (name = "numero", nullable = false)
     private String numero;
+
+    @Column (name = "complemento")
     private String complemento;
+
+    @Column (name = "municipio", nullable = false)
     private String municipio;
+
+    @ManyToOne
+    @JoinColumn(name = "NumCodigoPostal", nullable = false)
     private CodigoPostal codigoPostal;
 
     /**

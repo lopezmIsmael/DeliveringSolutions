@@ -1,6 +1,6 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
-import java.util.*;
+import jakarta.persistence.*;
 
 /**
  * Representa una carta de menú en un restaurante, que contiene una colección de ítems de menú.
@@ -11,10 +11,19 @@ import java.util.*;
  * @author Marco Muñoz García
  * @version 1.0
  */
+@Entity
+@Table(name = "CartaMenu")
 public class CartaMenu {
 
+    @ManyToOne
+    @Column(name = "restaurante_id", nullable = false, length = 50)
     private Restaurante restaurante;
-    private Collection<ItemMenu> items;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    
+    @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
     /**
@@ -24,12 +33,11 @@ public class CartaMenu {
      * @param items La colección de ítems de menú que forman parte de la carta.
      * @param nombre El nombre de la carta de menú.
      */
-    public CartaMenu(Restaurante restaurante, Collection<ItemMenu> items, String nombre) {
+    public CartaMenu(Restaurante restaurante, int id, String nombre) {
         this.restaurante = restaurante;
-        this.items = items;
+        this.id = id;
         this.nombre = nombre;
     }
-
     /**
      * Obtiene el restaurante asociado a esta carta de menú.
      *
@@ -49,21 +57,21 @@ public class CartaMenu {
     }
 
     /**
-     * Obtiene la colección de ítems de menú de esta carta.
-     *
-     * @return La colección de ítems de menú.
+     * Obtiene id de la carta de menú.
+     * 
+     * @return
      */
-    public Collection<ItemMenu> getItems() {
-        return items;
+    public int getId() {
+        return id;
     }
 
     /**
-     * Establece la colección de ítems de menú para esta carta.
-     *
-     * @param items La colección de ítems de menú a establecer.
+     * Establece id de la carta de menú.
+     * 
+     * @param id
      */
-    public void setItems(Collection<ItemMenu> items) {
-        this.items = items;
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -93,7 +101,7 @@ public class CartaMenu {
     public String toString() {
         return "CartaMenu{" +
                 "restaurante=" + restaurante +
-                ", items=" + items +
+                ", id=" + id +
                 ", nombre='" + nombre + '\'' +
                 '}';
     }

@@ -2,8 +2,13 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import java.util.*;
 
+import org.hibernate.annotations.ManyToAny;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 /**
  * Representa a un cliente que extiende la clase Usuario y contiene información sobre sus restaurantes favoritos, pedidos, direcciones y datos personales.
@@ -18,18 +23,27 @@ import jakarta.persistence.Id;
  @Entity
 public class Cliente extends Usuario {
 
+    @Column (name = "favoritos")
     private Collection<Restaurante> favoritos;
+
+    @Column (name = "pedidos")
     private Collection<Pedido> pedidos;
+
+    @Column (name = "direcciones")
     private Collection<Direccion> direcciones;
 
-    
+    @Column (name = "nombre", nullable = false)
     private String nombre;
 
-
+    @Column (name = "apellidos", nullable = false) 
     private String apellidos;
 
     @Id ()
     private String dni;
+
+    @ManyToOne
+    @JoinColumn(name = "idUsuario", nullable = false)
+    private String idUsuario;
 
     /**
      * Constructor para crear un cliente con sus datos personales, credenciales de usuario, restaurantes favoritos, pedidos y direcciones.
@@ -162,6 +176,26 @@ public class Cliente extends Usuario {
      */
     public void setDni(String dni) {
         this.dni = dni;
+    }
+
+    /**
+     * Obtiene el identificador del cliente.
+     *
+     * @return El identificador del cliente.
+     */
+
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
+    /**
+     * Establece el identificador del cliente.
+     *
+     * @param idUsuario El identificador a establecer.
+     */
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     /**
