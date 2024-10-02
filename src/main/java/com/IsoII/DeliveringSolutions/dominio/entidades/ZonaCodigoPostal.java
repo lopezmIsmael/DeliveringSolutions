@@ -6,10 +6,12 @@ import jakarta.persistence.*;
 @Table(name = "ZonaCodigoPostal")
 public class ZonaCodigoPostal extends Zona {
 
+    @Id
     @OneToOne
     @JoinColumn(name = "codigo_postal_id")
     private CodigoPostal codigoPostalId;
     
+    @Id
     @OneToOne
     @JoinColumn(name = "zona_id")
     private Zona zonaId;
