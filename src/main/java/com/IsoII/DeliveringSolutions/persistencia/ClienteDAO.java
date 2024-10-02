@@ -1,10 +1,9 @@
 package com.IsoII.DeliveringSolutions.persistencia;
 
 import org.springframework.stereotype.Repository;
-import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-
 @Repository
-public interface UsuarioDAO extends JpaRepository<Usuario, String> {
+public interface ClienteDAO extends JpaRepository<Cliente, String> {
 }

@@ -1,7 +1,9 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
 import jakarta.persistence.Column;
+import jakarta.persistence.InheritanceType;
 
 
 /**
@@ -15,12 +17,15 @@ import jakarta.persistence.Column;
  */
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario {
 
     @Id
     protected String idUsuario;
+
     @Column (name = "pass", nullable = false)
     protected String pass;
+
     @Column (name = "tipoUsuario", nullable = false)
     protected String tipoUsuario;
     
