@@ -7,17 +7,33 @@ import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/usuarios")
 public class GestorUsuario{
+    RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
+
     @Autowired
     private UsuarioDAO usuarioDAO;
 
-    @GetMapping
+    @GetMapping("/findAll")
     public List<Usuario> findAll(){
         return usuarioDAO.findAll();
+    }
+
+    @GetMapping("/register")
+    public String mostrarFormularioRegistro() {
+        return "RegistroUsuario"; // Nombre del archivo HTML sin la extensión
+    }
+
+    @PostMapping("/registrarUsuario")
+    public ResponseEntity<Usuario> registrarUsuario(@RequestBody Usuario usuario){
+        Usuario usuarioRegistrado = usuarioDAO.save(usuario);
+        return new ResponseEntity<>(usuarioRegistrado, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -29,9 +45,15 @@ public class GestorUsuario{
         return new ResponseEntity<>(usuario, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Usuario> save(@RequestBody Usuario usuario){
-        return new ResponseEntity<>(usuarioDAO.save(usuario), HttpStatus.CREATED);
+    @PostMapping("/usuarios/registrarUsuario")
+    public ResponseEntity<Usuario> registrarUsuario(
+            @RequestParam String idUsuario,
+            @RequestParam String pass,
+            @RequestParam String tipoUsuario) {
+        
+        Usuario usuario = new Usuario(idUsuario, pass, tipoUsuario);
+        // Lógica para registrar el usuario
+        return ResponseEntity.ok(usuario);
     }
 
     @DeleteMapping("/{id}")
@@ -39,4 +61,6 @@ public class GestorUsuario{
         usuarioDAO.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 }
