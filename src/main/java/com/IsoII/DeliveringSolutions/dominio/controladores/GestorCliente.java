@@ -32,7 +32,7 @@ public class GestorCliente {
     // Método que muestra el formulario de registro de cliente
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
-        return "register"; // Nombre del archivo HTML sin la extensión
+        return "Pruebas-RegisterClient"; // Nombre del archivo HTML sin la extensión
     }
 
     // Método que busca un solo cliente por su id
@@ -46,8 +46,15 @@ public class GestorCliente {
     // ********************************************** */
     // Método que registra un cliente
     @PostMapping("/registrarCliente")
-    public ResponseEntity<Cliente> registrarCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> registrarCliente(@ModelAttribute Cliente cliente) {
+        // Comprobar si 'pass' no es nulo o vacío
+        System.out.println("Cliente recibido: " + cliente.toString());
+        if (cliente.getPass() == null || cliente.getPass().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Devuelve un error si 'pass' está vacío
+        }
+
         Cliente clienteRegistrado = clienteDAO.save(cliente);
+        System.out.println("Cliente registrado: " + clienteRegistrado);
         return new ResponseEntity<>(clienteRegistrado, HttpStatus.CREATED);
     }
 

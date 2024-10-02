@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/home/nethunter/Universidad/ISOII/DeliveringSolutions/src/main/resources/DeliveringSolutionsDB" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="4201"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="0"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,9:mainCartaMenu"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="CartaMenu" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="28"/><column index="2" value="61"/><column index="3" value="111"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Cliente" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="74"/><column index="2" value="61"/><column index="3" value="71"/><column index="4" value="86"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Usuario" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="82"/><column index="2" value="82"/><column index="3" value="102"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">CREATE TABLE &quot;Cliente&quot; (
+	&quot;idUsuario&quot;	VARCHAR(50) NOT NULL,
+	&quot;pass&quot;	VARCHAR(50) NOT NULL,
+	&quot;tipoUsuario&quot;	TEXT NOT NULL CHECK(&quot;tipoUsuario&quot; IN ('CLIENTE', 'REPARTIDOR', 'RESTAURANTE', 'ANONIMO')),
+	&quot;nombre&quot;	VARCHAR(50) NOT NULL,
+	&quot;apellidos&quot;	VARCHAR(50) NOT NULL,
+	&quot;dni&quot;	VARCHAR(9) NOT NULL UNIQUE,
+	PRIMARY KEY(&quot;idUsuario&quot;)
+);
+
+CREATE TABLE &quot;Repartidor&quot; (
+	&quot;idUsuario&quot;	VARCHAR(50) NOT NULL,
+	&quot;pass&quot;	VARCHAR(50) NOT NULL,
+	&quot;tipoUsuario&quot;	TEXT NOT NULL CHECK(&quot;tipoUsuario&quot; IN ('CLIENTE', 'REPARTIDOR', 'RESTAURANTE', 'ANONIMO')),
+	&quot;nombre&quot;	VARCHAR(50) NOT NULL,
+	&quot;apellidos&quot;	VARCHAR(50) NOT NULL,
+	&quot;dni&quot;	VARCHAR(9) NOT NULL UNIQUE,
+	&quot;eficiencia&quot;	INT,
+	&quot;zona_id&quot;	INT,
+	FOREIGN KEY(&quot;zona_id&quot;) REFERENCES &quot;Zona&quot;(&quot;id&quot;),
+	PRIMARY KEY(&quot;idUsuario&quot;)
+);
+
+CREATE TABLE &quot;Restaurante&quot; (
+	&quot;idUsuario&quot;	VARCHAR(50) NOT NULL,
+	&quot;pass&quot;	VARCHAR(50) NOT NULL,
+	&quot;tipoUsuario&quot;	TEXT NOT NULL CHECK(&quot;tipoUsuario&quot; IN ('CLIENTE', 'REPARTIDOR', 'RESTAURANTE', 'ANONIMO')),
+	&quot;cif&quot;	VARCHAR(50) NOT NULL,
+	&quot;nombre&quot;	VARCHAR(50) NOT NULL,
+	PRIMARY KEY(&quot;idUsuario&quot;)
+);</sql><current_tab id="0"/></tab_sql></sqlb_project>

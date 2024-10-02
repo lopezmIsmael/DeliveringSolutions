@@ -13,7 +13,7 @@ import jakarta.persistence.*;
  */
 
 @Entity
-@PrimaryKeyJoinColumn(name = "idUsuario") // Indica que la clave primaria es heredada de Usuario
+@PrimaryKeyJoinColumn(name = "idUsuario")
 public class Cliente extends Usuario {
 
     @Column(name = "nombre", nullable = false, length = 50)
@@ -69,5 +69,10 @@ public class Cliente extends Usuario {
 
     public void setdni(String dni) {
         this.dni = dni;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente [idUsuario=" + idUsuario + ", pass=" + pass + ", tipoUsuario=" + tipoUsuario + ", nombre=" + nombre + ", apellido=" + apellido + ", dni=" + dni + "]";
     }
 }
