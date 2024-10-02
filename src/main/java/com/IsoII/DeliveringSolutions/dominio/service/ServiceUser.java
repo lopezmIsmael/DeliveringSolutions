@@ -17,7 +17,7 @@ public class ServiceUser{
         return usuarioDAO.findAll();
     }
 
-    public Optional<Usuario> findById(Long id){
+    public Optional<Usuario> findById(String id){
         return usuarioDAO.findById(id);
     }
 
@@ -25,7 +25,7 @@ public class ServiceUser{
         return usuarioDAO.save(usuario);
     }
 
-    public void deleteById(Long id){
+    public void deleteById(String id){
         usuarioDAO.deleteById(id);
     }
 }

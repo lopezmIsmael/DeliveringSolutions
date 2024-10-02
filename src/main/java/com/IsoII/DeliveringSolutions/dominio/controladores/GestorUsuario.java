@@ -14,43 +14,61 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/usuarios")
-public class GestorUsuario{
+public class GestorUsuario {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     @Autowired
     private UsuarioDAO usuarioDAO;
 
+    // ************************************************** GETMAPPING
+    // ********************************************** */
+
+    // Método que devuelve una lista de todos los usuarios
     @GetMapping("/findAll")
     @ResponseBody
-    public List<Usuario> findAll(){
+    public List<Usuario> findAll() {
         return usuarioDAO.findAll();
     }
 
+    // Método que muestra el formulario de registro de usuario
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
-        return "RegistroUsuario"; // Nombre del archivo HTML sin la extensión
+        return "Pruebas-RegistroUsuario"; // Nombre del archivo HTML sin la extensión
     }
 
+    // Método que busca un solo usuario por su id
+    @GetMapping("/findById/{id}")
+    @ResponseBody
+    public Usuario findById(@PathVariable String id) {
+        return usuarioDAO.findById(id).orElse(null);
+    }
+
+    // Metodo que muestra formulario de login
+    @GetMapping("/login")
+    public String mostrarFormularioLogin() {
+        return "Pruebas-Login"; // Nombre del archivo HTML sin la extensión
+    }
+
+    // ************************************************** POSTMAPPING
+    // ********************************************** */
+    // Método que registra un usuario
     @PostMapping("/registrarUsuario")
-    public ResponseEntity<Usuario> registrarUsuario(@RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> registrarUsuario(@RequestBody Usuario usuario) {
         Usuario usuarioRegistrado = usuarioDAO.save(usuario);
         return new ResponseEntity<>(usuarioRegistrado, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Usuario> findById(@PathVariable Long id){
-        Usuario usuario = usuarioDAO.findById(id).orElse(null);
-        if(usuario == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    // Método que logea un usuario
+    @PostMapping("/loginUsuario")
+    public String loginUsuario(@RequestParam String username, @RequestParam String password,
+            RedirectAttributes redirectAttributes) {
+        Usuario usuarioLogueado = usuarioDAO.findById(username).orElse(null);
+        if (usuarioLogueado != null && usuarioLogueado.getPass().equals(password)) {
+            redirectAttributes.addFlashAttribute("mensaje", "Inicio de sesión exitoso.");
+            return "redirect:/usuarios/login";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Usuario o contraseña incorrectos.");
+            return "redirect:/usuarios/login";
         }
-        return new ResponseEntity<>(usuario, HttpStatus.OK);
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id){
-        usuarioDAO.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-
 }

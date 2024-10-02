@@ -17,7 +17,7 @@ import jakarta.persistence.Column;
 @Entity
 public class Usuario {
 
-    @Id ()
+    @Id
     protected String idUsuario;
     @Column (name = "pass", nullable = false)
     protected String pass;
