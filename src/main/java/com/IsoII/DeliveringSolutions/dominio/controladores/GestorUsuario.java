@@ -46,7 +46,7 @@ public class GestorUsuario {
     // Metodo que muestra formulario de login
     @GetMapping("/login")
     public String mostrarFormularioLogin() {
-        return "Pruebas-Login"; // Nombre del archivo HTML sin la extensión
+        return "index"; // Nombre del archivo HTML sin la extensión
     }
 
     // ************************************************** POSTMAPPING
@@ -65,10 +65,10 @@ public class GestorUsuario {
         Usuario usuarioLogueado = usuarioDAO.findById(username).orElse(null);
         if (usuarioLogueado != null && usuarioLogueado.getPass().equals(password)) {
             redirectAttributes.addFlashAttribute("mensaje", "Inicio de sesión exitoso.");
-            return "redirect:/usuarios/login";
+            return "redirect:/";
         } else {
             redirectAttributes.addFlashAttribute("error", "Usuario o contraseña incorrectos.");
-            return "redirect:/usuarios/login";
+            return "redirect:/";
         }
     }
 }
