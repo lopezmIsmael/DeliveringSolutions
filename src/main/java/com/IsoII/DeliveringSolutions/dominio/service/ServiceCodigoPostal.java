@@ -17,7 +17,7 @@ public class ServiceCodigoPostal {
         return codigoPostalDAO.findAll();
     }
 
-    public Optional<CodigoPostal> findById(String id){
+    public Optional<CodigoPostal> findById(Integer id){
         return codigoPostalDAO.findById(id);
     }
 
@@ -25,7 +25,7 @@ public class ServiceCodigoPostal {
         return codigoPostalDAO.save(codigoPostal);
     }
 
-    public void deleteById(String id){
+    public void deleteById(Integer id){
         codigoPostalDAO.deleteById(id);
     }   
 }

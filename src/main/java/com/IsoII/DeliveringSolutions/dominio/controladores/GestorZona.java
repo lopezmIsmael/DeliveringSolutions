@@ -33,7 +33,7 @@ public class GestorZona {
 
     @GetMapping("/findById/{id}")
     @ResponseBody
-    public Zona findById(@PathVariable String id) {
+    public Zona findById(@PathVariable Integer id) {
         return zonaDAO.findById(id).orElse(null);
     }
 

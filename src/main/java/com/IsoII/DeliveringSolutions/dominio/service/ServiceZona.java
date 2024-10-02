@@ -17,7 +17,7 @@ public class ServiceZona {
         return zonaDAO.findAll();
     }
 
-    public Optional<Zona> findById(String id){
+    public Optional<Zona> findById(Integer id){
         return zonaDAO.findById(id);
     }
 
@@ -25,7 +25,7 @@ public class ServiceZona {
         return zonaDAO.save(zona);
     }
 
-    public void deleteById(String id){
+    public void deleteById(Integer id){
         zonaDAO.deleteById(id);
     }
 }

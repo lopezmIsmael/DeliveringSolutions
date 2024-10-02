@@ -34,7 +34,7 @@ public class GestorCodigoPostal {
 
     @GetMapping("/findById/{id}")
     @ResponseBody
-    public CodigoPostal findById(@PathVariable String id) {
+    public CodigoPostal findById(@PathVariable Integer id) {
         return codigoPostalDAO.findById(id).orElse(null);
     }
 

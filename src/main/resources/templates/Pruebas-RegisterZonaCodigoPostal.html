@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de ZonaCodigoPostal</title>
+</head>
+<body>
+
+<h1>Registro de Zona y Código Postal</h1>
+
+<form th:action="@{/zonaCodigoPostal/registrarZonaCodigoPostal}" method="post">
+    <div>
+        <label for="zona">Zona:</label>
+        <select id="zona" name="zona" required>
+            <option value="" disabled selected>Seleccione una zona</option>
+            <!-- Asegúrate de que el valor sea el ID de la zona -->
+            <option th:each="zona : ${zonas}" th:value="${zona.id}" th:text="${zona.nombre}"></option>
+        </select>
+    </div>
+
+    <div>
+        <label for="codigoPostal">Código Postal:</label>
+        <select id="codigoPostal" name="codigoPostal" required>
+            <option value="" disabled selected>Seleccione un código postal</option>
+            <!-- Asegúrate de que el valor sea el ID del código postal -->
+            <option th:each="codigoPostal : ${codigosPostales}" th:value="${codigoPostal.id}" th:text="${codigoPostal.codigo}"></option>
+        </select>
+    </div>
+
+    <div>
+        <button type="submit">Registrar</button>
+    </div>
+</form>
+
+</body>
+</html>
