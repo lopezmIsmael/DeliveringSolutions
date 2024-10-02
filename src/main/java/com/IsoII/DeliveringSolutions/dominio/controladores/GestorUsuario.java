@@ -21,6 +21,7 @@ public class GestorUsuario{
     private UsuarioDAO usuarioDAO;
 
     @GetMapping("/findAll")
+    @ResponseBody
     public List<Usuario> findAll(){
         return usuarioDAO.findAll();
     }
