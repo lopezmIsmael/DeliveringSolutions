@@ -35,7 +35,8 @@ public class Pedido {
     @JoinColumn (name = "repartidor_id", nullable = false)
     private Repartidor repartidor;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany
+    @JoinColumn (name = "idItemMenu", nullable = false)
     private Collection<ItemMenu> items;
 
     @ManyToOne

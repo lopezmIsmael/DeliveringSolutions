@@ -23,6 +23,7 @@ public class Pago {
     @JoinColumn (name = "idPedido", nullable = false)
     private Pedido pedido;
 
+    @OneToOne
     @JoinColumn (name = "tipoPago", nullable = false)
     private MetodoPago tipo;
 
