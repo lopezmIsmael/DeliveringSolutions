@@ -33,7 +33,7 @@ public class GestorUsuario {
     // Método que muestra el formulario de registro de usuario
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
-        return "Pruebas-RegistroUsuario"; // Nombre del archivo HTML sin la extensión
+        return "register"; // Nombre del archivo HTML sin la extensión
     }
 
     // Método que busca un solo usuario por su id
@@ -55,6 +55,19 @@ public class GestorUsuario {
     @PostMapping("/registrarUsuario")
     public ResponseEntity<Usuario> registrarUsuario(@RequestBody Usuario usuario) {
         Usuario usuarioRegistrado = usuarioDAO.save(usuario);
+        if (usuarioRegistrado.gettipoUsuario().equals("cliente")) {
+           //registra un cliente
+        } else if (usuarioRegistrado.gettipoUsuario().equals("repartidor")) {
+            //registra un repartidor
+        } else if (usuarioRegistrado.gettipoUsuario().equals("restaurante")) {
+            //registra un restaurante
+        } else {
+            try {
+                throw new Exception("Tipo de usuario no válido.");
+            } catch (Exception e) {
+                e.printStackTrace();
+        }
+        }
         return new ResponseEntity<>(usuarioRegistrado, HttpStatus.CREATED);
     }
 

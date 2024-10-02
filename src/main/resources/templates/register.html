@@ -140,8 +140,18 @@
   <!-- Formulario -->
   <form id="registroForm">
 
-    <!-- Sección Cliente -->
+    <!-- Sección Cliente -->    
+
+
     <div id="cliente" class="tab-content active">
+      <div class="form-group">
+        <label for="idUsuario">Usuario:</label>
+        <input type="text" id="idUsuario" name="idUsuario" required>
+      </div> 
+      <div class="form-group">
+        <label for="contrasena">Contraseña:</label>
+        <input type="password" id="contrasena" name="contrasena" required>
+      </div>
       <div class="form-group">
         <label for="nombreCliente">Nombre:</label>
         <input type="text" id="nombreCliente" name="nombreCliente" required>
@@ -150,30 +160,10 @@
         <label for="apellidosCliente">Apellidos:</label>
         <input type="text" id="apellidosCliente" name="apellidosCliente" required>
       </div>
-      <!-- Campos comunes para dirección -->
-      <div id="direccionCliente">
-        <div class="form-group">
-          <label for="calleCliente">Calle:</label>
-          <input type="text" id="calleCliente" name="calleCliente" required>
-        </div>
-        <div class="form-group">
-          <label for="numeroCliente">Número:</label>
-          <input type="text" id="numeroCliente" name="numeroCliente" required>
-        </div>
-        <div class="form-group">
-          <label for="codigoPostalCliente">Código Postal:</label>
-          <input type="text" id="codigoPostalCliente" name="codigoPostalCliente" required>
-        </div>
-        <div class="form-group">
-          <label for="municipioCliente">Municipio:</label>
-          <input type="text" id="municipioCliente" name="municipioCliente" required>
-        </div>
-        <div class="form-group">
-          <label for="comentarioCliente">Comentario (opcional):</label>
-          <textarea id="comentarioCliente" name="comentarioCliente"></textarea>
-        </div>
+      <div class="form-group">
+        <label for="dniCliente">DNI:</label>
+        <input type="text" id="dniCliente" name="dniCliente" required>
       </div>
-    </div>
 
     <!-- Sección Restaurante -->
     <div id="restaurante" class="tab-content">
@@ -185,27 +175,6 @@
         <label for="cifRestaurante">CIF:</label>
         <input type="text" id="cifRestaurante" name="cifRestaurante" required>
       </div>
-      <!-- Campos comunes para dirección -->
-      <div id="direccionRestaurante">
-        <div class="form-group">
-          <label for="calleRestaurante">Calle:</label>
-          <input type="text" id="calleRestaurante" name="calleRestaurante" required>
-        </div>
-        <div class="form-group">
-          <label for="numeroRestaurante">Número:</label>
-          <input type="text" id="numeroRestaurante" name="numeroRestaurante" required>
-        </div>
-        <div class="form-group">
-          <label for="codigoPostalRestaurante">Código Postal:</label>
-          <input type="text" id="codigoPostalRestaurante" name="codigoPostalRestaurante" required>
-        </div>
-        <div class="form-group">
-          <label for="municipioRestaurante">Municipio:</label>
-          <input type="text" id="municipioRestaurante" name="municipioRestaurante" required>
-        </div>
-      </div>
-    </div>
-
     <!-- Sección Repartidor -->
     <div id="repartidor" class="tab-content">
       <div class="form-group">
