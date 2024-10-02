@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Cliente</title>
+</head>
+<body>
+    <h2>Registro de Cliente</h2>
+    <form action="/clientes/registrarCliente" method="post">
+        <label for="idUsuario">Nombre de Usuario:</label>
+        <input type="text" id="idUsuario" name="idUsuario" required><br><br>
+    
+        <label for="pass">Contraseña:</label>
+        <input type="password" id="pass" name="pass" required><br><br>
+    
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+    
+        <label for="apellido">Apellidos:</label>
+        <input type="text" id="apellido" name="apellido" required><br><br>
+    
+        <label for="dni">DNI:</label>
+        <input type="text" id="dni" name="dni" required><br><br>
+    
+        <input type="hidden" name="tipoUsuario" value="CLIENTE">
+    
+        <input type="submit" value="Registrar">
+    </form>
+    
+    
+</body>
+</html>
