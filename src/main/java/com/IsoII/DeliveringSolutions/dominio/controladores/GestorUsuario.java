@@ -3,7 +3,7 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
 import com.IsoII.DeliveringSolutions.persistencia.UsuarioDAO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/usuarios")
 public class GestorUsuario{
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
@@ -43,17 +43,6 @@ public class GestorUsuario{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(usuario, HttpStatus.OK);
-    }
-
-    @PostMapping("/usuarios/registrarUsuario")
-    public ResponseEntity<Usuario> registrarUsuario(
-            @RequestParam String idUsuario,
-            @RequestParam String pass,
-            @RequestParam String tipoUsuario) {
-        
-        Usuario usuario = new Usuario(idUsuario, pass, tipoUsuario);
-        // Lógica para registrar el usuario
-        return ResponseEntity.ok(usuario);
     }
 
     @DeleteMapping("/{id}")
