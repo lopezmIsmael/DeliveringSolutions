@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Repartidor</title>
+</head>
+<body>
+    <h2>Registro de Repartidor</h2>
+    <form action="/repartidores/registrarRepartidor" method="post">
+        <label for="idUsuario">Nombre de Usuario:</label>
+        <input type="text" id="idUsuario" name="idUsuario" required><br><br>
+    
+        <label for="pass">Contraseña:</label>
+        <input type="password" id="pass" name="pass" required><br><br>
+    
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+    
+        <label for="apellido">Apellidos:</label>
+        <input type="text" id="apellido" name="apellido" required><br><br>
+    
+        <label for="dni">DNI:</label>
+        <input type="text" id="dni" name="dni" required><br><br>
+
+        <label for="codigoPostal">Código Postal:</label>
+        <select id="codigoPostal" name="codigoPostal" required>
+            
+        </select><br><br>
+    
+        <input type="hidden" name="tipoUsuario" value="REPARTIDOR">
+    
+        <input type="submit" value="Registrar">
+    </form>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/codigoPostal/findAll')
+                .then(response => response.json())
+                .then(data => {
+                    const select = document.getElementById('codigoPostal');
+                    data.forEach(codigoPostal => {
+                        const option = document.createElement('option');
+                        option.value = codigoPostal.id;
+                        option.text = codigoPostal.codigoPostal;
+                        select.appendChild(option);
+                    });
+                });
+        });
+    </script>
+</body>
+</html>
