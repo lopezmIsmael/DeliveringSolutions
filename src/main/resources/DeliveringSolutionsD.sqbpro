@@ -1,31 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/home/nethunter/Universidad/ISOII/DeliveringSolutions/src/main/resources/DeliveringSolutionsDB" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="4201"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="0"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,9:mainCartaMenu"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="CartaMenu" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="28"/><column index="2" value="61"/><column index="3" value="111"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Cliente" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="74"/><column index="2" value="61"/><column index="3" value="71"/><column index="4" value="86"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Usuario" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="82"/><column index="2" value="82"/><column index="3" value="102"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">CREATE TABLE &quot;Cliente&quot; (
-	&quot;idUsuario&quot;	VARCHAR(50) NOT NULL,
-	&quot;pass&quot;	VARCHAR(50) NOT NULL,
-	&quot;tipoUsuario&quot;	TEXT NOT NULL CHECK(&quot;tipoUsuario&quot; IN ('CLIENTE', 'REPARTIDOR', 'RESTAURANTE', 'ANONIMO')),
-	&quot;nombre&quot;	VARCHAR(50) NOT NULL,
-	&quot;apellidos&quot;	VARCHAR(50) NOT NULL,
-	&quot;dni&quot;	VARCHAR(9) NOT NULL UNIQUE,
-	PRIMARY KEY(&quot;idUsuario&quot;)
-);
-
-CREATE TABLE &quot;Repartidor&quot; (
-	&quot;idUsuario&quot;	VARCHAR(50) NOT NULL,
-	&quot;pass&quot;	VARCHAR(50) NOT NULL,
-	&quot;tipoUsuario&quot;	TEXT NOT NULL CHECK(&quot;tipoUsuario&quot; IN ('CLIENTE', 'REPARTIDOR', 'RESTAURANTE', 'ANONIMO')),
-	&quot;nombre&quot;	VARCHAR(50) NOT NULL,
-	&quot;apellidos&quot;	VARCHAR(50) NOT NULL,
-	&quot;dni&quot;	VARCHAR(9) NOT NULL UNIQUE,
-	&quot;eficiencia&quot;	INT,
-	&quot;zona_id&quot;	INT,
-	FOREIGN KEY(&quot;zona_id&quot;) REFERENCES &quot;Zona&quot;(&quot;id&quot;),
-	PRIMARY KEY(&quot;idUsuario&quot;)
-);
-
-CREATE TABLE &quot;Restaurante&quot; (
-	&quot;idUsuario&quot;	VARCHAR(50) NOT NULL,
-	&quot;pass&quot;	VARCHAR(50) NOT NULL,
-	&quot;tipoUsuario&quot;	TEXT NOT NULL CHECK(&quot;tipoUsuario&quot; IN ('CLIENTE', 'REPARTIDOR', 'RESTAURANTE', 'ANONIMO')),
-	&quot;cif&quot;	VARCHAR(50) NOT NULL,
-	&quot;nombre&quot;	VARCHAR(50) NOT NULL,
-	PRIMARY KEY(&quot;idUsuario&quot;)
-);</sql><current_tab id="0"/></tab_sql></sqlb_project>
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/home/isma/Universidad/ISOII/Lab/DeliveringSolutions/src/main/resources/DeliveringSolutionsDB" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1302"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,12:mainCodigoPostal"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="Cliente" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="71"/><column index="2" value="28"/><column index="3" value="61"/><column index="4" value="74"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="CodigoPostal" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="28"/><column index="2" value="53"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="HTE_Cliente" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="28"/><column index="2" value="89"/><column index="3" value="86"/><column index="4" value="71"/><column index="5" value="74"/><column index="6" value="61"/><column index="7" value="38"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="HT_Usuario" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="86"/><column index="2" value="74"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Repartidor" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="86"/><column index="2" value="86"/><column index="3" value="75"/><column index="4" value="65"/><column index="5" value="90"/><column index="6" value="49"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Restaurante" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="28"/><column index="2" value="61"/><column index="3" value="74"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Usuario" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="90"/><column index="2" value="49"/><column index="3" value="90"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Zona" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="28"/><column index="2" value="109"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="ZonaCodigoPostal" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="28"/><column index="2" value="99"/><column index="3" value="39"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">INSERT INTO &quot;CodigoPostal&quot; (&quot;id&quot;, &quot;codigo&quot;) VALUES
+(1, '45001'), -- Toledo (capital)
+(2, '45002'),
+(3, '45003'),
+(4, '45004'),
+(5, '45005'),
+(6, '45006'),
+(7, '45007'),
+(8, '45008'),
+(9, '45200'), -- Illescas
+(10, '45210'), -- Yuncos
+(11, '45220'), -- Yeles
+(12, '45230'), -- Numancia de la Sagra
+(13, '45240'), -- Alameda de la Sagra
+(14, '45250'), -- Añover de Tajo
+(15, '45260'), -- Villaseca de la Sagra
+(16, '45270'), -- Mocejón
+(17, '45300'), -- Ocaña
+(18, '45310'), -- Villarrubia de Santiago
+(19, '45400'), -- Mora
+(20, '45420'), -- Madridejos
+(21, '45500'), -- Torrijos
+(22, '45600'), -- Talavera de la Reina
+(23, '45700'), -- Consuegra
+(24, '45710'), -- Madridejos
+(25, '45720'), -- Puebla de Almoradiel
+(26, '45730'), -- Villafranca de los Caballeros
+(27, '45740'), -- Villacañas
+(28, '45800'), -- Quintanar de la Orden
+(29, '45810'), -- Miguel Esteban
+(30, '45820'), -- El Toboso
+(31, '45900'), -- Almorox
+(32, '45910'), -- Escalona
+(33, '45920'), -- El Casar de Escalona
+(34, '45930'), -- Méntrida
+(35, '45940'); -- Valmojado
+</sql><current_tab id="0"/></tab_sql></sqlb_project>

@@ -70,5 +70,4 @@ public class GestorZonaCodigoPostal {
         redirectAttributes.addFlashAttribute("success", "ZonaCodigoPostal registrada exitosamente.");
         return "redirect:/zonaCodigoPostal/register";
     }
-// Esto es una prueba de comentario para ver github network
 }
