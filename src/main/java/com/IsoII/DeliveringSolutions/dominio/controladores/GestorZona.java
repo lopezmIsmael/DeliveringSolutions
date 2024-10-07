@@ -38,13 +38,15 @@ public class GestorZona {
     }
 
     @PostMapping("/registrarZona")
-    public ResponseEntity<Zona> registrarZona(@ModelAttribute Zona zona) {
+    public String registrarZona(@ModelAttribute Zona zona) {
         System.out.println("Zona recibida: " + zona.toString());
         if (zona.getNombre() == null || zona.getNombre().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return "Error";
         }
         Zona zonaRegistrada = zonaDAO.save(zona);
         System.out.println("Zona registrada: " + zonaRegistrada);
-        return new ResponseEntity<>(zonaRegistrada, HttpStatus.CREATED);
+        // redirige a web ZonaCodigoPostal/register
+        return "redirect:/zonaCodigoPostal/register";
+       
     }
 }
