@@ -19,7 +19,8 @@ public class GestorUsuario {
     @Autowired
     private UsuarioDAO usuarioDAO;
 
-    // ************************************************** GETMAPPING ********************************************** */
+    // ************************************************** GETMAPPING
+    // ********************************************** */
 
     // Método que devuelve una lista de todos los clientes
     @GetMapping("/findAll")
@@ -41,8 +42,20 @@ public class GestorUsuario {
         return usuarioDAO.findById(id).orElse(null);
     }
 
-    // ************************************************** POSTMAPPING ********************************************** */
-    // Método que registra un cliente 
+    // Metodo que muestra formulario de login
+    @GetMapping("/login")
+    public String mostrarFormularioLogin() {
+        return "index"; // Nombre del archivo HTML sin la extensión
+    }
+
+    @GetMapping("/aboutUs")
+    public String mostrarAboutUs() {
+        return "aboutUs"; // Nombre del archivo HTML sin la extensión
+    }
+
+    // ************************************************** POSTMAPPING
+    // ********************************************** */
+    // Método que registra un cliente
     @PostMapping("/registrarUsuario")
     public ResponseEntity<Usuario> registrarCliente(@ModelAttribute Usuario usuario) {
         // Comprobar si 'pass' no es nulo o vacío
@@ -62,6 +75,17 @@ public class GestorUsuario {
         usuarioDAO.deleteById(id);
         return new ResponseEntity<>("Usuario eliminado", HttpStatus.OK);
     }
-}
 
-        
+    @PostMapping("/loginUsuario")
+    public String loginUsuario(@RequestParam String username, @RequestParam String password,
+            RedirectAttributes redirectAttributes) {
+        Usuario usuarioLogueado = usuarioDAO.findById(username).orElse(null);
+        if (usuarioLogueado != null && usuarioLogueado.getPass().equals(password)) {
+            redirectAttributes.addFlashAttribute("mensaje", "Inicio de sesión exitoso.");
+            return "redirect:/";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Usuario o contraseña incorrectos.");
+            return "redirect:/";
+        }
+    }
+}

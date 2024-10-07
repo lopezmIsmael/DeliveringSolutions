@@ -46,4 +46,8 @@ window.onload = function() {
     document.getElementById("registerButton").onclick = function () {
         window.location.href = "/usuarios/register";
     };
+
+    document.getElementById("aboutUs").onclick = function () {
+        window.location.href = "/usuarios/aboutUs";
+    };
 };
