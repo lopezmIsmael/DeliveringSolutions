@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Seleccionar Rol</title>
+    <meta charset="UTF-8">
+    <style>
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+            margin: 10px;
+        }
+
+        .button:hover {background-color: #3e8e41}
+
+        .button:active {
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+    </style>
+</head>
+<body>
+    <h1>Seleccionar Rol</h1>
+    <a th:href="@{/clientes/register}" class="button">Registrar Cliente</a>
+    <a th:href="@{/repartidores/register}" class="button">Registrar Repartidor</a>
+    <a th:href="@{/restaurantes/register}" class="button">Registrar Restaurante</a>
+</body>
+</html>

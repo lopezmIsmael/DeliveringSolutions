@@ -31,7 +31,7 @@ public class GestorUsuario {
     // Método que muestra el formulario de registro de cliente
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
-        return "Pruebas-RegisterUser"; // Nombre del archivo HTML sin la extensión
+        return "rol"; // Nombre del archivo HTML sin la extensión
     }
 
     // Método que busca un solo cliente por su id
