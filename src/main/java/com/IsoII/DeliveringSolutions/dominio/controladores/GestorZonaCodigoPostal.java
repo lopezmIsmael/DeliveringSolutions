@@ -51,22 +51,30 @@ public class GestorZonaCodigoPostal {
     }
 
     @PostMapping("/registrarZonaCodigoPostal")
-    public String registrarZonaCodigoPostal(@RequestParam("codigoPostal") int codigoPostalId,
+    public String registrarZonaCodigoPostal(@RequestParam("codigoPostal") List<Integer> codigoPostalIds,
             @RequestParam("zona") int zonaId,
             RedirectAttributes redirectAttributes) {
-        CodigoPostal codigoPostal = codigoPostalDAO.findById(codigoPostalId).orElse(null);
+                
         Zona zona = zonaDAO.findById(zonaId).orElse(null);
 
-        if (codigoPostal == null || zona == null) {
+        if (zona == null) {
             redirectAttributes.addFlashAttribute("error", "Debe seleccionar una zona y un código postal válidos.");
             return "redirect:/zonaCodigoPostal/register";
         }
 
-        ZonaCodigoPostal zonaCodigoPostal = new ZonaCodigoPostal();
-        zonaCodigoPostal.setCodigoPostal(codigoPostal);
-        zonaCodigoPostal.setZona(zona);
+        for (int codigoPostalId : codigoPostalIds) {
+            CodigoPostal codigoPostal = codigoPostalDAO.findById(codigoPostalId).orElse(null);
+            if (codigoPostal == null) {
+                redirectAttributes.addFlashAttribute("error", "Debe seleccionar una zona y un código postal válidos.");
+                return "redirect:/zonaCodigoPostal/register";
+            }
+            ZonaCodigoPostal zonaCodigoPostal = new ZonaCodigoPostal();
+            zonaCodigoPostal.setCodigoPostal(codigoPostal);
+            zonaCodigoPostal.setZona(zona);
 
-        zonaCodigoPostalDAO.save(zonaCodigoPostal);
+            zonaCodigoPostalDAO.save(zonaCodigoPostal);
+        }
+
         redirectAttributes.addFlashAttribute("success", "ZonaCodigoPostal registrada exitosamente.");
         return "redirect:/zonaCodigoPostal/register";
     }
