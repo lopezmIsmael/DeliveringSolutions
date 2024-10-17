@@ -8,6 +8,11 @@
 
 <body>
     <h2>Registro de Repartidor</h2>
+
+    <!-- Mensajes de éxito o error -->
+    <div th:if="${mensaje}" class="mensaje mensaje-exito" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="mensaje mensaje-error" th:text="${error}"></div>
+
     <form th:action="@{/repartidores/registrarRepartidor}" method="post">
         <div>
             <label for="idUsuario">Nombre de Usuario:</label>
