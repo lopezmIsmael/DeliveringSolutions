@@ -20,8 +20,7 @@
 
     <div>
         <label for="codigoPostal">Código Postal:</label>
-        <select id="codigoPostal" name="codigoPostal" required>
-            <option value="" disabled selected>Seleccione un código postal</option>
+        <select name="codigoPostal[]" size="5" multiple>
             <!-- Asegúrate de que el valor sea el ID del código postal -->
             <option th:each="codigoPostal : ${codigosPostales}" th:value="${codigoPostal.id}" th:text="${codigoPostal.codigo}"></option>
         </select>

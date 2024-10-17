@@ -57,15 +57,17 @@ public class GestorRepartidor {
     // ************************************************** POSTMAPPING ********************************************** */
     // Método que registra un repartidor
     @PostMapping("/registrarRepartidor")
-    public ResponseEntity<Repartidor> registrarRepartidor(@ModelAttribute Repartidor repartidor) {
+    public String registrarRepartidor(@ModelAttribute Repartidor repartidor, RedirectAttributes redirectAttributes) {
         // Comprobar si 'pass' no es nulo o vacío
         System.out.println("Repartidor recibido: " + repartidor.toString());
-        if (repartidor.getPass() == null || repartidor.getPass().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Devuelve un error si 'pass' está vacío
+        if (repartidor.getPass() == null || repartidor.getPass().isEmpty() || repartidor.getDni().length() != 9 || repartidor.getPass().length() < 6) {
+            redirectAttributes.addFlashAttribute("error", "La contraseña no puede estar vacía, el DNI debe tener 9 caracteres y la contraseña debe tener al menos 6 caracteres.");
+            return "redirect:/repartidores/register"; // Devuelve un error si 'pass' está vacío
         }
         
         Repartidor repartidorRegistrado = repartidorDAO.save(repartidor);
         System.out.println("Repartidor registrado: " + repartidorRegistrado);
-        return new ResponseEntity<>(repartidorRegistrado, HttpStatus.CREATED);
+        redirectAttributes.addFlashAttribute("success", "Repartidor registrado correctamente");
+        return "redirect:/"; // Redirige al index si el repartidor se registra correctamente
     }
 }
