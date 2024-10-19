@@ -8,12 +8,13 @@
 <body>
     <h2>Registro de Menus</h2>
     <form action="/menu/registrarMenu" method="post">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required><br><br>
-        <label for="precio">Precio:</label>
-        <input type="text" id="precio" name="precio" required><br><br>
-        <label for="descripcion">Descripcion:</label>
-        <input type="text" id="descripcion" name="descripcion" required><br><br>
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required><br><br>
+        </div>
+
+        <input type="hidden" name="cif" value="${cif}">
+        
         <input type="submit" value="Registrar">
     </form>
 </body>
