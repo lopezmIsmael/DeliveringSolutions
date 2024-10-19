@@ -1,12 +1,12 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Column;
 
 /**
  * Representa un usuario genérico en el sistema con un id, nombre.
@@ -25,7 +25,7 @@ public class CartaMenu {
     private String nombre;
 
     @ManyToOne
-    @JoinColumn(name = "cif")
+    @JoinColumn(name = "cif", nullable = false)
     Restaurante restaurante;
 
     public CartaMenu() {
