@@ -24,7 +24,7 @@ public class ItemMenu {
     private double precio;
 
     @ManyToOne
-    @JoinColumn(name = "idCarta", referencedColumnName = "idCarta")
+    @JoinColumn(name = "idCarta")
     private CartaMenu cartamenu;
 
     @Column(name = "tipo", nullable = false, length = 50)

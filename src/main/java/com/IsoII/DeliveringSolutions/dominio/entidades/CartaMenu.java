@@ -25,7 +25,7 @@ public class CartaMenu {
     private String nombre;
 
     @ManyToOne
-    @JoinColumn(name = "idRestaurante", referencedColumnName = "cif")
+    @JoinColumn(name = "cif")
     Restaurante restaurante;
 
     public CartaMenu() {
