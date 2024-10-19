@@ -8,7 +8,12 @@
 
 <h1>Lista de Restaurantes</h1>
 
-<form>
+<!-- Barra de búsqueda -->
+<form th:action="@{/restaurantes/buscar}" method="get">
+    <input type="text" name="nombre" placeholder="Buscar restaurante" required>
+    <button type="submit">Buscar</button>
+</form>
+
     <div>
         <ul>
             <li th:each="restaurante : ${restaurantes}">
@@ -16,7 +21,7 @@
             </li>
         </ul>
     </div>
-</form>
+
 
 </body>
 </html>
