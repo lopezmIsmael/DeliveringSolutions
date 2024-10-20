@@ -62,6 +62,8 @@ public class GestorUsuario {
         return "aboutUs"; // Nombre del archivo HTML sin la extensión
     }
 
+
+
     // ************************************************** POSTMAPPING
     // ********************************************** */
     // Método que registra un cliente
@@ -91,10 +93,16 @@ public class GestorUsuario {
         Usuario usuarioLogueado = usuarioDAO.findById(username).orElse(null);
         if (usuarioLogueado != null && usuarioLogueado.getPass().equals(password)) {
             redirectAttributes.addFlashAttribute("mensaje", "Inicio de sesión exitoso.");
-            return "redirect:/";
+            if(usuarioLogueado.gettipoUsuario().equals("CLIENTE"))
+                return "redirect:/clientes/verRestaurantes";
+            else if(usuarioLogueado.gettipoUsuario().equals("REPARTIDOR"))
+                return "redirect:/";
+            else if(usuarioLogueado.gettipoUsuario().equals("RESTAURANTE"))
+                return "redirect:/cartas/register";
         } else {
             redirectAttributes.addFlashAttribute("error", "Usuario o contraseña incorrectos.");
-            return "redirect:/clientes/verRestaurantes";
+            return "redirect:/";
         }
+        return "redirect:/";
     }
 }
