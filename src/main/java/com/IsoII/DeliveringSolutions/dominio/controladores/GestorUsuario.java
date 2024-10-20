@@ -98,7 +98,7 @@ public class GestorUsuario {
             else if(usuarioLogueado.gettipoUsuario().equals("REPARTIDOR"))
                 return "redirect:/";
             else if(usuarioLogueado.gettipoUsuario().equals("RESTAURANTE"))
-                return "redirect:/cartas/register";
+                return "redirect:/restaurantes/gestion/" + username;
         } else {
             redirectAttributes.addFlashAttribute("error", "Usuario o contraseña incorrectos.");
             return "redirect:/";

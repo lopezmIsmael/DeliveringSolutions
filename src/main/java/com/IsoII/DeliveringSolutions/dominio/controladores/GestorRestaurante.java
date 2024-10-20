@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
+import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
 import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
 
 @Controller
@@ -28,6 +30,11 @@ public class GestorRestaurante {
 
     @Autowired
     private RestauranteDAO restauranteDAO;
+
+
+    @Autowired
+    private ServiceCartaMenu serviceCartaMenu;
+
 
     @GetMapping("/findAll")
     @ResponseBody
@@ -57,6 +64,21 @@ public String buscarRestaurante(@RequestParam String nombre, Model model) {
         return "verRestaurantes"; // Nombre del archivo HTML sin la extensión
     }
 }
+
+@GetMapping("/gestion/{id}")
+    public String gestionRestaurante(@PathVariable String id, Model model) {
+        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(id);
+        if (optionalRestaurante.isPresent()) {
+            Restaurante restaurante = optionalRestaurante.get();
+            List<CartaMenu> menus = serviceCartaMenu.findByRestaurante(restaurante);
+            model.addAttribute("restaurante", restaurante);
+            model.addAttribute("menus", menus);
+            return "interfazGestionRestaurante"; // Nombre del archivo HTML sin la extensión
+        } else {
+            model.addAttribute("error", "Restaurante no encontrado");
+            return "error"; // Nombre del archivo HTML de la página de error
+        }
+    }
 
     @PostMapping("/registrarRestaurante")
     public ResponseEntity<Restaurante> registrarRestaurante(@ModelAttribute Restaurante restaurante) {
