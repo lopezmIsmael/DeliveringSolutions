@@ -63,16 +63,19 @@ public class GestorMenu {
     // ************************************************** POSTMAPPING ********************************************** */
     // Método que registra una carta
     @PostMapping("/registrarCarta")
-    public ResponseEntity<CartaMenu> registrarCarta(@ModelAttribute CartaMenu cartaMenu) {
+    public String registrarCarta(@ModelAttribute CartaMenu cartaMenu, RedirectAttributes redirectAttributes) {
         // Comprobar si 'nombre' no es nulo o vacío
         System.out.println("Carta recibida: " + cartaMenu.toString());
         if (cartaMenu.getNombre() == null || cartaMenu.getNombre().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Devuelve un error si 'nombre' está vacío
+            redirectAttributes.addFlashAttribute("error", "El nombre de la carta no puede estar vacío");
+            return "redirect:/cartas/register";
         }
 
         CartaMenu cartaMenuRegistrada = cartaMenuDAO.save(cartaMenu);
-        System.out.println("Carta registrada: " + cartaMenuRegistrada);
-        return new ResponseEntity<>(cartaMenuRegistrada, HttpStatus.CREATED);
+        String cif = cartaMenuRegistrada.getRestaurante().getCif();
+        //System.out.println("Carta registrada: " + cartaMenuRegistrada);
+        redirectAttributes.addFlashAttribute("success", "Carta registrada exitosamente.");
+        return "redirect:/restaurantes/gestion/" + cif;
     }
 
     // ************************************************** DELETEMAPPING ********************************************** */

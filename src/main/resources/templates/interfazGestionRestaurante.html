@@ -6,20 +6,31 @@
 </head>
 <body>
 
-<h1>Gestión de Restaurante</h1>
+    <div class="container">
+        <div class="header text-center">
+            <h1>Bienvenido al panel de Gestión</h1>
+        </div>
+    
+        <div class="content mt-4">
+            <!-- Sección para mostrar el nombre del restaurante -->
+            <div class="mb-4">
+                <h2>Nombre del Restaurante: <span th:text="${restaurante.nombre}"></span></h2>
+            </div>
+    
+            <!-- Sección para mostrar las cartas/menús asignados al restaurante -->
+            <div>
+                <h3>Cartas/Menús:</h3>
+                <ul class="menu-list">
+                    <li th:each="menu : ${menus}" th:text="${menu.nombre}"></li>
+                </ul>
+            </div>
 
-<!-- Sección para mostrar el nombre del restaurante -->
-<div>
-    <h2>Nombre del Restaurante: <span th:text="${restaurante.nombre}"></span></h2>
-</div>
-
-<!-- Sección para mostrar las cartas/menús asignados al restaurante -->
-<div>
-    <h3>Cartas/Menús:</h3>
-    <ul>
-        <li th:each="menu : ${menus}" th:text="${menu.nombre}"></li>
-    </ul>
-</div>
+            <!-- Botón para poder crear menús nuevos -->
+            <div class="mt-4">
+                <button onclick="location.href='/cartas/register'" class="btn btn-primary">Crear Menú</button>
+            </div> 
+        </div>
+    </div>
 
 </body>
 </html>
