@@ -4,30 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Cliente</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center; 
+            align-items: center; 
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        input[type="text"], input[type="password"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h2>Registro de Cliente</h2>
-    <form action="/clientes/registrarCliente" method="post">
-        <label for="idUsuario">Nombre de Usuario:</label>
-        <input type="text" id="idUsuario" name="idUsuario" required><br><br>
-    
-        <label for="pass">Contraseña:</label>
-        <input type="password" id="pass" name="pass" required><br><br>
-    
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required><br><br>
-    
-        <label for="apellido">Apellidos:</label>
-        <input type="text" id="apellido" name="apellido" required><br><br>
-    
-        <label for="dni">DNI:</label>
-        <input type="text" id="dni" name="dni" required><br><br>
-    
-        <input type="hidden" name="tipoUsuario" value="CLIENTE">
-    
-        <input type="submit" value="Registrar">
-    </form>
-    
-    
+    <table>
+        <tr>
+            <td colspan="2" style="text-align: center;"><h2>Registro de Cliente</h2></td>
+        </tr>
+        <tr>
+            <td><label for="idUsuario">Nombre de Usuario:</label></td>
+            <td><input type="text" id="idUsuario" name="idUsuario" required></td>
+        </tr>
+        <tr>
+            <td><label for="pass">Contraseña:</label></td>
+            <td><input type="password" id="pass" name="pass" required></td>
+        </tr>
+        <tr>
+            <td><label for="nombre">Nombre:</label></td>
+            <td><input type="text" id="nombre" name="nombre" required></td>
+        </tr>
+        <tr>
+            <td><label for="apellido">Apellidos:</label></td>
+            <td><input type="text" id="apellido" name="apellido" required></td>
+        </tr>
+        <tr>
+            <td><label for="dni">DNI:</label></td>
+            <td><input type="text" id="dni" name="dni" required></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center;">
+                <input type="hidden" name="tipoUsuario" value="CLIENTE">
+                <input type="submit" value="Registrarse">
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
