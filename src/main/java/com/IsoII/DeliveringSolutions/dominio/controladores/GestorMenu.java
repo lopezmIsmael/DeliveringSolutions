@@ -2,8 +2,13 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
+import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
+
+import org.springframework.ui.Model;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.http.HttpStatus;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/cartas")
@@ -25,6 +31,9 @@ public class GestorMenu {
     @Autowired
     private ItemMenuDAO itemMenuDAO;
 
+    @Autowired
+    private RestauranteDAO restauranteDAO;
+
     // ************************************************** GETMAPPING ********************************************** */
 
     // Método que devuelve una lista de todas las cartas
@@ -36,8 +45,16 @@ public class GestorMenu {
 
     // Método que muestra el formulario de registro de carta
     @GetMapping("/register")
-    public String mostrarFormularioRegistro() {
-        return "Pruebas-RegisterMenu"; // Nombre del archivo HTML sin la extensión
+    public String mostrarFormularioRegistro(@PathVariable String id, Model model) {
+        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(id);
+        if (optionalRestaurante.isPresent()) {
+            Restaurante restaurante = optionalRestaurante.get();
+            model.addAttribute("restaurante", restaurante);
+            return "Pruebas-RegisterMenu"; // Nombre del archivo HTML sin la extensión
+        } else {
+            model.addAttribute("error", "Restaurante no encontrado");
+            return "error"; // Nombre del archivo HTML de la página de error
+        }
     }
 
     // Método que busca una sola carta por su id
