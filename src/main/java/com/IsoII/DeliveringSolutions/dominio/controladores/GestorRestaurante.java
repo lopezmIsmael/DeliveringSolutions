@@ -80,6 +80,7 @@ public String buscarRestaurante(@RequestParam String nombre, Model model) {
         }
     }
 
+
     @PostMapping("/registrarRestaurante")
     public ResponseEntity<Restaurante> registrarRestaurante(@ModelAttribute Restaurante restaurante) {
         System.out.println("Restaurante recibido: " + restaurante.toString());

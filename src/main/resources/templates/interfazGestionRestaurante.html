@@ -27,7 +27,7 @@
 
             <!-- Botón para poder crear menús nuevos -->
             <div class="mt-4">
-                <button onclick="location.href='/cartas/register'" class="btn btn-primary">Crear Menú</button>
+                <a th:href="@{'/cartas/register/' + ${restaurante.idUsuario}}" class="btn btn-primary">Crear Menú</a>
             </div> 
         </div>
     </div>
