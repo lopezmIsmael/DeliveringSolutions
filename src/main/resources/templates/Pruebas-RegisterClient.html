@@ -40,7 +40,7 @@
             border-radius: 5px;
         }
 
-        input[type="submit"] {
+        button[type="submit"], button[type="button"] {
             width: 100%;
             padding: 10px;
             background-color: #4CAF50;
@@ -50,42 +50,44 @@
             cursor: pointer;
         }
 
-        input[type="submit"]:hover {
+        button[type="submit"]:hover, button[type="button"]:hover {
             background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <table>
-        <tr>
-            <td colspan="2" style="text-align: center;"><h2>Registro de Cliente</h2></td>
-        </tr>
-        <tr>
-            <td><label for="idUsuario">Nombre de Usuario:</label></td>
-            <td><input type="text" id="idUsuario" name="idUsuario" required></td>
-        </tr>
-        <tr>
-            <td><label for="pass">Contraseña:</label></td>
-            <td><input type="password" id="pass" name="pass" required></td>
-        </tr>
-        <tr>
-            <td><label for="nombre">Nombre:</label></td>
-            <td><input type="text" id="nombre" name="nombre" required></td>
-        </tr>
-        <tr>
-            <td><label for="apellido">Apellidos:</label></td>
-            <td><input type="text" id="apellido" name="apellido" required></td>
-        </tr>
-        <tr>
-            <td><label for="dni">DNI:</label></td>
-            <td><input type="text" id="dni" name="dni" required></td>
-        </tr>
-        <tr>
-            <td colspan="2" style="text-align: center;">
-                <input type="hidden" name="tipoUsuario" value="CLIENTE">
-                <input type="submit" value="Registrarse">
-            </td>
-        </tr>
-    </table>
+    <form action="/clientes/registrarCliente" method="post">
+        <table>
+            <tr>
+                <td colspan="2" style="text-align: center;"><h2>Registro de Cliente</h2></td>
+            </tr>
+            <tr>
+                <td><label for="idUsuario">Nombre de Usuario:</label></td>
+                <td><input type="text" id="idUsuario" name="idUsuario" required></td>
+            </tr>
+            <tr>
+                <td><label for="pass">Contraseña:</label></td>
+                <td><input type="password" id="pass" name="pass" required></td>
+            </tr>
+            <tr>
+                <td><label for="nombre">Nombre:</label></td>
+                <td><input type="text" id="nombre" name="nombre" required></td>
+            </tr>
+            <tr>
+                <td><label for="apellido">Apellidos:</label></td>
+                <td><input type="text" id="apellido" name="apellido" required></td>
+            </tr>
+            <tr>
+                <td><label for="dni">DNI:</label></td>
+                <td><input type="text" id="dni" name="dni" required></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <input type="hidden" name="tipoUsuario" value="CLIENTE">
+                    <button type="submit">Registrar</button>
+                </td>
+            </tr>
+        </table>
+    </form>
 </body>
 </html>
