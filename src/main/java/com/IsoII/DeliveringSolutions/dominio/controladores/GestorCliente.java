@@ -44,6 +44,9 @@ public class GestorCliente {
     @Autowired
     private ServiceCartaMenu serviceCartaMenu;
 
+    @Autowired
+    private ItemMenuDAO itemMenuDAO;
+
     // ************************************************** GETMAPPING
     // ********************************************** */
     // Método que devuelve una lista de todos los clientes

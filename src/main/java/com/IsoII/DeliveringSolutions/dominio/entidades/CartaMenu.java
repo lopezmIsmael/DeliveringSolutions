@@ -1,19 +1,9 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-/**
- * Representa un usuario genérico en el sistema con un id, nombre.
- * 
- * @autor Pablo Verdúguez Gervaso
- * @version 1.0
- */
 @Entity
 public class CartaMenu {
 
@@ -27,6 +17,10 @@ public class CartaMenu {
     @ManyToOne
     @JoinColumn(name = "cif", nullable = false)
     Restaurante restaurante;
+
+    @OneToMany(mappedBy = "cartamenu", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<ItemMenu> items;
 
     public CartaMenu() {
     }
@@ -60,5 +54,12 @@ public class CartaMenu {
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
     }
-    
+
+    public List<ItemMenu> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ItemMenu> items) {
+        this.items = items;
+    }
 }
