@@ -4,27 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Restaurante</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center; /* Centra el contenido horizontalmente */
+            align-items: center; /* Centra el contenido verticalmente */
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"], button[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover, button[type="button"]:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h2>Registro de Restaurante</h2>
     <form action="/restaurantes/registrarRestaurante" method="post">
-        <label for="idUsuario">Nombre de Usuario:</label>
-        <input type="text" id="idUsuario" name="idUsuario" required><br><br>
-    
-        <label for="pass">Contraseña:</label>
-        <input type="password" id="pass" name="pass" required><br><br>
-    
-        <label for="cif">CIF:</label>
-        <input type="text" id="cif" name="cif" required><br><br>
-    
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required><br><br>
-    
-        <input type="hidden" name="tipoUsuario" value="RESTAURANTE">
-    
-        <input type="submit" value="Registrar">
+        <table>
+            <tr>
+                <td colspan="2" style="text-align: center;"><h2>Registro de Restaurante</h2></td>
+            </tr>
+            <tr>
+                <td><label for="idUsuario">Nombre de Usuario:</label></td>
+                <td><input type="text" id="idUsuario" name="idUsuario" required></td>
+            </tr>
+            <tr>
+                <td><label for="pass">Contraseña:</label></td>
+                <td><input type="password" id="pass" name="pass" required></td>
+            </tr>
+            <tr>
+                <td><label for="cif">CIF:</label></td>
+                <td><input type="text" id="cif" name="cif" required></td>
+            </tr>
+            <tr>
+                <td><label for="nombre">Nombre:</label></td>
+                <td><input type="text" id="nombre" name="nombre" required></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <input type="hidden" name="tipoUsuario" value="RESTAURANTE">
+                    <button type="submit">Registrar</button>
+                </td>
+            </tr>
+        </table>
     </form>
-    
-    
 </body>
 </html>

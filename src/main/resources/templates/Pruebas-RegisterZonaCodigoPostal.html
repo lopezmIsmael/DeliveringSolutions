@@ -1,35 +1,92 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro de ZonaCodigoPostal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Zona y Código Postal</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center; /* Centra el contenido horizontalmente */
+            align-items: center; /* Centra el contenido verticalmente */
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"], button[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover, button[type="button"]:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-
-<h1>Registro de Zona y Código Postal</h1>
-
-<form th:action="@{/zonaCodigoPostal/registrarZonaCodigoPostal}" method="post">
-    <div>
-        <label for="zona">Zona:</label>
-        <select id="zona" name="zona" required>
-            <option value="" disabled selected>Seleccione una zona</option>
-            <!-- Asegúrate de que el valor sea el ID de la zona -->
-            <option th:each="zona : ${zonas}" th:value="${zona.id}" th:text="${zona.nombre}"></option>
-        </select>
-    </div>
-
-    <div>
-        <label for="codigoPostal">Código Postal:</label>
-        <select name="codigoPostal[]" size="5" multiple>
-            <!-- Asegúrate de que el valor sea el ID del código postal -->
-            <option th:each="codigoPostal : ${codigosPostales}" th:value="${codigoPostal.id}" th:text="${codigoPostal.codigo}"></option>
-        </select>
-    </div>
-
-    <div>
-        <button type="submit">Registrar</button>
-    </div>
-</form>
-
+    <form th:action="@{/zonaCodigoPostal/registrarZonaCodigoPostal}" method="post">
+        <table>
+            <tr>
+                <td colspan="2" style="text-align: center;"><h2>Registro de Zona y Código Postal</h2></td>
+            </tr>
+            <tr>
+                <td><label for="zona">Zona:</label></td>
+                <td>
+                    <select id="zona" name="zona" required>
+                        <option value="" disabled selected>Seleccione una zona</option>
+                        <!-- Asegúrate de que el valor sea el ID de la zona -->
+                        <option th:each="zona : ${zonas}" th:value="${zona.id}" th:text="${zona.nombre}"></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="codigoPostal">Código Postal:</label></td>
+                <td>
+                    <select id="codigoPostal" name="codigoPostal" required>
+                        <option value="" disabled selected>Seleccione un código postal</option>
+                        <!-- Asegúrate de que el valor sea el ID del código postal -->
+                        <option th:each="codigoPostal : ${codigosPostales}" th:value="${codigoPostal.id}" th:text="${codigoPostal.codigo}"></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <button type="submit">Registrar</button>
+                </td>
+            </tr>
+        </table>
+    </form>
 </body>
 </html>

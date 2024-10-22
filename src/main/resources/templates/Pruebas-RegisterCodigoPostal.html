@@ -3,16 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de  Codigos Postales</title>
+    <title>Registro de Códigos Postales</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center; /* Centra el contenido horizontalmente */
+            align-items: center; /* Centra el contenido verticalmente */
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h2>Registro de Codigos Postales</h2>
     <form action="/codigoPostal/registrarCodigoPostal" method="post">
-        <label for="codigo">Codigo Postal:</label>
-        <input type="text" id="codigo" name="codigo" required><br><br>
-        <input type="submit" value="Registrar">
-    </form>
-    
-    
+    <table>
+        <tr>
+            <td colspan="2" style="text-align: center;"><h2>Registro de Códigos Postales</h2></td>
+        </tr>
+        <tr>
+            <td><label for="codigo">Código Postal:</label></td>
+            <td><input type="text" id="codigo" name="codigo" required></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center;">
+                <input type="submit" value="Registrar">
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
