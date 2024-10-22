@@ -42,7 +42,7 @@
                 <div th:if="${#fields.hasErrors('tipo')}" class="text-danger" th:errors="*{tipo}"></div>
             </div>
 
-            <input type="hidden" th:field="*{cartamenu}" th:value="${cartaMenu}">
+            <input type="hidden" th:field="*{cartamenu.idCarta}" th:value="${cartaMenu.idCarta}">
         
             <button type="submit" class="btn btn-success">Añadir Item</button>
         </form>

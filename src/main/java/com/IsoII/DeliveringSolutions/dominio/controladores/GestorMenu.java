@@ -120,32 +120,30 @@ public class GestorMenu {
         Integer cartaMenuID = itemMenu.getCartamenu().getIdCarta();
         Optional<CartaMenu> optionalCarta = cartaMenuDAO.findById(cartaMenuID);
 
+        System.out.println("\nCARTA RECIBIDA: " + cartaMenuID + "\n");
+
         if (!optionalCarta.isPresent()) {
             model.addAttribute("error", "Carta no encontrada");
-            return "redirect:/cartas/items/register";
+            return "redirect:/cartas/modificar/" + cartaMenuID;
         }
 
         CartaMenu cartaMenu = optionalCarta.get();
         itemMenu.setCartamenu(cartaMenu);
 
-        
-
-
-
         if (itemMenu.getNombre() == null || itemMenu.getNombre().isEmpty()) {
             model.addAttribute("error", "Carta no válida, nombre no puede estar vacío");
-            return "redirect:/cartas/items/register";
+            return "redirect:/cartas/modificar/" + cartaMenuID;
         }
 
         if (itemMenu.getTipo() == null || itemMenu.getTipo().isEmpty()) {
             model.addAttribute("error", "Carta no válida, tipo no puede estar vacío");
-            return "redirect:/cartas/items/register";
+            return "redirect:/cartas/modificar/" + cartaMenuID;
         }
 
          // Validar el precio
         if (itemMenu.getPrecio() <= 0) {
             redirectAttributes.addFlashAttribute("error", "El precio debe ser mayor que 0");
-            return "redirect:/cartas/items/register";
+            return "redirect:/cartas/modificar/" + cartaMenuID;
         }
 
         // Lógica para registrar el item
@@ -153,7 +151,7 @@ public class GestorMenu {
         System.out.println("\nITEM REGISTRADO: " + itemMenu.toString());
         model.addAttribute("success", "Item registrado exitosamente.");
         model.addAttribute("itemMenu", itemMenu); // Para resetear el formulario
-        return "redirect:/cartas/items/register";
+        return "redirect:/cartas/modificar/" + itemMenu.getCartamenu().getIdCarta();
     }
 
     // Método que registra una carta
