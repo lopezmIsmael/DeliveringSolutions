@@ -8,82 +8,74 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Gestor de Items</h1>
-        
-        <div class="card mb-4">
-            <div class="card-header">
-                Modificar Item
-            </div>
-            <div class="card-body">
-                <form id="modify-item-form">
-                    <div class="form-group">
-                        <label for="item-title">Título del Item</label>
-                        <input type="text" class="form-control" id="item-title" placeholder="Ingrese el título del item">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Modificar</button>
-                </form>
-            </div>
-        </div>
+        <!-- Título con el nombre de la carta -->
+        <h1 class="mb-4" th:text="'Gestor de ' + ${cartaMenu.nombre}">Gestor de Items</h1>
 
-        <h2 class="mb-4">Lista de Items</h2>
+        <!-- Subtítulo con el nombre de la carta -->
+        <h2 class="mb-4" th:text="${cartaMenu.nombre}">Items</h2>
+
         <ul class="list-group mb-4" id="item-list">
-            <!-- Items will be dynamically added here -->
+            <li th:each="item : ${items}" class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                    <span th:text="${item.nombre}">Nombre del Item</span> - 
+                    <span th:text="${item.precio}">Precio del Item</span> - 
+                    <span th:text="${item.tipo}">Tipo del Item</span>
+                </span>
+                <button class="btn btn-danger btn-sm" th:attr="data-id=${item.nombre}" onclick="eliminarItem(this)">Eliminar</button>
+            </li>
         </ul>
 
-        <form id="add-item-form">
-            <div class="form-group">
-                <label for="new-item">Nuevo Item</label>
-                <input type="text" class="form-control" id="new-item" placeholder="Ingrese el nuevo item">
+        <!-- Mensajes de éxito o error -->
+        <div th:if="${mensaje}" class="mensaje mensaje-exito" th:text="${mensaje}"></div>
+        <div th:if="${error}" class="mensaje mensaje-error" th:text="${error}"></div>
+
+        <!-- Formulario para añadir un nuevo item -->
+        <form th:action="@{/cartas/items/registrarItem}" method="post" th:object="${itemMenu}">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ingrese el nombre del item" required>
+                    <div th:if="${#fields.hasErrors('nombre')}" class="text-danger" th:errors="*{nombre}"></div>
+                </div>
+            
+                <div class="form-group col-md-4">
+                    <label for="precio">Precio</label>
+                    <input type="number" th:field="*{precio}" class="form-control" step="0.01" placeholder="Ingrese el precio" required>
+                    <div th:if="${#fields.hasErrors('precio')}" class="text-danger" th:errors="*{precio}"></div>
+                </div>
+            
+                <div class="form-group col-md-4">
+                    <label for="tipo">Tipo</label>
+                    <input type="text" th:field="*{tipo}" class="form-control" placeholder="Ingrese el tipo" required>
+                    <div th:if="${#fields.hasErrors('tipo')}" class="text-danger" th:errors="*{tipo}"></div>
+                </div>
             </div>
+
+            <input type="hidden" th:field="*{cartamenu.idCarta}" th:value="${cartaMenu.idCarta}">            
             <button type="submit" class="btn btn-success">Añadir Item</button>
         </form>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const itemList = document.getElementById('item-list');
-            const addItemForm = document.getElementById('add-item-form');
-            const modifyItemForm = document.getElementById('modify-item-form');
-            let items = [];
-
-            addItemForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const newItem = document.getElementById('new-item').value;
-                if (newItem) {
-                    items.push(newItem);
-                    renderItems();
-                    document.getElementById('new-item').value = '';
-                }
-            });
-
-            modifyItemForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const itemTitle = document.getElementById('item-title').value;
-                if (itemTitle && items.length > 0) {
-                    items[0] = itemTitle; // Modify the first item for simplicity
-                    renderItems();
-                    document.getElementById('item-title').value = '';
-                }
-            });
-
-            function renderItems() {
-                itemList.innerHTML = '';
-                items.forEach((item, index) => {
-                    const li = document.createElement('li');
-                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
-                    li.textContent = item;
-                    const deleteButton = document.createElement('button');
-                    deleteButton.className = 'btn btn-danger btn-sm';
-                    deleteButton.textContent = 'Eliminar';
-                    deleteButton.addEventListener('click', function() {
-                        items.splice(index, 1);
-                        renderItems();
-                    });
-                    li.appendChild(deleteButton);
-                    itemList.appendChild(li);
+        function eliminarItem(button) {
+            const itemId = button.getAttribute('data-id');
+            if (confirm('¿Estás seguro de que deseas eliminar este item?')) {
+                fetch(`/cartas/eliminarItem/${itemId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (response.ok) {
+                        button.closest('li').remove();
+                    } else {
+                        alert('Error al eliminar el item');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al eliminar el item');
                 });
             }
-        });
+        }
     </script>
 </body>
 </html>

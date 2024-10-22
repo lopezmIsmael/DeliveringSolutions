@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.*;
+
 import jakarta.persistence.Column;
 
 /**
@@ -21,6 +23,7 @@ public class ItemMenu {
     private String nombre;
 
     @Column(name = "precio", nullable = false)
+    @DecimalMin(value = "0.01", message = "El precio debe ser mayor que 0")
     private double precio;
 
     @ManyToOne
@@ -70,5 +73,10 @@ public class ItemMenu {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemMenu [cartamenu=" + cartamenu + ", nombre=" + nombre + ", precio=" + precio + ", tipo=" + tipo + "]";
     }
 }

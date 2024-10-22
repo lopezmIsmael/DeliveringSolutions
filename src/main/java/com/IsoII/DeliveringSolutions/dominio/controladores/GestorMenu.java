@@ -8,7 +8,7 @@ import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
 
 import org.springframework.ui.Model;
-
+import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.http.HttpStatus;
@@ -70,7 +70,7 @@ public class GestorMenu {
     // Método que busca una sola carta por su id
     @GetMapping("/findById/{id}")
     @ResponseBody
-    public CartaMenu findById(@PathVariable String id) {
+    public CartaMenu findById(@PathVariable Integer id) {
         return cartaMenuDAO.findById(id).orElse(null);
     }
 
@@ -83,26 +83,86 @@ public class GestorMenu {
 
     // Método que muestra el formulario de registro de item del menú
     @GetMapping("/items/register")
-    public String mostrarFormularioRegistroItem() {
+    public String mostrarFormularioRegistroItem(Model model) {
+        model.addAttribute("itemMenu", new ItemMenu());
         return "Pruebas-RegisterItemMenu"; // Nombre del archivo HTML sin la extensión
     }
 
 
     @GetMapping("/modificar/{id}")
-    public String mostrarFormularioModificar(@PathVariable String id, Model model) {
+    public String mostrarFormularioModificar(@PathVariable Integer id, Model model) {
         Optional<CartaMenu> optionalCartaMenu = cartaMenuDAO.findById(id);
-        if (optionalCartaMenu.isPresent()) {
-            CartaMenu cartaMenu = optionalCartaMenu.get();
-            model.addAttribute("cartaMenu", cartaMenu);
-            return "gestorItems";
-        } else {
-            model.addAttribute("error", "Carta no encontrada");
-            return "error";
-        }
+    if (optionalCartaMenu.isPresent()) {
+        CartaMenu cartaMenu = optionalCartaMenu.get();
+        model.addAttribute("cartaMenu", cartaMenu);
+
+        // Crear un nuevo ItemMenu y asignarle la cartaMenu
+        ItemMenu itemMenu = new ItemMenu();
+        itemMenu.setCartamenu(cartaMenu); // Inicializar cartamenu
+        model.addAttribute("itemMenu", itemMenu);
+
+        // Añadir la lista de items al modelo
+        List<ItemMenu> items = itemMenuDAO.findByCartamenu(cartaMenu);
+        model.addAttribute("items", items);
+        
+        return "gestorItems";
+    } else {
+        model.addAttribute("error", "Carta no encontrada");
+        return "error"; // Asegúrate de tener una plantilla 'error.html'
+    }
     }
 
     // ************************************************** POSTMAPPING
     // ********************************************** */
+    // Método que registra un item del menú
+    @PostMapping("/items/registrarItem")
+    public String registrarItem(@ModelAttribute ItemMenu itemMenu, Model model, RedirectAttributes redirectAttributes, BindingResult result) {
+
+        if(itemMenu.getCartamenu() == null || itemMenu.getCartamenu().getIdCarta() == 0) {
+            model.addAttribute("error", "Carta no válida");
+            return "redirect:/cartas/modificar/" + itemMenu.getCartamenu().getIdCarta();
+        }
+        System.out.println("\nITEM RECIBIDO: " + itemMenu.getNombre() + "\n");
+        System.out.println("\nITEM RECIBIDO: " + itemMenu.getTipo() + "\n");
+        System.out.println("\nITEM RECIBIDO: " + itemMenu.getPrecio() + "\n");
+
+        Integer cartaMenuID = itemMenu.getCartamenu().getIdCarta();
+        Optional<CartaMenu> optionalCarta = cartaMenuDAO.findById(cartaMenuID);
+
+        System.out.println("\nCARTA RECIBIDA: " + cartaMenuID + "\n");
+
+        if (!optionalCarta.isPresent()) {
+            model.addAttribute("error", "Carta no encontrada");
+            return "redirect:/cartas/modificar/" + cartaMenuID;
+        }
+
+        CartaMenu cartaMenu = optionalCarta.get();
+        itemMenu.setCartamenu(cartaMenu);
+
+        if (itemMenu.getNombre() == null || itemMenu.getNombre().isEmpty()) {
+            model.addAttribute("error", "Carta no válida, nombre no puede estar vacío");
+            return "redirect:/cartas/modificar/" + cartaMenuID;
+        }
+
+        if (itemMenu.getTipo() == null || itemMenu.getTipo().isEmpty()) {
+            model.addAttribute("error", "Carta no válida, tipo no puede estar vacío");
+            return "redirect:/cartas/modificar/" + cartaMenuID;
+        }
+
+         // Validar el precio
+        if (itemMenu.getPrecio() <= 0) {
+            redirectAttributes.addFlashAttribute("error", "El precio debe ser mayor que 0");
+            return "redirect:/cartas/modificar/" + cartaMenuID;
+        }
+
+        // Lógica para registrar el item
+        itemMenuDAO.save(itemMenu);
+        System.out.println("\nITEM REGISTRADO: " + itemMenu.toString());
+        model.addAttribute("success", "Item registrado exitosamente.");
+        model.addAttribute("itemMenu", itemMenu); // Para resetear el formulario
+        return "redirect:/cartas/modificar/" + itemMenu.getCartamenu().getIdCarta();
+    }
+
     // Método que registra una carta
     @PostMapping("/registrarCarta")
     public String registrarCarta(@ModelAttribute CartaMenu cartaMenu, RedirectAttributes redirectAttributes) {
@@ -142,7 +202,7 @@ public class GestorMenu {
     // ********************************************** */
     // Método que elimina una carta
     @DeleteMapping("/eliminarCarta/{id}")
-    public ResponseEntity<CartaMenu> eliminarCarta(@PathVariable String id) {
+    public ResponseEntity<CartaMenu> eliminarCarta(@PathVariable Integer id) {
         // Comprobar si la carta existe
         CartaMenu cartaMenu = cartaMenuDAO.findById(id).orElse(null);
         if (cartaMenu == null) {
@@ -152,4 +212,21 @@ public class GestorMenu {
         cartaMenuDAO.deleteById(id);
         return new ResponseEntity<>(cartaMenu, HttpStatus.OK);
     }
+
+
+    @DeleteMapping("/eliminarItem/{id}")
+    @ResponseBody
+    public ResponseEntity<Void> eliminarItem(@PathVariable String id) {
+        System.out.println("\nBuscando item: " + id + "\n");
+        Optional<ItemMenu> optionalItemMenu = itemMenuDAO.findById(id);
+        System.out.println("\nItem encontrado: " + optionalItemMenu + "\n");
+        if (optionalItemMenu.isPresent()) {
+            itemMenuDAO.delete(optionalItemMenu.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
+
+

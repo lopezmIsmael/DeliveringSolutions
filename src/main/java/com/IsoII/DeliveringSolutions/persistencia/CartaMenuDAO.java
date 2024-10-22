@@ -5,5 +5,5 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
-public interface CartaMenuDAO extends JpaRepository<CartaMenu, String> {
+public interface CartaMenuDAO extends JpaRepository<CartaMenu, Integer> {
 }
