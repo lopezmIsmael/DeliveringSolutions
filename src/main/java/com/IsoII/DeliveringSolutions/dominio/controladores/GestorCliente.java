@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
@@ -61,6 +62,38 @@ public class GestorCliente {
         List<Restaurante> restaurantes = RestauranteDAO.findAll();
         model.addAttribute("restaurantes", restaurantes);
         return "verRestaurantes";
+    }
+
+    @GetMapping("/listar")
+    public String listarRestaurantes(Model model) {
+        // Obtener todos los restaurantes de la base de datos
+        List<Restaurante> restaurantes = RestauranteDAO.findAll();
+
+        // Agregar la lista de restaurantes al modelo para que Thymeleaf pueda acceder a
+        // ella
+        model.addAttribute("restaurantes", restaurantes);
+
+        // Retornar la vista "verRestaurantes"
+        return "verRestaurantes"; // Nombre del archivo Thymeleaf
+    }
+
+    @GetMapping("/filtrar")
+    public String filtrarRestaurantes(@RequestParam(required = false) String nombre, Model model) {
+        List<Restaurante> restaurantes;
+
+        // Si se proporciona el nombre, filtramos por nombre, de lo contrario listamos
+        // todos los restaurantes
+        if (nombre != null && !nombre.isEmpty()) {
+            restaurantes = RestauranteDAO.findAll().stream()
+                    .filter(r -> r.getNombre() != null && r.getNombre().toLowerCase().contains(nombre.toLowerCase()))
+                    .toList();
+        } else {
+            restaurantes = RestauranteDAO.findAll();
+        }
+
+        // Añadimos la lista de restaurantes filtrados o completos al modelo
+        model.addAttribute("restaurantes", restaurantes);
+        return "verRestaurantes"; // Nombre de la vista que contiene la lista de restaurantes
     }
 
     // ************************************************** POSTMAPPING
