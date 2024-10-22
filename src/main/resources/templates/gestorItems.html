@@ -13,6 +13,7 @@
 
         <!-- Subtítulo con el nombre de la carta -->
         <h2 class="mb-4" th:text="${cartaMenu.nombre}">Items</h2>
+        <h2 class="mb-4" th:text="${cartaMenu.idCarta}">ID Carta</h2>
 
         <ul class="list-group mb-4" id="item-list">
             <!-- Items will be dynamically added here -->
@@ -42,8 +43,7 @@
                 <div th:if="${#fields.hasErrors('tipo')}" class="text-danger" th:errors="*{tipo}"></div>
             </div>
 
-            <input type="hidden" th:field="*{cartamenu.idCarta}" th:value="${cartaMenu.idCarta}">
-        
+            <input type="hidden" th:field="*{cartamenu.idCarta}" th:value="${cartaMenu.idCarta}">            
             <button type="submit" class="btn btn-success">Añadir Item</button>
         </form>
         

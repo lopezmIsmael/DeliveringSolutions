@@ -92,15 +92,19 @@ public class GestorMenu {
     @GetMapping("/modificar/{id}")
     public String mostrarFormularioModificar(@PathVariable Integer id, Model model) {
         Optional<CartaMenu> optionalCartaMenu = cartaMenuDAO.findById(id);
-        if (optionalCartaMenu.isPresent()) {
-            CartaMenu cartaMenu = optionalCartaMenu.get();
-            model.addAttribute("cartaMenu", cartaMenu);
-            model.addAttribute("itemMenu", new ItemMenu());
-            return "gestorItems";
-        } else {
-            model.addAttribute("error", "Carta no encontrada");
-            return "error";
-        }
+    if (optionalCartaMenu.isPresent()) {
+        CartaMenu cartaMenu = optionalCartaMenu.get();
+        model.addAttribute("cartaMenu", cartaMenu);
+
+        // Crear un nuevo ItemMenu y asignarle la cartaMenu
+        ItemMenu itemMenu = new ItemMenu();
+        itemMenu.setCartamenu(cartaMenu); // Inicializar cartamenu
+        model.addAttribute("itemMenu", itemMenu);
+        return "gestorItems";
+    } else {
+        model.addAttribute("error", "Carta no encontrada");
+        return "error"; // Asegúrate de tener una plantilla 'error.html'
+    }
     }
 
     // ************************************************** POSTMAPPING
@@ -109,9 +113,9 @@ public class GestorMenu {
     @PostMapping("/items/registrarItem")
     public String registrarItem(@ModelAttribute ItemMenu itemMenu, Model model, RedirectAttributes redirectAttributes, BindingResult result) {
 
-        if (result.hasErrors()) {
-            model.addAttribute("error", "Por favor corrija los errores en el formulario.");
-            return "Pruebas-RegisterItemMenu"; // Volver al formulario en caso de error
+        if(itemMenu.getCartamenu() == null || itemMenu.getCartamenu().getIdCarta() == 0) {
+            model.addAttribute("error", "Carta no válida");
+            return "redirect:/cartas/modificar/" + itemMenu.getCartamenu().getIdCarta();
         }
         System.out.println("\nITEM RECIBIDO: " + itemMenu.getNombre() + "\n");
         System.out.println("\nITEM RECIBIDO: " + itemMenu.getTipo() + "\n");
