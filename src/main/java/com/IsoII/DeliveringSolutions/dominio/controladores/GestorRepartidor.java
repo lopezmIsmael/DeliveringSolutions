@@ -14,9 +14,6 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.Repartidor;
 import com.IsoII.DeliveringSolutions.persistencia.RepartidorDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ZonaDAO;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-
 
  
 

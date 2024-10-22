@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Restaurante</title>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header text-center">
+            <h1>Bienvenido al panel de Gestión</h1>
+        </div>
+    
+        <div class="content mt-4">
+            <!-- Sección para mostrar el nombre del restaurante -->
+            <div class="mb-4">
+                <h2>Nombre del Restaurante: <span th:text="${restaurante.nombre}"></span></h2>
+            </div>
+    
+            <!-- Sección para mostrar las cartas/menús asignados al restaurante -->
+            <div>
+                <h3>Cartas/Menús:</h3>
+                <ul class="menu-list">
+                    <!-- <li th:each="menu : ${menus}" th:text="${menu.nombre}"></li> -->
+                    <li th:each="menu : ${menus}">
+                        <a th:href="@{'/cartas/modificar/' + ${menu.idCarta}}" th:text="${menu.nombre}"></a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Botón para poder crear menús nuevos -->
+            <div class="mt-4">
+                <a th:href="@{'/cartas/register/' + ${restaurante.idUsuario}}" class="btn btn-primary">Crear Menú</a>
+            </div> 
+        </div>
+    </div>
+
+</body>
+</html>

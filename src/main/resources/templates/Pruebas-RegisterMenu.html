@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +7,22 @@
 </head>
 <body>
     <h2>Registro de Menus</h2>
-    <form action="/menu/registrarMenu" method="post">
+
+    <!-- Mensajes de éxito o error -->
+    <div th:if="${mensaje}" class="mensaje mensaje-exito" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="mensaje mensaje-error" th:text="${error}"></div>
+    
+    <form action="/cartas/registrarCarta" method="post" th:object="${cartaMenu}">
         <div>
             <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required><br><br>
+            <input type="text" id="nombre" th:field="*{nombre}" required><br><br>
         </div>
 
-        <input type="hidden" name="cif" value="${cif}">
+        <!-- Campo oculto para el cif del restaurante -->
+        <input type="hidden" th:field="*{restaurante.idUsuario}" th:value="*{restaurante.idUsuario}" />
+
         
         <input type="submit" value="Registrar">
     </form>
 </body>
+</html>

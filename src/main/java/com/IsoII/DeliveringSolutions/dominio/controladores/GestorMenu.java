@@ -2,8 +2,13 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
+import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
+
+import org.springframework.ui.Model;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.http.HttpStatus;
@@ -12,11 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/cartas")
 public class GestorMenu {
-    
+
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     @Autowired
@@ -25,7 +31,11 @@ public class GestorMenu {
     @Autowired
     private ItemMenuDAO itemMenuDAO;
 
-    // ************************************************** GETMAPPING ********************************************** */
+    @Autowired
+    private RestauranteDAO restauranteDAO;
+
+    // ************************************************** GETMAPPING
+    // ********************************************** */
 
     // Método que devuelve una lista de todas las cartas
     @GetMapping("/findAll")
@@ -34,10 +44,27 @@ public class GestorMenu {
         return cartaMenuDAO.findAll();
     }
 
-    // Método que muestra el formulario de registro de carta
-    @GetMapping("/register")
-    public String mostrarFormularioRegistro() {
-        return "Pruebas-RegisterMenu"; // Nombre del archivo HTML sin la extensión
+    @GetMapping("/register/{id}")
+    public String mostrarFormularioRegistro(@PathVariable String id, Model model) {
+        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(id);
+        if (optionalRestaurante.isPresent()) {
+            Restaurante restaurante = optionalRestaurante.get();
+
+            // Asegurarse de que restaurante tiene idUsuario
+            System.out.println("Restaurante encontrado: " + restaurante.getIdUsuario());
+
+            model.addAttribute("restaurante", restaurante);
+
+            // Crear una nueva instancia de CartaMenu y establecer el restaurante
+            CartaMenu cartaMenu = new CartaMenu();
+            cartaMenu.setRestaurante(restaurante);
+            model.addAttribute("cartaMenu", cartaMenu);
+
+            return "Pruebas-RegisterMenu";
+        } else {
+            model.addAttribute("error", "Restaurante no encontrado");
+            return "error";
+        }
     }
 
     // Método que busca una sola carta por su id
@@ -60,22 +87,59 @@ public class GestorMenu {
         return "Pruebas-RegisterItemMenu"; // Nombre del archivo HTML sin la extensión
     }
 
-    // ************************************************** POSTMAPPING ********************************************** */
-    // Método que registra una carta
-    @PostMapping("/registrarCarta")
-    public ResponseEntity<CartaMenu> registrarCarta(@ModelAttribute CartaMenu cartaMenu) {
-        // Comprobar si 'nombre' no es nulo o vacío
-        System.out.println("Carta recibida: " + cartaMenu.toString());
-        if (cartaMenu.getNombre() == null || cartaMenu.getNombre().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Devuelve un error si 'nombre' está vacío
-        }
 
-        CartaMenu cartaMenuRegistrada = cartaMenuDAO.save(cartaMenu);
-        System.out.println("Carta registrada: " + cartaMenuRegistrada);
-        return new ResponseEntity<>(cartaMenuRegistrada, HttpStatus.CREATED);
+    @GetMapping("/modificar/{id}")
+    public String mostrarFormularioModificar(@PathVariable String id, Model model) {
+        Optional<CartaMenu> optionalCartaMenu = cartaMenuDAO.findById(id);
+        if (optionalCartaMenu.isPresent()) {
+            CartaMenu cartaMenu = optionalCartaMenu.get();
+            model.addAttribute("cartaMenu", cartaMenu);
+            return "gestorItems";
+        } else {
+            model.addAttribute("error", "Carta no encontrada");
+            return "error";
+        }
     }
 
-    // ************************************************** DELETEMAPPING ********************************************** */
+    // ************************************************** POSTMAPPING
+    // ********************************************** */
+    // Método que registra una carta
+    @PostMapping("/registrarCarta")
+    public String registrarCarta(@ModelAttribute CartaMenu cartaMenu, RedirectAttributes redirectAttributes) {
+        if (cartaMenu.getRestaurante() == null || cartaMenu.getRestaurante().getIdUsuario() == null) {
+            System.out.println("Restaurante no válido: " + cartaMenu.getRestaurante());
+            redirectAttributes.addFlashAttribute("error", "Restaurante no válido");
+            return "redirect:/cartas/register";
+        }
+
+        if (cartaMenu.getNombre() == null || cartaMenu.getNombre().isEmpty()) {
+            System.out.println("Nombre de la carta no puede estar vacío");
+            redirectAttributes.addFlashAttribute("error", "El nombre de la carta no puede estar vacío");
+            return "redirect:/cartas/register";
+        }
+
+        // Buscar el Restaurante en la base de datos
+        String restauranteCif = cartaMenu.getRestaurante().getIdUsuario();
+        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(restauranteCif);
+        if (!optionalRestaurante.isPresent()) {
+            System.out.println("Restaurante no encontrado" + restauranteCif);
+            redirectAttributes.addFlashAttribute("error", "Restaurante no encontrado");
+            return "redirect:/cartas/register";
+        }
+
+        Restaurante restaurante = optionalRestaurante.get();
+        cartaMenu.setRestaurante(restaurante); // Asignar el Restaurante persistente a cartaMenu
+
+        // Guardar cartaMenu
+        System.out.println("Carta recibida: " + cartaMenu);
+        cartaMenuDAO.save(cartaMenu);
+        System.out.println("Carta registrada: " + cartaMenu);
+        redirectAttributes.addFlashAttribute("success", "Carta registrada exitosamente.");
+        return "redirect:/restaurantes/gestion/" + restauranteCif;
+    }
+
+    // ************************************************** DELETEMAPPING
+    // ********************************************** */
     // Método que elimina una carta
     @DeleteMapping("/eliminarCarta/{id}")
     public ResponseEntity<CartaMenu> eliminarCarta(@PathVariable String id) {

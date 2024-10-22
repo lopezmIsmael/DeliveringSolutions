@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Items</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Gestor de Items</h1>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                Modificar Item
+            </div>
+            <div class="card-body">
+                <form id="modify-item-form">
+                    <div class="form-group">
+                        <label for="item-title">Título del Item</label>
+                        <input type="text" class="form-control" id="item-title" placeholder="Ingrese el título del item">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Modificar</button>
+                </form>
+            </div>
+        </div>
+
+        <h2 class="mb-4">Lista de Items</h2>
+        <ul class="list-group mb-4" id="item-list">
+            <!-- Items will be dynamically added here -->
+        </ul>
+
+        <form id="add-item-form">
+            <div class="form-group">
+                <label for="new-item">Nuevo Item</label>
+                <input type="text" class="form-control" id="new-item" placeholder="Ingrese el nuevo item">
+            </div>
+            <button type="submit" class="btn btn-success">Añadir Item</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const itemList = document.getElementById('item-list');
+            const addItemForm = document.getElementById('add-item-form');
+            const modifyItemForm = document.getElementById('modify-item-form');
+            let items = [];
+
+            addItemForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const newItem = document.getElementById('new-item').value;
+                if (newItem) {
+                    items.push(newItem);
+                    renderItems();
+                    document.getElementById('new-item').value = '';
+                }
+            });
+
+            modifyItemForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const itemTitle = document.getElementById('item-title').value;
+                if (itemTitle && items.length > 0) {
+                    items[0] = itemTitle; // Modify the first item for simplicity
+                    renderItems();
+                    document.getElementById('item-title').value = '';
+                }
+            });
+
+            function renderItems() {
+                itemList.innerHTML = '';
+                items.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                    li.textContent = item;
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'btn btn-danger btn-sm';
+                    deleteButton.textContent = 'Eliminar';
+                    deleteButton.addEventListener('click', function() {
+                        items.splice(index, 1);
+                        renderItems();
+                    });
+                    li.appendChild(deleteButton);
+                    itemList.appendChild(li);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
