@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ver Restaurantes</title>
+</head>
+<body>
+
+<h1>Lista de Restaurantes</h1>
+
+<!-- Barra de búsqueda -->
+<form th:action="@{/restaurantes/buscar}" method="get">
+    <input type="text" name="nombre" placeholder="Buscar restaurante" required>
+    <button type="submit">Buscar</button>
+</form>
+
+    <div>
+        <ul>
+            <li th:each="restaurante : ${restaurantes}">
+                <a th:href="@{/restaurantes/findById/{id}(id=${restaurante.nombre})}" th:text="${restaurante.nombre}"></a>
+            </li>
+        </ul>
+    </div>
+
+
+</body>
+</html>

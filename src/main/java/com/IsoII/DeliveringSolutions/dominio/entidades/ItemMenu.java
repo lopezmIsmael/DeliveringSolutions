@@ -1,0 +1,74 @@
+package com.IsoII.DeliveringSolutions.dominio.entidades;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Column;
+
+/**
+ * Representa un usuario genérico en el sistema con un nombre, precio, cartamenu, tipo.
+ * 
+ * @autor Pablo Verdúguez Gervaso
+ * @version 1.0
+ */
+
+@Entity
+public class ItemMenu {
+    
+    @Id
+    @Column(name = "nombre", nullable = false, length = 50)
+    private String nombre;
+
+    @Column(name = "precio", nullable = false)
+    private double precio;
+
+    @ManyToOne
+    @JoinColumn(name = "idCarta")
+    private CartaMenu cartamenu;
+
+    @Column(name = "tipo", nullable = false, length = 50)
+    private String tipo;
+
+    public ItemMenu() {
+    }
+
+    public ItemMenu(String nombre, double precio, CartaMenu cartamenu, String tipo) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.cartamenu = cartamenu;
+        this.tipo = tipo;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public CartaMenu getCartamenu() {
+        return cartamenu;
+    }
+
+    public void setCartamenu(CartaMenu cartamenu) {
+        this.cartamenu = cartamenu;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+}
