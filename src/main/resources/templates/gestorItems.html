@@ -13,7 +13,14 @@
 
         <!-- Subtítulo con el nombre de la carta -->
         <h2 class="mb-4" th:text="${cartaMenu.nombre}">Items</h2>
-        <h2 class="mb-4" th:text="${cartaMenu.idCarta}">ID Carta</h2>
+
+        <ul class="list-group mb-4" id="item-list">
+            <li th:each="item : ${items}" class="list-group-item">
+                <span th:text="${item.nombre}">Nombre del Item</span> - 
+                <span th:text="${item.precio}">Precio del Item</span> - 
+                <span th:text="${item.tipo}">Tipo del Item</span>
+            </li>
+        </ul>
 
         <ul class="list-group mb-4" id="item-list">
             <!-- Items will be dynamically added here -->
@@ -25,22 +32,24 @@
 
         <!-- Formulario para añadir un nuevo item -->
         <form th:action="@{/cartas/items/registrarItem}" method="post" th:object="${itemMenu}">
-            <div class="form-group">
-                <label for="nombre">Nombre</label>
-                <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ingrese el nombre del item" required>
-                <div th:if="${#fields.hasErrors('nombre')}" class="text-danger" th:errors="*{nombre}"></div>
-            </div>
-        
-            <div class="form-group">
-                <label for="precio">Precio</label>
-                <input type="number" th:field="*{precio}" class="form-control" step="0.01" placeholder="Ingrese el precio" required>
-                <div th:if="${#fields.hasErrors('precio')}" class="text-danger" th:errors="*{precio}"></div>
-            </div>
-        
-            <div class="form-group">
-                <label for="tipo">Tipo</label>
-                <input type="text" th:field="*{tipo}" class="form-control" placeholder="Ingrese el tipo" required>
-                <div th:if="${#fields.hasErrors('tipo')}" class="text-danger" th:errors="*{tipo}"></div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ingrese el nombre del item" required>
+                    <div th:if="${#fields.hasErrors('nombre')}" class="text-danger" th:errors="*{nombre}"></div>
+                </div>
+            
+                <div class="form-group col-md-4">
+                    <label for="precio">Precio</label>
+                    <input type="number" th:field="*{precio}" class="form-control" step="0.01" placeholder="Ingrese el precio" required>
+                    <div th:if="${#fields.hasErrors('precio')}" class="text-danger" th:errors="*{precio}"></div>
+                </div>
+            
+                <div class="form-group col-md-4">
+                    <label for="tipo">Tipo</label>
+                    <input type="text" th:field="*{tipo}" class="form-control" placeholder="Ingrese el tipo" required>
+                    <div th:if="${#fields.hasErrors('tipo')}" class="text-danger" th:errors="*{tipo}"></div>
+                </div>
             </div>
 
             <input type="hidden" th:field="*{cartamenu.idCarta}" th:value="${cartaMenu.idCarta}">            

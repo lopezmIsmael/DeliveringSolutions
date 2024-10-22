@@ -100,6 +100,11 @@ public class GestorMenu {
         ItemMenu itemMenu = new ItemMenu();
         itemMenu.setCartamenu(cartaMenu); // Inicializar cartamenu
         model.addAttribute("itemMenu", itemMenu);
+
+        // Añadir la lista de items al modelo
+        List<ItemMenu> items = itemMenuDAO.findByCartamenu(cartaMenu);
+        model.addAttribute("items", items);
+        
         return "gestorItems";
     } else {
         model.addAttribute("error", "Carta no encontrada");
