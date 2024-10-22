@@ -18,6 +18,10 @@
             <!-- Items will be dynamically added here -->
         </ul>
 
+        <!-- Mensajes de éxito o error -->
+        <div th:if="${mensaje}" class="mensaje mensaje-exito" th:text="${mensaje}"></div>
+        <div th:if="${error}" class="mensaje mensaje-error" th:text="${error}"></div>
+
         <!-- Formulario para añadir un nuevo item -->
         <form id="add-item-form" th:action="@{/cartas/items/registrarItem}" method="post" th:object="${itemMenu}">
             <div class="form-row">

@@ -107,11 +107,25 @@ public class GestorMenu {
     // ********************************************** */
     // Método que registra un item del menú
     @PostMapping("/items/registrarItem")
-    public String registrarItem(@ModelAttribute ItemMenu itemMenu, Model model) {
+    public String registrarItem(@ModelAttribute ItemMenu itemMenu, Model model, RedirectAttributes redirectAttributes) {
+        System.out.println("Item recibido: " + itemMenu);
+
+        if (itemMenu.getNombre() == null || itemMenu.getNombre().isEmpty()) {
+            model.addAttribute("error", "Carta no válida, nombre no puede estar vacío");
+            return "redirect:/cartas/items/register";
+        }
+
+        if (itemMenu.getTipo() == null || itemMenu.getTipo().isEmpty()) {
+            model.addAttribute("error", "Carta no válida, tipo no puede estar vacío");
+            return "redirect:/cartas/items/register";
+        }
+
         // Lógica para registrar el item
         itemMenuDAO.save(itemMenu);
-        model.addAttribute("itemMenu", new ItemMenu()); // Para resetear el formulario
-        return "gestorItems";
+        System.out.println("Item registrado: " + itemMenu);
+        model.addAttribute("success", "Item registrado exitosamente.");
+        model.addAttribute("itemMenu", itemMenu); // Para resetear el formulario
+        return "redirect:/cartas/items/register";
     }
 
     // Método que registra una carta
