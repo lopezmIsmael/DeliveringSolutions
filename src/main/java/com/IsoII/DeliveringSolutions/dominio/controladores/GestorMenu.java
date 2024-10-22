@@ -8,7 +8,7 @@ import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
 
 import org.springframework.ui.Model;
-
+import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.http.HttpStatus;
@@ -70,7 +70,7 @@ public class GestorMenu {
     // Método que busca una sola carta por su id
     @GetMapping("/findById/{id}")
     @ResponseBody
-    public CartaMenu findById(@PathVariable String id) {
+    public CartaMenu findById(@PathVariable Integer id) {
         return cartaMenuDAO.findById(id).orElse(null);
     }
 
@@ -90,7 +90,7 @@ public class GestorMenu {
 
 
     @GetMapping("/modificar/{id}")
-    public String mostrarFormularioModificar(@PathVariable String id, Model model) {
+    public String mostrarFormularioModificar(@PathVariable Integer id, Model model) {
         Optional<CartaMenu> optionalCartaMenu = cartaMenuDAO.findById(id);
         if (optionalCartaMenu.isPresent()) {
             CartaMenu cartaMenu = optionalCartaMenu.get();
@@ -107,8 +107,30 @@ public class GestorMenu {
     // ********************************************** */
     // Método que registra un item del menú
     @PostMapping("/items/registrarItem")
-    public String registrarItem(@ModelAttribute ItemMenu itemMenu, Model model, RedirectAttributes redirectAttributes) {
-        System.out.println("Item recibido: " + itemMenu);
+    public String registrarItem(@ModelAttribute ItemMenu itemMenu, Model model, RedirectAttributes redirectAttributes, BindingResult result) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("error", "Por favor corrija los errores en el formulario.");
+            return "Pruebas-RegisterItemMenu"; // Volver al formulario en caso de error
+        }
+        System.out.println("\nITEM RECIBIDO: " + itemMenu.getNombre() + "\n");
+        System.out.println("\nITEM RECIBIDO: " + itemMenu.getTipo() + "\n");
+        System.out.println("\nITEM RECIBIDO: " + itemMenu.getPrecio() + "\n");
+
+        Integer cartaMenuID = itemMenu.getCartamenu().getIdCarta();
+        Optional<CartaMenu> optionalCarta = cartaMenuDAO.findById(cartaMenuID);
+
+        if (!optionalCarta.isPresent()) {
+            model.addAttribute("error", "Carta no encontrada");
+            return "redirect:/cartas/items/register";
+        }
+
+        CartaMenu cartaMenu = optionalCarta.get();
+        itemMenu.setCartamenu(cartaMenu);
+
+        
+
+
 
         if (itemMenu.getNombre() == null || itemMenu.getNombre().isEmpty()) {
             model.addAttribute("error", "Carta no válida, nombre no puede estar vacío");
@@ -120,9 +142,15 @@ public class GestorMenu {
             return "redirect:/cartas/items/register";
         }
 
+         // Validar el precio
+        if (itemMenu.getPrecio() <= 0) {
+            redirectAttributes.addFlashAttribute("error", "El precio debe ser mayor que 0");
+            return "redirect:/cartas/items/register";
+        }
+
         // Lógica para registrar el item
         itemMenuDAO.save(itemMenu);
-        System.out.println("Item registrado: " + itemMenu);
+        System.out.println("\nITEM REGISTRADO: " + itemMenu.toString());
         model.addAttribute("success", "Item registrado exitosamente.");
         model.addAttribute("itemMenu", itemMenu); // Para resetear el formulario
         return "redirect:/cartas/items/register";
@@ -167,7 +195,7 @@ public class GestorMenu {
     // ********************************************** */
     // Método que elimina una carta
     @DeleteMapping("/eliminarCarta/{id}")
-    public ResponseEntity<CartaMenu> eliminarCarta(@PathVariable String id) {
+    public ResponseEntity<CartaMenu> eliminarCarta(@PathVariable Integer id) {
         // Comprobar si la carta existe
         CartaMenu cartaMenu = cartaMenuDAO.findById(id).orElse(null);
         if (cartaMenu == null) {

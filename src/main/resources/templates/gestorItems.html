@@ -23,45 +23,60 @@
         <div th:if="${error}" class="mensaje mensaje-error" th:text="${error}"></div>
 
         <!-- Formulario para añadir un nuevo item -->
-        <form id="add-item-form" th:action="@{/cartas/items/registrarItem}" method="post" th:object="${itemMenu}">
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" th:field="*{nombre}" placeholder="Ingrese el nombre del item" required>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="precio">Precio</label>
-                    <input type="number" class="form-control" id="precio" th:field="*{precio}" placeholder="Ingrese el precio" required>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="tipo">Tipo</label>
-                    <input type="text" class="form-control" id="tipo" th:field="*{tipo}" placeholder="Ingrese el tipo" required>
-                </div>
+        <form th:action="@{/cartas/items/registrarItem}" method="post" th:object="${itemMenu}">
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ingrese el nombre del item" required>
+                <div th:if="${#fields.hasErrors('nombre')}" class="text-danger" th:errors="*{nombre}"></div>
             </div>
-            <!-- Campo oculto para pasar el ID de la carta -->
-            <input type="hidden" th:field="*{cartamenu.idCarta}" />
+        
+            <div class="form-group">
+                <label for="precio">Precio</label>
+                <input type="number" th:field="*{precio}" class="form-control" step="0.01" placeholder="Ingrese el precio" required>
+                <div th:if="${#fields.hasErrors('precio')}" class="text-danger" th:errors="*{precio}"></div>
+            </div>
+        
+            <div class="form-group">
+                <label for="tipo">Tipo</label>
+                <input type="text" th:field="*{tipo}" class="form-control" placeholder="Ingrese el tipo" required>
+                <div th:if="${#fields.hasErrors('tipo')}" class="text-danger" th:errors="*{tipo}"></div>
+            </div>
+
+            <input type="hidden" th:field="*{cartamenu}" th:value="${cartaMenu}">
+        
             <button type="submit" class="btn btn-success">Añadir Item</button>
         </form>
-    </div>
+        
 
-    <!-- Script para manejo dinámico de la lista de items -->
-    <script>
+     <!-- Script para manejo dinámico de la lista de items -->
+     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const itemList = document.getElementById('item-list');
             const addItemForm = document.getElementById('add-item-form');
             let items = [];
 
             addItemForm.addEventListener('submit', function(event) {
-                event.preventDefault();
                 const newItemInput = document.getElementById('nombre');
+                const newItemPriceInput = document.getElementById('precio');
+                const newItemTypeInput = document.getElementById('tipo');
                 const newItemText = newItemInput.value.trim();
-                if (newItemText !== '') {
-                    items.push(newItemText);
+                const newItemPrice = newItemPriceInput.value.trim();
+                const newItemType = newItemTypeInput.value.trim();
+
+                if (newItemText !== '' && newItemPrice !== '' && newItemType !== '') {
+                    const newItem = {
+                        text: newItemText,
+                        price: newItemPrice,
+                        type: newItemType
+                    };
+                    items.push(newItem);
                     const newItemElement = document.createElement('li');
                     newItemElement.className = 'list-group-item';
-                    newItemElement.textContent = newItemText;
+                    newItemElement.textContent = `${newItem.text} - ${newItem.price} - ${newItem.type}`;
                     itemList.appendChild(newItemElement);
                     newItemInput.value = '';
+                    newItemPriceInput.value = '';
+                    newItemTypeInput.value = '';
                 }
             });
         });
