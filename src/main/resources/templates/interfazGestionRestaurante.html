@@ -21,7 +21,10 @@
             <div>
                 <h3>Cartas/Menús:</h3>
                 <ul class="menu-list">
-                    <li th:each="menu : ${menus}" th:text="${menu.nombre}"></li>
+                    <!-- <li th:each="menu : ${menus}" th:text="${menu.nombre}"></li> -->
+                    <li th:each="menu : ${menus}">
+                        <a th:href="@{'/cartas/findById/' + ${menu.idCarta}}" th:text="${menu.nombre}"></a>
+                    </li>
                 </ul>
             </div>
 
