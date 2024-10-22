@@ -2,6 +2,7 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 
 import java.util.List;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -94,6 +95,21 @@ public class GestorCliente {
         // Añadimos la lista de restaurantes filtrados o completos al modelo
         model.addAttribute("restaurantes", restaurantes);
         return "verRestaurantes"; // Nombre de la vista que contiene la lista de restaurantes
+    }
+
+    @GetMapping("/verMenusRestaurante/{id}")
+    public String verMenusRestaurante(@PathVariable String id, Model model) {
+        // Buscar el restaurante por su idUsuario
+        Optional<Restaurante> restaurante = RestauranteDAO.findById(id);
+
+        // Si el restaurante existe, pasarlo al modelo
+        if (restaurante.isPresent()) {
+            model.addAttribute("nombreRestaurante", restaurante.get().getNombre());
+            return "verMenusRestaurante"; // Nombre de la vista
+        } else {
+            model.addAttribute("error", "Restaurante no encontrado");
+            return "error"; // Vista de error si no se encuentra el restaurante
+        }
     }
 
     // ************************************************** POSTMAPPING

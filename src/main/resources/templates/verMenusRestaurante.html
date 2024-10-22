@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menús del Restaurante</title>
+    <style>
+        /* Estilos omitidos por brevedad */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Mostrar el nombre del restaurante -->
+        <h2>Menús del Restaurante: <span th:text="${nombreRestaurante}"></span></h2>
+
+        <!-- Aquí se mostrarían los menús relacionados con el restaurante -->
+        <p>En esta página aparecerán los menús disponibles del restaurante seleccionado.</p>
+    </div>
+</body>
+</html>

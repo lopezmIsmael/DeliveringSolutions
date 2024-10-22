@@ -116,6 +116,8 @@
             <!-- Cada restaurante aparece en una tarjeta con el nombre -->
             <div th:each="restaurante : ${restaurantes}" class="restaurant-card">
                 <div class="restaurant-name" th:text="${restaurante.nombre}"></div>
+                <!-- Enlace que redirige a verMenusRestaurante pasando el idUsuario del restaurante -->
+                <a th:href="@{/clientes/verMenusRestaurante/{id}(id=${restaurante.idUsuario})}">Ver Menús</a>
             </div>
         </div>
     </div>
