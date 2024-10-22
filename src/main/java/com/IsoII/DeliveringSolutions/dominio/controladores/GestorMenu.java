@@ -212,4 +212,21 @@ public class GestorMenu {
         cartaMenuDAO.deleteById(id);
         return new ResponseEntity<>(cartaMenu, HttpStatus.OK);
     }
+
+
+    @DeleteMapping("/eliminarItem/{id}")
+    @ResponseBody
+    public ResponseEntity<Void> eliminarItem(@PathVariable String id) {
+        System.out.println("\nBuscando item: " + id + "\n");
+        Optional<ItemMenu> optionalItemMenu = itemMenuDAO.findById(id);
+        System.out.println("\nItem encontrado: " + optionalItemMenu + "\n");
+        if (optionalItemMenu.isPresent()) {
+            itemMenuDAO.delete(optionalItemMenu.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
+
+
