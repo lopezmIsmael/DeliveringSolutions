@@ -36,9 +36,25 @@
     <div class="container">
         <!-- Mostrar el nombre del restaurante -->
         <h2>Menús del Restaurante: <span th:text="${nombreRestaurante}"></span></h2>
+        <!-- Si no hay menús, mostrar un mensaje -->
+        <div th:if="${#lists.isEmpty(menus)}">
+            <p>No hay menús disponibles en este momento.</p>
+        </div>
 
-        <!-- Aquí se mostrarían los menús relacionados con el restaurante -->
-        <p>En esta página aparecerán los menús disponibles del restaurante seleccionado.</p>
+        <!-- Si hay menús, mostrarlos en una tabla -->
+        <div th:if="${not #lists.isEmpty(menus)}">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="menu : ${menus}">
+                        <td th:text="${menu.nombre}"></td>
+                    </tr>
+                </tbody>
+            </table>
     </div>
 </body>
 </html>
