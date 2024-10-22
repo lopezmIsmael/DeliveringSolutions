@@ -87,6 +87,20 @@ public class GestorMenu {
         return "Pruebas-RegisterItemMenu"; // Nombre del archivo HTML sin la extensión
     }
 
+
+    @GetMapping("/modificar/{id}")
+    public String mostrarFormularioModificar(@PathVariable String id, Model model) {
+        Optional<CartaMenu> optionalCartaMenu = cartaMenuDAO.findById(id);
+        if (optionalCartaMenu.isPresent()) {
+            CartaMenu cartaMenu = optionalCartaMenu.get();
+            model.addAttribute("cartaMenu", cartaMenu);
+            return "gestorItems";
+        } else {
+            model.addAttribute("error", "Carta no encontrada");
+            return "error";
+        }
+    }
+
     // ************************************************** POSTMAPPING
     // ********************************************** */
     // Método que registra una carta

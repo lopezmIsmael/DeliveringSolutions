@@ -23,7 +23,7 @@
                 <ul class="menu-list">
                     <!-- <li th:each="menu : ${menus}" th:text="${menu.nombre}"></li> -->
                     <li th:each="menu : ${menus}">
-                        <a th:href="@{'/cartas/findById/' + ${menu.idCarta}}" th:text="${menu.nombre}"></a>
+                        <a th:href="@{'/cartas/modificar/' + ${menu.idCarta}}" th:text="${menu.nombre}"></a>
                     </li>
                 </ul>
             </div>
