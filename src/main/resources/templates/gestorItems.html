@@ -1,73 +1,71 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestor de Items</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title th:text="'Gestor de ' + ${cartaMenu.nombre}">Gestor de Items</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Gestor de Items</h1>
+        <!-- Título con el nombre de la carta -->
+        <h1 class="mb-4" th:text="'Gestor de ' + ${cartaMenu.nombre}">Gestor de Items</h1>
 
-        <h2 class="mb-4">Items</h2>
+        <!-- Subtítulo con el nombre de la carta -->
+        <h2 class="mb-4" th:text="${cartaMenu.nombre}">Items</h2>
+
         <ul class="list-group mb-4" id="item-list">
             <!-- Items will be dynamically added here -->
         </ul>
 
-        <form id="add-item-form">
+        <!-- <form id="add-item-form">
             <div class="form-group">
                 <label for="new-item">Nuevo Item</label>
                 <input type="text" class="form-control" id="new-item" placeholder="Ingrese el nuevo item">
             </div>
             <button type="submit" class="btn btn-success">Añadir Item</button>
+        </form> -->
+
+        <!-- Formulario para añadir un nuevo item -->
+        <form id="add-item-form" th:action="@{/cartas/items/registrarItem}" method="post" th:object="${itemMenu}">
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" class="form-control" id="nombre" th:field="*{nombre}" placeholder="Ingrese el nombre del item" required>
+            </div>
+            <div class="form-group">
+                <label for="precio">Precio</label>
+                <input type="number" class="form-control" id="precio" th:field="*{precio}" placeholder="Ingrese el precio" required>
+            </div>
+            <div class="form-group">
+                <label for="tipo">Tipo</label>
+                <input type="text" class="form-control" id="tipo" th:field="*{tipo}" placeholder="Ingrese el tipo" required>
+            </div>
+            <!-- Campo oculto para pasar el ID de la carta -->
+            <input type="hidden" th:field="*{cartamenu.idCarta}" />
+            <button type="submit" class="btn btn-success">Añadir Item</button>
         </form>
     </div>
 
+    <!-- Script para manejo dinámico de la lista de items -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const itemList = document.getElementById('item-list');
             const addItemForm = document.getElementById('add-item-form');
-            const modifyItemForm = document.getElementById('modify-item-form');
             let items = [];
 
             addItemForm.addEventListener('submit', function(event) {
                 event.preventDefault();
-                const newItem = document.getElementById('new-item').value;
-                if (newItem) {
-                    items.push(newItem);
-                    renderItems();
-                    document.getElementById('new-item').value = '';
+                const newItemInput = document.getElementById('nombre');
+                const newItemText = newItemInput.value.trim();
+                if (newItemText !== '') {
+                    items.push(newItemText);
+                    const newItemElement = document.createElement('li');
+                    newItemElement.className = 'list-group-item';
+                    newItemElement.textContent = newItemText;
+                    itemList.appendChild(newItemElement);
+                    newItemInput.value = '';
                 }
             });
-
-            modifyItemForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const itemTitle = document.getElementById('item-title').value;
-                if (itemTitle && items.length > 0) {
-                    items[0] = itemTitle; // Modify the first item for simplicity
-                    renderItems();
-                    document.getElementById('item-title').value = '';
-                }
-            });
-
-            function renderItems() {
-                itemList.innerHTML = '';
-                items.forEach((item, index) => {
-                    const li = document.createElement('li');
-                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
-                    li.textContent = item;
-                    const deleteButton = document.createElement('button');
-                    deleteButton.className = 'btn btn-danger btn-sm';
-                    deleteButton.textContent = 'Eliminar';
-                    deleteButton.addEventListener('click', function() {
-                        items.splice(index, 1);
-                        renderItems();
-                    });
-                    li.appendChild(deleteButton);
-                    itemList.appendChild(li);
-                });
-            }
         });
     </script>
 </body>

@@ -83,7 +83,8 @@ public class GestorMenu {
 
     // Método que muestra el formulario de registro de item del menú
     @GetMapping("/items/register")
-    public String mostrarFormularioRegistroItem() {
+    public String mostrarFormularioRegistroItem(Model model) {
+        model.addAttribute("itemMenu", new ItemMenu());
         return "Pruebas-RegisterItemMenu"; // Nombre del archivo HTML sin la extensión
     }
 
@@ -94,6 +95,7 @@ public class GestorMenu {
         if (optionalCartaMenu.isPresent()) {
             CartaMenu cartaMenu = optionalCartaMenu.get();
             model.addAttribute("cartaMenu", cartaMenu);
+            model.addAttribute("itemMenu", new ItemMenu());
             return "gestorItems";
         } else {
             model.addAttribute("error", "Carta no encontrada");
@@ -103,6 +105,15 @@ public class GestorMenu {
 
     // ************************************************** POSTMAPPING
     // ********************************************** */
+    // Método que registra un item del menú
+    @PostMapping("/items/registrarItem")
+    public String registrarItem(@ModelAttribute ItemMenu itemMenu, Model model) {
+        // Lógica para registrar el item
+        itemMenuDAO.save(itemMenu);
+        model.addAttribute("itemMenu", new ItemMenu()); // Para resetear el formulario
+        return "gestorItems";
+    }
+
     // Método que registra una carta
     @PostMapping("/registrarCarta")
     public String registrarCarta(@ModelAttribute CartaMenu cartaMenu, RedirectAttributes redirectAttributes) {
