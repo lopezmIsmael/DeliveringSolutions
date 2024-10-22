@@ -4,60 +4,108 @@
 <head>
     <meta charset="UTF-8">
     <title>Registro de Repartidor</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center; /* Centra el contenido horizontalmente */
+            align-items: center; /* Centra el contenido verticalmente */
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        input[type="text"], input[type="password"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"], button[type="button"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover, button[type="button"]:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 
 <body>
-    <h2>Registro de Repartidor</h2>
-
-    <!-- Mensajes de éxito o error -->
-    <div th:if="${mensaje}" class="mensaje mensaje-exito" th:text="${mensaje}"></div>
-    <div th:if="${error}" class="mensaje mensaje-error" th:text="${error}"></div>
-
-    <form th:action="@{/repartidores/registrarRepartidor}" method="post">
-        <div>
-            <label for="idUsuario">Nombre de Usuario:</label>
-            <input type="text" id="idUsuario" name="idUsuario" required>
-        </div>
-        <br>
-
-        <div>
-            <label for="pass">Contraseña:</label>
-            <input type="password" id="pass" name="pass" required>
-        </div>
-        <br>
-
-        <div>
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
-        </div>
-        <br>
-
-        <div>
-            <label for="apellido">Apellidos:</label>
-            <input type="text" id="apellido" name="apellido" required>
-        </div>
-        <br>
-
-        <div>
-            <label for="dni">DNI:</label>
-            <input type="text" id="dni" name="dni" required>
-        </div>
-        <div>
-            <label for="zona">Zona:</label>
-            <select id="zona" name="zona" required>
-                <option value="" disabled selected>Seleccione una zona</option>
-                <!-- Asegúrate de que el valor sea el ID de la zona -->
-                <option th:each="zona : ${zonas}" th:value="${zona.id}" th:text="${zona.nombre}"></option>
-            </select>
-        </div>
-
-        <input type="hidden" name="tipoUsuario" value="REPARTIDOR">
-        <input type="hidden" name="eficiencia" value="0">
-        <div>
-            <button type="submit">Registrar</button>
-            <a th:href="@{/zona/register}" class="button">Crear Zona</a>
-        </div>
-    </form>
+    <form action="/repartidores/registrarRepartidor" method="post">
+    <table>
+        <tr>
+            <td colspan="2" style="text-align: center;"><h2>Registro de Repartidor</h2></td>
+        </tr>
+        <tr>
+            <td><label for="idUsuario">Nombre de Usuario:</label></td>
+            <td><input type="text" id="idUsuario" name="idUsuario" required></td>
+        </tr>
+        <tr>
+            <td><label for="pass">Contraseña:</label></td>
+            <td><input type="password" id="pass" name="pass" required></td>
+        </tr>
+        <tr>
+            <td><label for="nombre">Nombre:</label></td>
+            <td><input type="text" id="nombre" name="nombre" required></td>
+        </tr>
+        <tr>
+            <td><label for="apellido">Apellidos:</label></td>
+            <td><input type="text" id="apellido" name="apellido" required></td>
+        </tr>
+        <tr>
+            <td><label for="dni">DNI:</label></td>
+            <td><input type="text" id="dni" name="dni" required></td>
+        </tr>
+        <tr>
+            <td><label for="zona">Zona:</label></td>
+            <td>
+                <select id="zona" name="zona" required>
+                    <option value="" disabled selected>Seleccione una zona</option>
+                    <!-- Asegúrate de que el valor sea el ID de la zona -->
+                    <option th:each="zona : ${zonas}" th:value="${zona.id}" th:text="${zona.nombre}"></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center;">
+                <a th:href="@{/zona/register}" class="button">Crear Zona</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="text-align: center;">
+                <input type="hidden" name="tipoUsuario" value="REPARTIDOR">
+                <input type="hidden" name="eficiencia" value="0">
+                <button type="submit">Registrar</button>
+            </td>
+        </tr>
+        
+    </table>
 </body>
 
 </html>
