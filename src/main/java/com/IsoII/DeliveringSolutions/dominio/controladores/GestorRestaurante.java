@@ -54,18 +54,18 @@ public class GestorRestaurante {
     }
 
     @GetMapping("/buscar")
-public String buscarRestaurante(@RequestParam String nombre, Model model) {
-    Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(nombre);
-    if (optionalRestaurante.isPresent()) {
-        Restaurante restaurante = optionalRestaurante.get();
-        return "redirect:/restaurantes/findById/" + restaurante.getNombre();
-    } else {
-        model.addAttribute("error", "Restaurante no encontrado");
-        return "verRestaurantes"; // Nombre del archivo HTML sin la extensión
+    public String buscarRestaurante(@RequestParam String nombre, Model model) {
+        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(nombre);
+        if (optionalRestaurante.isPresent()) {
+            Restaurante restaurante = optionalRestaurante.get();
+            return "redirect:/restaurantes/findById/" + restaurante.getNombre();
+        } else {
+            model.addAttribute("error", "Restaurante no encontrado");
+            return "verRestaurantes"; // Nombre del archivo HTML sin la extensión
+        }
     }
-}
 
-@GetMapping("/gestion/{id}")
+    @GetMapping("/gestion/{id}")
     public String gestionRestaurante(@PathVariable String id, Model model) {
         Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(id);
         if (optionalRestaurante.isPresent()) {

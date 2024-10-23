@@ -18,6 +18,9 @@ public class Restaurante extends Usuario {
     @Column(name = "cif", nullable = false, length = 50)
     private String cif;
 
+    @Column(name = "direccion", nullable = false, length = 50)
+    private String direccion;
+
     @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
 
@@ -33,9 +36,10 @@ public class Restaurante extends Usuario {
      * @param cif       El cif del restaurante.
      * @param nombre    El nombre del restaurante.
      */
-    public Restaurante(String idUsuario, String pass, String tipoUsuario, String cif, String nombre) {
+    public Restaurante(String idUsuario, String pass, String tipoUsuario, String cif, String direccion, String nombre) {
         super(idUsuario, pass, tipoUsuario);
         this.cif = cif;
+        this.direccion = direccion;
         this.nombre = nombre;
     }
 
@@ -46,6 +50,14 @@ public class Restaurante extends Usuario {
 
     public void setCif(String cif) {
         this.cif = cif;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     public String getNombre() {
