@@ -137,16 +137,16 @@ public class GestorCliente {
     // ********************************************** */
     // Método que registra un cliente
     @PostMapping("/registrarCliente")
-    public ResponseEntity<Cliente> registrarCliente(@ModelAttribute Cliente cliente) {
+    public String registrarCliente(@ModelAttribute Cliente cliente) {
         // Comprobar si 'pass' no es nulo o vacío
         System.out.println("Cliente recibido: " + cliente.toString());
         if (cliente.getPass() == null || cliente.getPass().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Devuelve un error si 'pass' está vacío
+            return "redirect:/clientes/register"; // Devuelve un error si 'pass' está vacío
         }
 
         Cliente clienteRegistrado = clienteDAO.save(cliente);
         System.out.println("Cliente registrado: " + clienteRegistrado);
-        return new ResponseEntity<>(clienteRegistrado, HttpStatus.CREATED);
+        return "redirect:/"; // Redirige al index si el cliente se registra correctamente
     }
 
     // Método que elimina un cliente por su id

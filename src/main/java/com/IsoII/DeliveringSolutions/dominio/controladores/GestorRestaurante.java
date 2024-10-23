@@ -82,14 +82,14 @@ public class GestorRestaurante {
 
 
     @PostMapping("/registrarRestaurante")
-    public ResponseEntity<Restaurante> registrarRestaurante(@ModelAttribute Restaurante restaurante) {
+    public String registrarRestaurante(@ModelAttribute Restaurante restaurante, Model model) {
         System.out.println("Restaurante recibido: " + restaurante.toString());
         if (restaurante.getPass() == null || restaurante.getPass().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            model.addAttribute("error", "Contraseña no puede estar vacía");
+            return "error"; // Nombre del archivo HTML de la página de error
         }
         Restaurante restauranteRegistrado = restauranteDAO.save(restaurante);
         System.out.println("Restaurante registrado: " + restauranteRegistrado);
-        return new ResponseEntity<>(restauranteRegistrado, HttpStatus.CREATED);
+        return "redirect:/restaurantes/gestion/" + restauranteRegistrado.getIdUsuario();
     }
-
 }

@@ -68,16 +68,16 @@ public class GestorUsuario {
     // ********************************************** */
     // Método que registra un cliente
     @PostMapping("/registrarUsuario")
-    public ResponseEntity<Usuario> registrarCliente(@ModelAttribute Usuario usuario) {
+    public String registrarUsuario(@ModelAttribute Usuario usuario) {
         // Comprobar si 'pass' no es nulo o vacío
-        System.out.println("Cliente recibido: " + usuario.toString());
+        System.out.println("Usuario recibido: " + usuario.toString());
         if (usuario.getPass() == null || usuario.getPass().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Devuelve un error si 'pass' está vacío
+            return "redirect:/usuarios/registrarUsuario"; // Devuelve un error si 'pass' está vacío
         }
 
         Usuario usuarioRegistrado = usuarioDAO.save(usuario);
         System.out.println("Usuario registrado: " + usuarioRegistrado);
-        return new ResponseEntity<>(usuarioRegistrado, HttpStatus.CREATED);
+        return "redirect:/";
     }
 
     // Método que elimina un cliente por su id
