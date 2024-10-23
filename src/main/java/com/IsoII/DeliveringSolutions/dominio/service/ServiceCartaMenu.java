@@ -23,7 +23,7 @@ public class ServiceCartaMenu {
         return cartaMenuDAO.findAll();
     }
 
-    public Optional<CartaMenu> findById(String id){
+    public Optional<CartaMenu> findById(Integer id){
         return cartaMenuDAO.findById(id);
     }
 
@@ -39,7 +39,7 @@ public class ServiceCartaMenu {
         return cartaMenuDAO.save(cartaMenu);
     }
 
-    public void deleteById(String id){
+    public void deleteById(Integer id){
         cartaMenuDAO.deleteById(id);
     }
 }
