@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menús del Restaurante</title>
+    <style>
+        /* Estilos omitidos por brevedad */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Mostrar el nombre del restaurante -->
+        <h2>Menús del Restaurante: <span th:text="${restaurante.nombre}"></span></h2>
+        <!-- Si no hay menús, mostrar un mensaje -->
+        <div th:if="${#lists.isEmpty(menus)}">
+            <p>No hay menús disponibles en este momento.</p>
+        </div>
+
+        <!-- Si hay menús, mostrarlos en una tabla -->
+        <div th:if="${not #lists.isEmpty(menus)}">
+            <div th:each="menu : ${menus}">
+                <h3 th:text="${menu.nombre}"></h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre del Item</th>
+                            <th>Precio</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${menu.items}">
+                            <td th:text="${item.nombre}"></td>
+                            <td th:text="${item.precio}"></td>
+                            <td th:text="${item.tipo}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
