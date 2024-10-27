@@ -22,9 +22,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.persistencia.ClienteDAO;
 import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
+
+import jakarta.servlet.http.HttpSession;
+
 import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
@@ -70,11 +74,23 @@ public class GestorCliente {
     }
 
     @GetMapping("/verRestaurantes")
-    public String verRestaurantes(Model model) {
+    public String verRestaurantes(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            // Si el usuario no está autenticado, se muestra como "anónimo"
+            Usuario anonimo = new Usuario();
+            anonimo.setIdUsuario("anónimo");
+            model.addAttribute("usuario", anonimo);
+        } else {
+            model.addAttribute("usuario", usuario);
+        }
+
         List<Restaurante> restaurantes = RestauranteDAO.findAll();
         model.addAttribute("restaurantes", restaurantes);
         return "verRestaurantes";
     }
+
+
 
     @GetMapping("/listar")
     public String listarRestaurantes(Model model) {
@@ -132,6 +148,14 @@ public class GestorCliente {
             return "error"; // Vista de error si no se encuentra el restaurante
         }
     }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
+        session.invalidate(); // Invalida la sesión actual
+        redirectAttributes.addFlashAttribute("mensaje", "Has cerrado sesión.");
+        return "redirect:/";
+    }
+
 
     // ************************************************** POSTMAPPING
     // ********************************************** */
