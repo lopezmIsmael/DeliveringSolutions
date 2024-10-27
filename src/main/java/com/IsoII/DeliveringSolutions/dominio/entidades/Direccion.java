@@ -76,14 +76,6 @@ public class Direccion {
         this.municipio = municipio;
     }
 
-    public CodigoPostal getCodigoPostal() {
-        return codigoPostal;
-    }
-
-    public void setCodigoPostal(CodigoPostal codigoPostal) {
-        this.codigoPostal = codigoPostal;
-    }
-
     @Override
     public String toString() {
         return "Direccion{" +

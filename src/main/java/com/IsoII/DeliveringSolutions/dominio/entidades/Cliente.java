@@ -25,6 +25,10 @@ public class Cliente extends Usuario {
     @Column(name = "dni", nullable = false, length = 9)
     private String dni;
 
+    @ManyToOne
+    @JoinColumn(name = "Direccion", nullable = true)
+    private Direccion direccion;
+
     public Cliente() {
     }
 
@@ -38,11 +42,12 @@ public class Cliente extends Usuario {
      * @param apellido  El apellido del cliente.
      * @param dni     El dni del cliente.
      */
-    public Cliente(String idUsuario, String pass, String tipoUsuario, String nombre, String apellido, String dni) {
+    public Cliente(String idUsuario, String pass, String tipoUsuario, String nombre, String apellido, String dni, Direccion direccion) {
         super(idUsuario, pass, tipoUsuario);
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
+        this.direccion = direccion;
     }
 
     // Getters y setters para los atributos específicos de Cliente
@@ -73,6 +78,6 @@ public class Cliente extends Usuario {
 
     @Override
     public String toString() {
-        return "Cliente [idUsuario=" + idUsuario + ", pass=" + pass + ", tipoUsuario=" + tipoUsuario + ", nombre=" + nombre + ", apellido=" + apellido + ", dni=" + dni + "]";
+        return "Cliente [idUsuario=" + idUsuario + ", pass=" + pass + ", tipoUsuario=" + tipoUsuario + ", nombre=" + nombre + ", apellido=" + apellido + ", dni=" + dni + ", direccion=" + direccion.toString() + "]";
     }
 }
