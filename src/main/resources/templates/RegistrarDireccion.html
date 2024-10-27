@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>Registro de Dirección</title>
@@ -10,8 +9,8 @@
             padding: 0;
             height: 100%;
             display: flex;
-            justify-content: center; /* Centra el contenido horizontalmente */
-            align-items: center; /* Centra el contenido verticalmente */
+            justify-content: center;
+            align-items: center;
             font-family: Arial, sans-serif;
         }
 
@@ -64,19 +63,19 @@
             </tr>
             <tr>
                 <td><label for="calle">Calle:</label></td>
-                <td><input type="text" id="calle" name="calle" required maxlength="50"></td>
+                <td><input type="text" id="calle" name="calle" required maxlength="50" th:value="${direccion.calle}"></td>
             </tr>
             <tr>
                 <td><label for="numero">Número:</label></td>
-                <td><input type="text" id="numero" name="numero" required maxlength="10"></td>
+                <td><input type="text" id="numero" name="numero" required maxlength="10" th:value="${direccion.numero}"></td>
             </tr>
             <tr>
                 <td><label for="complemento">Complemento:</label></td>
-                <td><input type="text" id="complemento" name="complemento" maxlength="50"></td>
+                <td><input type="text" id="complemento" name="complemento" maxlength="50" th:value="${direccion.complemento}"></td>
             </tr>
             <tr>
                 <td><label for="municipio">Municipio:</label></td>
-                <td><input type="text" id="municipio" name="municipio" required maxlength="50"></td>
+                <td><input type="text" id="municipio" name="municipio" required maxlength="50" th:value="${direccion.municipio}"></td>
             </tr>
             <tr>
                 <td><label for="codigoPostal">Código Postal:</label></td>
@@ -95,5 +94,4 @@
         </table>
     </form>
 </body>
-
 </html>

@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
@@ -32,6 +33,7 @@ import jakarta.servlet.http.HttpSession;
 import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
 
 @Controller
 @RequestMapping("/clientes")
@@ -47,6 +49,9 @@ public class GestorCliente {
 
     @Autowired
     private ServiceCartaMenu serviceCartaMenu;
+
+    @Autowired
+    private ServiceDireccion serviceDireccion;
 
     @Autowired
     private ItemMenuDAO itemMenuDAO;
@@ -89,8 +94,6 @@ public class GestorCliente {
         model.addAttribute("restaurantes", restaurantes);
         return "verRestaurantes";
     }
-
-
 
     @GetMapping("/listar")
     public String listarRestaurantes(Model model) {
@@ -136,7 +139,7 @@ public class GestorCliente {
 
             if (menus.isEmpty()) {
                 model.addAttribute("error", "No hay menús disponibles");
-                return "error"; 
+                return "error";
             }
 
             model.addAttribute("restaurante", restaurante);
@@ -155,7 +158,6 @@ public class GestorCliente {
         redirectAttributes.addFlashAttribute("mensaje", "Has cerrado sesión.");
         return "redirect:/";
     }
-
 
     // ************************************************** POSTMAPPING
     // ********************************************** */
@@ -179,4 +181,42 @@ public class GestorCliente {
         clienteDAO.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    // Método: Mostrar el formulario de modificación de dirección
+    // Método para mostrar el formulario de modificación de dirección
+    @GetMapping("/modificarDireccion/{id}")
+    public String mostrarFormularioModificarDireccion(@PathVariable String id, Model model) {
+        Optional<Cliente> optionalCliente = clienteDAO.findById(id);
+        if (optionalCliente.isPresent()) {
+            Cliente cliente = optionalCliente.get();
+            model.addAttribute("cliente", cliente);
+            model.addAttribute("direccion", cliente.getDireccion()); // Usar el método getDireccion()
+            return "modificarDireccionCliente"; // Vista para modificar la dirección del cliente
+        } else {
+            model.addAttribute("error", "Cliente no encontrado");
+            return "error";
+        }
+    }
+
+    // Método para procesar la modificación de la dirección
+    @PostMapping("/modificarDireccion/{id}")
+    public String modificarDireccionCliente(@PathVariable String id, @ModelAttribute Direccion direccion, Model model) {
+        Optional<Cliente> optionalCliente = clienteDAO.findById(id);
+        if (optionalCliente.isPresent()) {
+            Cliente cliente = optionalCliente.get();
+
+            // Guardar la dirección (nueva o existente)
+            Direccion direccionGuardada = serviceDireccion.save(direccion);
+
+            // Asociar la nueva dirección al cliente usando setDireccion()
+            cliente.setDireccion(direccionGuardada);
+            clienteDAO.save(cliente);
+
+            return "redirect:/clientes/findById/" + cliente.getIdUsuario(); // Redirige a la vista del cliente
+        } else {
+            model.addAttribute("error", "Cliente no encontrado");
+            return "error";
+        }
+    }
+
 }

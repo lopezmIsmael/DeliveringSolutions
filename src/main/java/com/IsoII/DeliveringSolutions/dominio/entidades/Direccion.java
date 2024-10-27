@@ -22,7 +22,7 @@ public class Direccion {
     private String municipio;
 
     @OneToOne
-    @JoinColumn(name = "idCodigoPostal", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "idCodigoPostal", referencedColumnName = "id", nullable = false, unique = true)
     private CodigoPostal codigoPostal;
 
     public Direccion() {
@@ -74,6 +74,14 @@ public class Direccion {
 
     public void setMunicipio(String municipio) {
         this.municipio = municipio;
+    }
+
+    public CodigoPostal getCodigoPostal() {
+        return codigoPostal;
+    }
+
+    public void setCodigoPostal(CodigoPostal codigoPostal) {
+        this.codigoPostal = codigoPostal;
     }
 
     @Override
