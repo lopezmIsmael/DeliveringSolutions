@@ -102,6 +102,15 @@
 
 <body>
     <div class="container">
+        <!-- Saludo al usuario -->
+        <div style="text-align: left;">
+            <p>Hola <span th:text="${usuario.idUsuario}"></span></p>
+            <!-- Mostrar enlace de cerrar sesión si el usuario no es anónimo -->
+            <div th:if="${usuario.idUsuario} != 'anónimo'">
+                <a th:href="@{/clientes/logout}">Cerrar sesión</a>
+            </div>
+        </div>
+        
         <!-- Título -->
         <h2>Buscar y Ver Restaurantes</h2>
 
