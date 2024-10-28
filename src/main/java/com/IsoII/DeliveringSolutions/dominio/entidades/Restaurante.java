@@ -22,10 +22,6 @@ public class Restaurante extends Usuario {
     @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
 
-    @OneToOne
-    @JoinColumn(name = "Direccion", nullable = true)
-    private Direccion direccion;
-
     public Restaurante() {
     }
 
@@ -38,10 +34,9 @@ public class Restaurante extends Usuario {
      * @param cif       El cif del restaurante.
      * @param nombre    El nombre del restaurante.
      */
-    public Restaurante(String idUsuario, String pass, String tipoUsuario, String cif, Direccion direccion, String nombre) {
+    public Restaurante(String idUsuario, String pass, String tipoUsuario, String cif, String nombre) {
         super(idUsuario, pass, tipoUsuario);
         this.cif = cif;
-        this.direccion = direccion;
         this.nombre = nombre;
     }
 
@@ -54,13 +49,6 @@ public class Restaurante extends Usuario {
         this.cif = cif;
     }
 
-    public Direccion getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(Direccion direccion) {
-        this.direccion = direccion;
-    }
 
     public String getNombre() {
         return nombre;

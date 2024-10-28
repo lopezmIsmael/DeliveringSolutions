@@ -97,33 +97,4 @@ public class GestorRestaurante {
         System.out.println("Restaurante registrado: " + restauranteRegistrado);
         return "redirect:/restaurantes/gestion/" + restauranteRegistrado.getIdUsuario();
     }
-
-    @GetMapping("/modificarDireccion/{id}")
-    public String mostrarFormularioModificarDireccion(@PathVariable String id, Model model) {
-        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(id);
-        if (optionalRestaurante.isPresent()) {
-            Restaurante restaurante = optionalRestaurante.get();
-            model.addAttribute("restaurante", restaurante);
-            model.addAttribute("direccion", restaurante.getDireccion());
-            return "modificarDireccionRestaurante"; // Vista para modificar la dirección
-        } else {
-            model.addAttribute("error", "Restaurante no encontrado");
-            return "error";
-        }
-    }
-
-    @PostMapping("/modificarDireccion/{id}")
-    public String modificarDireccionRestaurante(@PathVariable String id, @ModelAttribute Direccion direccion, Model model) {
-        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(id);
-        if (optionalRestaurante.isPresent()) {
-            Restaurante restaurante = optionalRestaurante.get();
-            Direccion direccionGuardada = serviceDireccion.save(direccion); // Guarda la dirección actualizada
-            restaurante.setDireccion(direccionGuardada);
-            restauranteDAO.save(restaurante); // Guarda el restaurante con la nueva dirección
-            return "redirect:/restaurantes/gestion/" + restaurante.getIdUsuario(); // Redirige a la vista de gestión del restaurante
-        } else {
-            model.addAttribute("error", "Restaurante no encontrado");
-            return "error";
-        }
-    }
 }
