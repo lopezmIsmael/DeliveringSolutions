@@ -30,21 +30,21 @@ public class ServicioEntrega {
 
     @OneToOne
     @JoinColumn(name = "idPedido", nullable = false)
-    private Pedido idpedido;
+    private Pedido pedido;
 
     @ManyToOne
     @JoinColumn(name = "idRepartidor", nullable = false)
-    private Repartidor idrepartidor;
+    private Repartidor repartidor;
 
     public ServicioEntrega() {
     }
 
-    public ServicioEntrega(int idServicioEntrega, Date fechaRecepcion, Date fechaEntrega, Pedido idpedido, Repartidor idrepartidor) {
+    public ServicioEntrega(int idServicioEntrega, Date fechaRecepcion, Date fechaEntrega, Pedido pedido, Repartidor repartidor) {
         this.idServicioEntrega = idServicioEntrega;
         this.fechaRecepcion = fechaRecepcion;
         this.fechaEntrega = fechaEntrega;
-        this.idpedido = idpedido;
-        this.idrepartidor = idrepartidor;
+        this.pedido = pedido;
+        this.repartidor = repartidor;
     }
 
     // Getters y setters para los atributos específicos de ServicioEntrega
@@ -74,19 +74,19 @@ public class ServicioEntrega {
     }
 
     public Pedido getPedido() {
-        return idpedido;
+        return pedido;
     }
 
-    public void setPedido(Pedido idpedido) {
-        this.idpedido = idpedido;
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 
     public Repartidor getRepartidor() {
-        return idrepartidor;
+        return repartidor;
     }
 
-    public void setRepartidor(Repartidor idrepartidor) {
-        this.idrepartidor = idrepartidor;
+    public void setRepartidor(Repartidor repartidor) {
+        this.repartidor = repartidor;
     }
 
 }

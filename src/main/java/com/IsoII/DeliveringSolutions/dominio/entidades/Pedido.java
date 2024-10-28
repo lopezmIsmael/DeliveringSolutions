@@ -35,12 +35,6 @@ public class Pedido {
     @JoinColumn(name = "idRestaurante", nullable = false)
     private Restaurante idRestaurante;
 
-    // @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
-    // private ServicioEntrega servicioEntrega;
-
-    // @OneToOne(mappedBy = "pedido")
-    // private Pago pago;
-
     public Pedido() {
     }
     

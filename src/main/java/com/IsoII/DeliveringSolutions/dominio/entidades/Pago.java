@@ -23,10 +23,6 @@ public class Pago {
     @Temporal(TemporalType.DATE)
     private Date fecha;
 
-    // @Enumerated(EnumType.STRING)
-    // @Column(name = "metodoPago", nullable = false)
-    // private MetodoPago metodoPago;
-
     @Column(name = "metodoPago", nullable = false, length = 50)
     private String metodoPago;
 
@@ -43,12 +39,6 @@ public class Pago {
         this.metodoPago = metodoPago;
         this.pedido = pedido;
     }
-
-    // public Pago(Date fecha, MetodoPago metodoPago, Pedido pedido) {
-    //     this.fecha = fecha;
-    //     this.metodoPago = metodoPago;
-    //     this.pedido = pedido;
-    // }
 
     // Getters y setters para los atributos específicos de Pago
 
@@ -68,24 +58,12 @@ public class Pago {
         this.fecha = fecha;
     }
 
-    // public MetodoPago getMetodoPago() {
-    //     return metodoPago;
-    // }
-
-    // public void setMetodoPago(MetodoPago metodoPago) {
-    //     this.metodoPago = metodoPago;
-    // }
-
     public String getMetodoPago() {
         return metodoPago;
     }
 
     public void setMetodoPago(String metodoPago) {
-        if (metodoPago.equalsIgnoreCase("Tarjeta") || metodoPago.equalsIgnoreCase("Paypal")) {
-            this.metodoPago = metodoPago;
-        } else {
-            throw new IllegalArgumentException("El método de pago debe ser 'Tarjeta' o 'Paypal'");
-        }
+        this.metodoPago = metodoPago;
     }
 
     public Pedido getPedido() {
