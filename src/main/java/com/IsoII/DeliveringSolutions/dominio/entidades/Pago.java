@@ -1,7 +1,81 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import jakarta.persistence.*;
+import java.util.Date;
 
+/**
+ * Representa un pago realizado por un cliente a un restaurante en el sistema.
+ * @author Jorge López Gómez
+ * @author Ismael López Marín
+ * @author Pablo Verdúguez Gervaso
+ * @author Marco Muñoz García
+ * @version 1.0
+ */
+
+ @Entity
 public class Pago {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int idPago;
+
+    @Column(name = "fecha", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "metodoPago", nullable = false)
+    private MetodoPago metodoPago;
+
+    @OneToOne
+    @JoinColumn(name = "idPedido", nullable = false)
+    private Pedido pedido;
+
+    public Pago() {
+    }
+
+    public Pago(Date fecha, MetodoPago metodoPago, Pedido pedido) {
+        this.fecha = fecha;
+        this.metodoPago = metodoPago;
+        this.pedido = pedido;
+    }
+
+    // Getters y setters para los atributos específicos de Pago
+
+    public int getIdPago() {
+        return idPago;
+    }
+
+    public void setIdPago(int idPago) {
+        this.idPago = idPago;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
+    public MetodoPago getMetodoPago() {
+        return metodoPago;
+    }
+
+    public void setMetodoPago(MetodoPago metodoPago) {
+        this.metodoPago = metodoPago;
+    }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
+
+    @Override
+    public String toString() {
+        return "Pago [idPago=" + idPago + ", fecha=" + fecha + ", metodoPago=" + metodoPago + ", pedido=" + pedido + "]";
+    }
 }
