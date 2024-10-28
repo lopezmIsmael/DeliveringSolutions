@@ -22,18 +22,23 @@ public class Direccion {
     private String municipio;
 
     @OneToOne
-    @JoinColumn(name = "idCodigoPostal", referencedColumnName = "id", nullable = false, unique = true)
+    @JoinColumn(name = "id", nullable = false)
     private CodigoPostal codigoPostal;
+
+    @OneToOne
+    @JoinColumn(name = "idUsuario", nullable = false)
+    private Usuario usuario;
 
     public Direccion() {
     }
 
-    public Direccion(String calle, String numero, String complemento, String municipio, CodigoPostal codigoPostal) {
+    public Direccion(String calle, String numero, String complemento, String municipio, CodigoPostal codigoPostal, Usuario usuario) {
         this.calle = calle;
         this.numero = numero;
         this.complemento = complemento;
         this.municipio = municipio;
         this.codigoPostal = codigoPostal;
+        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -78,10 +83,10 @@ public class Direccion {
 
     public CodigoPostal getCodigoPostal() {
         return codigoPostal;
-    }
+    }   
 
-    public void setCodigoPostal(CodigoPostal codigoPostal) {
-        this.codigoPostal = codigoPostal;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
     @Override
@@ -93,6 +98,7 @@ public class Direccion {
                 ", complemento='" + complemento + '\'' +
                 ", municipio='" + municipio + '\'' +
                 ", codigoPostal=" + codigoPostal +
+                ", usuario=" + usuario +
                 '}';
     }
 }

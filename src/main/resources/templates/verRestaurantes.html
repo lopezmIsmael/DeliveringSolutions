@@ -109,6 +109,10 @@
             <div th:if="${usuario.idUsuario} != 'anónimo'">
                 <a th:href="@{/clientes/logout}">Cerrar sesión</a>
             </div>
+            <!-- Mostrar editar datos usuario -->
+            <div th:if="${usuario.idUsuario} != 'anónimo'">
+                <a th:href="@{/clientes/editarDatos}">Editar datos</a>
+            </div>
         </div>
         
         <!-- Título -->

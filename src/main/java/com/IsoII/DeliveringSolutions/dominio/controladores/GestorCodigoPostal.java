@@ -50,5 +50,3 @@ public class GestorCodigoPostal {
     }
     
 }
-
-// Esto es una prueba en codigo postal para el funcionamiento correcto de la ramas en Git Hub 

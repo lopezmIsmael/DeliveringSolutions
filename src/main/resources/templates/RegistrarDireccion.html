@@ -59,7 +59,9 @@
     <form action="/direccion/registro" method="post">
         <table>
             <tr>
-                <td colspan="2" style="text-align: center;"><h2>Registro de Dirección</h2></td>
+                <td colspan="2" style="text-align: center;">
+                    <h2 th:text="'Registro de Dirección de ' + ${usuario.idUsuario}">Registro de Dirección</h2>
+                </td>
             </tr>
             <tr>
                 <td><label for="calle">Calle:</label></td>
@@ -85,6 +87,8 @@
                         <option th:each="cp : ${codigosPostales}" th:value="${cp.id}" th:text="${cp.codigo}"></option>
                     </select>
                 </td>
+
+                <td><input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}"></td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: center;">

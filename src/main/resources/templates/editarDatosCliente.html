@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Datos Cliente</title>
+    <link rel="stylesheet" href="path/to/your/css/styles.css">
+</head>
+<body>
+    <h1>Editar Datos del Cliente</h1>
+    <form action="/direccion/formularioRegistro">
+        <div>
+            <label for="idUsuario">idUsuario:</label>
+            <input type="text" id="nombre" name="nombre" th:value="${usuario.idUsuario}" readonly>
+        </div>
+        <div>
+            <button type="submit">Modificar Dirección</button>
+        </div>
+    </form>
+</body>
+</html>

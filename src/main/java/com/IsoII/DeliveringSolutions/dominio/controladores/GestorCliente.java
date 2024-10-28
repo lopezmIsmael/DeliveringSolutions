@@ -152,6 +152,14 @@ public class GestorCliente {
         }
     }
 
+    @GetMapping("/editarDatos")
+    public String editarDatos(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+            model.addAttribute("usuario", usuario);
+
+        return "editarDatosCliente"; // Vista para editar los datos del cliente
+    }
+
     @GetMapping("/logout")
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
         session.invalidate(); // Invalida la sesión actual
