@@ -3,7 +3,8 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 import jakarta.persistence.*;
 
 /**
- * Representa un cliente en el sistema con un identificador, contraseña, tipoUsuario, nombre, apellido y dni.
+ * Representa un cliente en el sistema con un identificador, contraseña,
+ * tipoUsuario, nombre, apellido y dni.
  * 
  * @author Jorge López Gómez
  * @author Ismael López Marín
@@ -26,23 +27,25 @@ public class Cliente extends Usuario {
     private String dni;
 
     @ManyToOne
-    @JoinColumn(name = "Direccion", nullable = true)
+    @JoinColumn(name = "Direccion")
     private Direccion direccion;
 
     public Cliente() {
     }
 
     /**
-     * Constructor para crear un cliente con un identificador, contraseña, tipoUsuario, nombre, apellido y email específicos.
+     * Constructor para crear un cliente con un identificador, contraseña,
+     * tipoUsuario, nombre, apellido y email específicos.
      *
-     * @param idUsuario El identificador único del usuario.
-     * @param pass      La contraseña del usuario.
+     * @param idUsuario   El identificador único del usuario.
+     * @param pass        La contraseña del usuario.
      * @param tipoUsuario El tipoUsuario del usuario en el sistema.
-     * @param nombre    El nombre del cliente.
-     * @param apellido  El apellido del cliente.
-     * @param dni     El dni del cliente.
+     * @param nombre      El nombre del cliente.
+     * @param apellido    El apellido del cliente.
+     * @param dni         El dni del cliente.
      */
-    public Cliente(String idUsuario, String pass, String tipoUsuario, String nombre, String apellido, String dni, Direccion direccion) {
+    public Cliente(String idUsuario, String pass, String tipoUsuario, String nombre, String apellido, String dni,
+            Direccion direccion) {
         super(idUsuario, pass, tipoUsuario);
         this.nombre = nombre;
         this.apellido = apellido;
@@ -86,6 +89,8 @@ public class Cliente extends Usuario {
 
     @Override
     public String toString() {
-        return "Cliente [idUsuario=" + idUsuario + ", pass=" + pass + ", tipoUsuario=" + tipoUsuario + ", nombre=" + nombre + ", apellido=" + apellido + ", dni=" + dni + ", direccion=" + direccion.toString() + "]";
+        return "Cliente [idUsuario=" + idUsuario + ", pass=" + pass + ", tipoUsuario=" + tipoUsuario + ", nombre="
+                + nombre + ", apellido=" + apellido + ", dni=" + dni + ", direccion="
+                + (direccion != null ? direccion.toString() : "null") + "]";
     }
 }
