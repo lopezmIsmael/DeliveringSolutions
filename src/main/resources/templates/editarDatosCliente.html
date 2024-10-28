@@ -75,15 +75,11 @@
             </tr>
             <tr>
                 <td><label for="idUsuario">ID Usuario:</label></td>
-                <td><input type="text" id="idUsuario" name="idUsuario" th:value="${cliente.idUsuario}" readonly></td>
+                <td><input type="text" id="idUsuario" name="idUsuario" th:value="${usuario.idUsuario}" readonly></td>
             </tr>
             <tr>
                 <td><label for="pass">Contraseña:</label></td>
                 <td><input type="text" id="pass" name="pass" th:value="${cliente.pass}" readonly></td>
-            </tr>
-            <tr>
-                <td><label for="tipoUsuario">Tipo de Usuario:</label></td>
-                <td><input type="text" id="tipoUsuario" name="tipoUsuario" th:value="${cliente.gettipoUsuario()}" readonly></td>
             </tr>
             <tr>
                 <td><label for="nombre">Nombre:</label></td>
@@ -95,15 +91,15 @@
             </tr>
             <tr>
                 <td><label for="dni">DNI:</label></td>
-                <td><input type="text" id="dni" name="dni" th:value="${cliente.getdni()}" readonly></td>
+                <td><input type="text" id="dni" name="dni" th:value="${cliente.dni}" readonly></td>
             </tr>
             <tr>
                 <td><label for="direccion">Dirección:</label></td>
-                <td><input type="text" id="direccion" name="direccion" th:value="${direccion != null ? direccion.direccionCompleta : 'null'}" readonly></td>
+                <td><input type="text" id="direccion" name="direccion" th:value="${direccion != null ? direccion.id : 'null'}" readonly></td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: center;">
-                    <button type="button" th:onclick="'location.href=\'/clientes/registrarDireccion/' + ${cliente.idUsuario} + '\''">Editar Dirección</button>
+                    <button type="button" onclick="location.href='/direccion/formularioRegistro'">Registrar Nueva Dirección</button>
                 </td>
             </tr>
         </table>

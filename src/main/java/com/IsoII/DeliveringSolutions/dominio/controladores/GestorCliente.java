@@ -155,7 +155,24 @@ public class GestorCliente {
     @GetMapping("/editarDatos")
     public String editarDatos(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-            model.addAttribute("usuario", usuario);
+
+        System.out.println("<<USUARIO>>:: " + usuario);
+
+        model.addAttribute("usuario", usuario);
+        
+        Direccion direccionOptional = serviceDireccion.findByUsuario(usuario);
+
+        System.out.println("<<DIRECCION>>: " + direccionOptional);
+        if (direccionOptional == null) {
+            direccionOptional = new Direccion();
+        }
+        model.addAttribute("direccion", direccionOptional);
+
+
+        Cliente cliente = clienteDAO.findById(usuario.getIdUsuario()).orElse(null);
+        model.addAttribute("cliente", usuario);
+
+        System.out.println("<<DIRECCION>>: " + direccionOptional);
 
         return "editarDatosCliente"; // Vista para editar los datos del cliente
     }
@@ -189,42 +206,4 @@ public class GestorCliente {
         clienteDAO.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    // Método: Mostrar el formulario de modificación de dirección
-    // Método para mostrar el formulario de modificación de dirección
-    @GetMapping("/modificarDireccion/{id}")
-    public String mostrarFormularioModificarDireccion(@PathVariable String id, Model model) {
-        Optional<Cliente> optionalCliente = clienteDAO.findById(id);
-        if (optionalCliente.isPresent()) {
-            Cliente cliente = optionalCliente.get();
-            model.addAttribute("cliente", cliente);
-            model.addAttribute("direccion", cliente.getDireccion()); // Usar el método getDireccion()
-            return "modificarDireccionCliente"; // Vista para modificar la dirección del cliente
-        } else {
-            model.addAttribute("error", "Cliente no encontrado");
-            return "error";
-        }
-    }
-
-    // Método para procesar la modificación de la dirección
-    @PostMapping("/modificarDireccion/{id}")
-    public String modificarDireccionCliente(@PathVariable String id, @ModelAttribute Direccion direccion, Model model) {
-        Optional<Cliente> optionalCliente = clienteDAO.findById(id);
-        if (optionalCliente.isPresent()) {
-            Cliente cliente = optionalCliente.get();
-
-            // Guardar la dirección (nueva o existente)
-            Direccion direccionGuardada = serviceDireccion.save(direccion);
-
-            // Asociar la nueva dirección al cliente usando setDireccion()
-            cliente.setDireccion(direccionGuardada);
-            clienteDAO.save(cliente);
-
-            return "redirect:/clientes/findById/" + cliente.getIdUsuario(); // Redirige a la vista del cliente
-        } else {
-            model.addAttribute("error", "Cliente no encontrado");
-            return "error";
-        }
-    }
-
 }

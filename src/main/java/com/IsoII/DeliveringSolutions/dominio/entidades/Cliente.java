@@ -26,10 +26,6 @@ public class Cliente extends Usuario {
     @Column(name = "dni", nullable = false, length = 9)
     private String dni;
 
-    @ManyToOne
-    @JoinColumn(name = "Direccion")
-    private Direccion direccion;
-
     public Cliente() {
     }
 
@@ -44,13 +40,11 @@ public class Cliente extends Usuario {
      * @param apellido    El apellido del cliente.
      * @param dni         El dni del cliente.
      */
-    public Cliente(String idUsuario, String pass, String tipoUsuario, String nombre, String apellido, String dni,
-            Direccion direccion) {
+    public Cliente(String idUsuario, String pass, String tipoUsuario, String nombre, String apellido, String dni) {
         super(idUsuario, pass, tipoUsuario);
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
-        this.direccion = direccion;
     }
 
     // Getters y setters para los atributos específicos de Cliente
@@ -71,26 +65,17 @@ public class Cliente extends Usuario {
         this.apellido = apellido;
     }
 
-    public String getdni() {
+    public String getDni() {
         return dni;
     }
 
-    public void setdni(String dni) {
+    public void setDni(String dni) {
         this.dni = dni;
-    }
-
-    public Direccion getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(Direccion direccion) {
-        this.direccion = direccion;
     }
 
     @Override
     public String toString() {
         return "Cliente [idUsuario=" + idUsuario + ", pass=" + pass + ", tipoUsuario=" + tipoUsuario + ", nombre="
-                + nombre + ", apellido=" + apellido + ", dni=" + dni + ", direccion="
-                + (direccion != null ? direccion.toString() : "null") + "]";
+                + nombre + ", apellido=" + apellido + ", dni=" + dni + "]";
     }
 }

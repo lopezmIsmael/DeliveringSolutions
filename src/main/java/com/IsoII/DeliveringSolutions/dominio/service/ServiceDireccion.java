@@ -4,6 +4,12 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
 import com.IsoII.DeliveringSolutions.persistencia.DireccionDAO;
 import com.IsoII.DeliveringSolutions.persistencia.UsuarioDAO;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.WebProperties.Resources.Chain.Strategy;
 import org.springframework.stereotype.Service;
@@ -15,6 +21,8 @@ import java.util.Optional;
 public class ServiceDireccion {
     @Autowired
     private DireccionDAO direccionDAO;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private UsuarioDAO usuarioDAO; // Añadido para manejar la entidad Usuario
@@ -38,5 +46,18 @@ public class ServiceDireccion {
     // Método para encontrar un usuario por su ID
     public Optional<Usuario> findUsuarioById(String id) {
         return usuarioDAO.findById(id);
+    }
+
+    public Direccion findByUsuario(Usuario usuario) {
+        System.out.println("<<USUARIO>>: " + usuario);
+        String idUsuario = usuario.getIdUsuario();
+        TypedQuery<Direccion> query = entityManager.createQuery(
+                "SELECT d FROM Direccion d WHERE d.usuario.idUsuario = :idUsuario", Direccion.class);
+        query.setParameter("idUsuario", idUsuario);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

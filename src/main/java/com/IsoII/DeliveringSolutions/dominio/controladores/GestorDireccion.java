@@ -74,52 +74,6 @@ public class GestorDireccion {
         return "redirect:/direccion/findById/" + direccionRegistrada.getId();
     }
 
-    /*
-     * @PostMapping("/registro")
-     * public String registrarDireccion(@ModelAttribute Direccion direccion,
-     * 
-     * @RequestParam("codigoPostal") Integer codigoPostalId,
-     * Model model) {
-     * // Validar que la dirección tenga los datos requeridos
-     * if (direccion.getCalle() == null || direccion.getCalle().trim().isEmpty() ||
-     * direccion.getNumero() == null || direccion.getNumero().trim().isEmpty()) {
-     * model.addAttribute("error", "La calle y el número son obligatorios");
-     * model.addAttribute("codigosPostales", serviceCodigoPostal.findAll());
-     * return "RegistrarDireccion";
-     * }
-     * 
-     * // Verificar que el código postal no esté ya asociado a otra dirección
-     * List<Direccion> todasDirecciones = serviceDireccion.findAll();
-     * boolean codigoPostalEnUso = todasDirecciones.stream()
-     * .anyMatch(d -> d.getCodigoPostal().getId() == codigoPostalId);
-     * 
-     * if (codigoPostalEnUso) {
-     * model.addAttribute("error",
-     * "Este código postal ya está asociado a otra dirección.");
-     * model.addAttribute("codigosPostales", serviceCodigoPostal.findAll());
-     * return "RegistrarDireccion";
-     * }
-     * 
-     * // Buscar el código postal seleccionado y asignarlo a la dirección
-     * Optional<CodigoPostal> codigoPostal =
-     * serviceCodigoPostal.findById(codigoPostalId);
-     * if (codigoPostal.isEmpty()) {
-     * model.addAttribute("error", "Código postal no válido");
-     * model.addAttribute("codigosPostales", serviceCodigoPostal.findAll());
-     * return "RegistrarDireccion";
-     * }
-     * 
-     * direccion.setCodigoPostal(codigoPostal.get());
-     * 
-     * // Guardar la dirección en la base de datos
-     * Direccion direccionRegistrada = serviceDireccion.save(direccion);
-     * 
-     * // Redirigir a una página de éxito o a la vista de la dirección registrada
-     * model.addAttribute("mensaje", "Dirección registrada con éxito");
-     * return "redirect:/direccion/findById/" + direccionRegistrada.getId();
-     * }
-     */
-
     // Método para encontrar una dirección por ID y mostrar su información
     @GetMapping("/findById/{id}")
     public String verDireccion(@PathVariable Long id, Model model) {
