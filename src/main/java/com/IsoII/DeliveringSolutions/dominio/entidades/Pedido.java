@@ -37,10 +37,10 @@ public class Pedido {
     @JoinColumn(name = "idRestaurante", nullable = false)
     private Restaurante restaurante;
 
-    @OneToMany(mappedBy = "pedido")
+    @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
     private ServicioEntrega servicioEntrega;
 
-    @OneToMany(mappedBy = "pedido")
+    @OneToOne(mappedBy = "pedido")
     private Pago pago;
 
     public Pedido() {
