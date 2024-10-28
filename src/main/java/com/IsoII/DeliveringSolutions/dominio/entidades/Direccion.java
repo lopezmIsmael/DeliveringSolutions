@@ -21,11 +21,11 @@ public class Direccion {
     @Column(name = "municipio", nullable = false, length = 50)
     private String municipio;
 
-    @OneToOne
-    @JoinColumn(name = "id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "idCodigoPostal", nullable = false)
     private CodigoPostal codigoPostal;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "idUsuario", nullable = false)
     private Usuario usuario;
 
