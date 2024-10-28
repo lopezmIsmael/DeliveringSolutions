@@ -1,7 +1,6 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import jakarta.persistence.*;
-import java.util.Date;
 
 /**
  * Representa un pago realizado por un cliente a un restaurante en el sistema.
@@ -19,9 +18,8 @@ public class Pago {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int idPago;
 
-    @Column(name = "fecha", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
+    @Column(name = "fecha", nullable = false, length = 10)
+    private long fecha;
 
     @Column(name = "metodoPago", nullable = false, length = 50)
     private String metodoPago;
@@ -33,7 +31,7 @@ public class Pago {
     public Pago() {
     }
 
-    public Pago(int idPago, Date fecha, String metodoPago, Pedido pedido) {
+    public Pago(int idPago, long fecha, String metodoPago, Pedido pedido) {
         this.idPago = idPago;
         this.fecha = fecha;
         this.metodoPago = metodoPago;
@@ -50,11 +48,11 @@ public class Pago {
         this.idPago = idPago;
     }
 
-    public Date getFecha() {
+    public long getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(long fecha) {
         this.fecha = fecha;
     }
 

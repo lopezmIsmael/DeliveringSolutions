@@ -1,7 +1,6 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import jakarta.persistence.*;
-import java.util.Date;
 
 /**
  * Representa un pago realizado por un cliente a un restaurante en el sistema.
@@ -20,13 +19,11 @@ public class ServicioEntrega {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int idServicioEntrega;
 
-    @Column(name = "fechaRecepcion", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date fechaRecepcion;
+    @Column(name = "fechaRecepcion", nullable = false, length = 10)
+    private long fechaRecepcion;
 
-    @Column(name = "fechaEntrega", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date fechaEntrega;
+    @Column(name = "fechaEntrega", nullable = false, length = 10)
+    private long fechaEntrega;
 
     @OneToOne
     @JoinColumn(name = "idPedido", nullable = false)
@@ -39,7 +36,7 @@ public class ServicioEntrega {
     public ServicioEntrega() {
     }
 
-    public ServicioEntrega(int idServicioEntrega, Date fechaRecepcion, Date fechaEntrega, Pedido pedido, Repartidor repartidor) {
+    public ServicioEntrega(int idServicioEntrega, long fechaRecepcion, long fechaEntrega, Pedido pedido, Repartidor repartidor) {
         this.idServicioEntrega = idServicioEntrega;
         this.fechaRecepcion = fechaRecepcion;
         this.fechaEntrega = fechaEntrega;
@@ -57,19 +54,19 @@ public class ServicioEntrega {
         this.idServicioEntrega = idServicioEntrega;
     }
 
-    public Date getFechaRecepcion() {
+    public long getFechaRecepcion() {
         return fechaRecepcion;
     }
 
-    public void setFechaRecepcion(Date fechaRecepcion) {
+    public void setFechaRecepcion(long fechaRecepcion) {
         this.fechaRecepcion = fechaRecepcion;
     }
 
-    public Date getFechaEntrega() {
+    public long getFechaEntrega() {
         return fechaEntrega;
     }
 
-    public void setFechaEntrega(Date fechaEntrega) {
+    public void setFechaEntrega(long fechaEntrega) {
         this.fechaEntrega = fechaEntrega;
     }
 

@@ -1,6 +1,5 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
-import java.sql.Date;
 import jakarta.persistence.*;
 
 
@@ -20,9 +19,8 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int idPedido;
 
-    @Column(name = "fecha", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
+    @Column(name = "fecha", nullable = false, length = 10)
+    private long fecha;
 
     @Column(name = "estadoPedido", nullable = false, length = 50)
     private String estadoPedido;
@@ -38,7 +36,7 @@ public class Pedido {
     public Pedido() {
     }
     
-    public Pedido(int idPedido, Date fecha, String estadoPedido, Cliente idCliente, Restaurante idRestaurante, ServicioEntrega servicioEntrega, Pago pago) {
+    public Pedido(int idPedido, long fecha, String estadoPedido, Cliente idCliente, Restaurante idRestaurante, ServicioEntrega servicioEntrega, Pago pago) {
         this.idPedido = idPedido;
         this.fecha = fecha;
         this.estadoPedido = estadoPedido;
@@ -56,11 +54,11 @@ public class Pedido {
         this.idPedido = idPedido;
     }
 
-    public Date getFecha() {
+    public long getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(long fecha) {
         this.fecha = fecha;
     }
 

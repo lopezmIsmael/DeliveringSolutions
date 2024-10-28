@@ -39,7 +39,7 @@ public class GestorPedido {
     @PostMapping("/registrarPedido")
     public ResponseEntity<Pedido> registrarPedido(@ModelAttribute Pedido pedido) {
         System.out.println("Pedido recibido: " + pedido.toString());
-        if (pedido.getFecha() == null || pedido.getEstadoPedido() == null || pedido.getEstadoPedido().isEmpty()) {
+        if (pedido.getFecha() == 0 || pedido.getEstadoPedido() == null || pedido.getEstadoPedido().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Pedido pedidoRegistrado = pedidoDAO.save(pedido);

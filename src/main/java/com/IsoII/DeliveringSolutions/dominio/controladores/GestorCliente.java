@@ -22,11 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
-import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.persistencia.ClienteDAO;
 import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
-import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
-import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
 
 @Controller
@@ -43,9 +40,6 @@ public class GestorCliente {
 
     @Autowired
     private ServiceCartaMenu serviceCartaMenu;
-
-    @Autowired
-    private ItemMenuDAO itemMenuDAO;
 
     // ************************************************** GETMAPPING
     // ********************************************** */

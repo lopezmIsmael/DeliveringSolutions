@@ -39,7 +39,7 @@ public class GestorServicioEntrega {
     @PostMapping("/registrarServicioEntrega")
     public ResponseEntity<ServicioEntrega> registrarServicioEntrega(@ModelAttribute ServicioEntrega servicioEntrega) {
         System.out.println("ServicioEntrega recibido: " + servicioEntrega.toString());
-        if (servicioEntrega.getFechaRecepcion() == null || servicioEntrega.getFechaEntrega() == null) {
+        if (servicioEntrega.getFechaRecepcion() == 0 || servicioEntrega.getFechaEntrega() == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         ServicioEntrega servicioEntregaRegistrado = servicioEntregaDAO.save(servicioEntrega);
