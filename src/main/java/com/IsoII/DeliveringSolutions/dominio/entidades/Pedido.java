@@ -35,11 +35,11 @@ public class Pedido {
     @JoinColumn(name = "idRestaurante", nullable = false)
     private Restaurante idRestaurante;
 
-    @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
-    private ServicioEntrega servicioEntrega;
+    // @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
+    // private ServicioEntrega servicioEntrega;
 
-    @OneToOne(mappedBy = "pedido")
-    private Pago pago;
+    // @OneToOne(mappedBy = "pedido")
+    // private Pago pago;
 
     public Pedido() {
     }
@@ -50,8 +50,6 @@ public class Pedido {
         this.estadoPedido = estadoPedido;
         this.idCliente = idCliente;
         this.idRestaurante = idRestaurante;
-        this.servicioEntrega = servicioEntrega;
-        this.pago = pago;
     }
 
     // Getters y setters para los atributos específicos de Pedido
@@ -94,22 +92,6 @@ public class Pedido {
 
     public void setRestaurante(Restaurante idRestaurante) {
         this.idRestaurante = idRestaurante;
-    }
-
-    public ServicioEntrega getServicioEntrega() {
-        return servicioEntrega;
-    }
-
-    public void setServicioEntrega(ServicioEntrega servicioEntrega) {
-        this.servicioEntrega = servicioEntrega;
-    }
-
-    public Pago getPago() {
-        return pago;
-    }
-
-    public void setPago(Pago pago) {
-        this.pago = pago;
     }
     
 }
