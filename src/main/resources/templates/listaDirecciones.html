@@ -82,6 +82,7 @@
                     <th>Número</th>
                     <th>Municipio</th>
                     <th>Código Postal</th>
+                    <th>ID Usuario</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -92,6 +93,7 @@
                     <td th:text="${direccion.numero}">123</td>
                     <td th:text="${direccion.municipio}">Ciudad</td>
                     <td th:text="${direccion.codigoPostal.codigo}">28001</td>
+                    <td th:text="${direccion.usuario.idUsuario}">28001</td>
                     <td>
                         <a th:href="@{/direccion/findById/{id}(id=${direccion.id})}">Ver detalles</a>
                     </td>
