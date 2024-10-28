@@ -1,7 +1,6 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import java.sql.Date;
-
 import jakarta.persistence.*;
 
 
@@ -17,7 +16,7 @@ import jakarta.persistence.*;
 @Entity
 public class Pedido {
     
-   @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int idPedido;
 
@@ -25,17 +24,16 @@ public class Pedido {
     @Temporal(TemporalType.DATE)
     private Date fecha;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "estado", nullable = false)
-    private EstadoPedido estado;
+    @Column(name = "estadoPedido", nullable = false, length = 50)
+    private String estadoPedido;
 
     @ManyToOne
     @JoinColumn(name = "idCliente", nullable = false)
-    private Cliente cliente;
+    private Cliente idCliente;
 
     @ManyToOne
     @JoinColumn(name = "idRestaurante", nullable = false)
-    private Restaurante restaurante;
+    private Restaurante idRestaurante;
 
     @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
     private ServicioEntrega servicioEntrega;
@@ -46,11 +44,12 @@ public class Pedido {
     public Pedido() {
     }
     
-    public Pedido(Date fecha, EstadoPedido estado, Cliente cliente, Restaurante restaurante, ServicioEntrega servicioEntrega, Pago pago) {
+    public Pedido(int idPedido, Date fecha, String estadoPedido, Cliente idCliente, Restaurante idRestaurante, ServicioEntrega servicioEntrega, Pago pago) {
+        this.idPedido = idPedido;
         this.fecha = fecha;
-        this.estado = estado;
-        this.cliente = cliente;
-        this.restaurante = restaurante;
+        this.estadoPedido = estadoPedido;
+        this.idCliente = idCliente;
+        this.idRestaurante = idRestaurante;
         this.servicioEntrega = servicioEntrega;
         this.pago = pago;
     }
@@ -73,28 +72,28 @@ public class Pedido {
         this.fecha = fecha;
     }
 
-    public EstadoPedido getEstado() {
-        return estado;
+    public void setEstadoPedido(String estadoPedido) {
+        this.estadoPedido = estadoPedido;
     }
 
-    public void setEstado(EstadoPedido estado) {
-        this.estado = estado;
+    public String getEstadoPedido() {
+        return estadoPedido;
     }
 
     public Cliente getCliente() {
-        return cliente;
+        return idCliente;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setCliente(Cliente idCliente) {
+        this.idCliente = idCliente;
     }
 
     public Restaurante getRestaurante() {
-        return restaurante;
+        return idRestaurante;
     }
 
-    public void setRestaurante(Restaurante restaurante) {
-        this.restaurante = restaurante;
+    public void setRestaurante(Restaurante idRestaurante) {
+        this.idRestaurante = idRestaurante;
     }
 
     public ServicioEntrega getServicioEntrega() {
@@ -111,11 +110,6 @@ public class Pedido {
 
     public void setPago(Pago pago) {
         this.pago = pago;
-    }
-
-    @Override
-    public String toString() {
-        return "Pedido [idPedido=" + idPedido + ", fecha=" + fecha + ", estado=" + estado + ", cliente=" + cliente + ", restaurante=" + restaurante + ", servicioEntrega=" + servicioEntrega + ", pago=" + pago + "]";
     }
     
 }
