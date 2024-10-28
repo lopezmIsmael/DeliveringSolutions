@@ -85,8 +85,16 @@ public class Direccion {
         return codigoPostal;
     }   
 
+    public void setCodigoPostal(CodigoPostal codigoPostal) {
+        this.codigoPostal = codigoPostal;
+    }
+
     public Usuario getUsuario() {
         return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override

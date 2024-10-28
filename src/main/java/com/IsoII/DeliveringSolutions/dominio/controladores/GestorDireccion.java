@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,23 +35,43 @@ public class GestorDireccion {
         model.addAttribute("codigosPostales", codigosPostales);
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         model.addAttribute("usuario", usuario);
-        
+
         return "RegistrarDireccion";
     }
 
     // Método para registrar una dirección
     @PostMapping("/registro")
-    @ResponseBody
     public String registrarDireccion(@ModelAttribute Direccion direccion,
             @RequestParam("codigoPostal") Integer codigoPostalId,
-            Model model, @RequestParam("idUsuario") String idUsuario) {
-        // Imprimir los valores recibidos del formulario
-        System.out.println("Calle: " + direccion.getCalle());
-        System.out.println("Número: " + direccion.getNumero());
-        System.out.println("Código Postal ID: " + codigoPostalId);
-        System.out.println("Id Usuario: " + idUsuario);
+            @RequestParam("idUsuario") String idUsuario,
+            RedirectAttributes redirectAttributes) {
+        // Validación
+        if (direccion.getCalle() == null || direccion.getCalle().trim().isEmpty() ||
+                direccion.getNumero() == null || direccion.getNumero().trim().isEmpty() ||
+                codigoPostalId == null || idUsuario == null) {
+            redirectAttributes.addFlashAttribute("error", "Rellenar los campos obligatorios");
+            return "redirect:/direccion/formularioRegistro";
+        }
 
-        return "Dirección registrada con éxito";
+        // Recuperar el Código Postal y el Usuario de la base de datos
+        CodigoPostal codigoPostal = serviceCodigoPostal.findById(codigoPostalId).orElse(null);
+        Optional<Usuario> usuarioOptional = serviceDireccion.findUsuarioById(idUsuario); // Añade este método en el
+                                                                                         // ServiceDireccion
+
+        if (codigoPostal == null || usuarioOptional.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Código Postal o Usuario no válido");
+            return "redirect:/direccion/formularioRegistro";
+        }
+
+        // Asignar las entidades a la Dirección
+        direccion.setCodigoPostal(codigoPostal);
+        direccion.setUsuario(usuarioOptional.get());
+
+        // Guardar la dirección en la base de datos
+        Direccion direccionRegistrada = serviceDireccion.save(direccion);
+
+        redirectAttributes.addFlashAttribute("mensaje", "Dirección registrada con éxito");
+        return "redirect:/direccion/findById/" + direccionRegistrada.getId();
     }
 
     /*
