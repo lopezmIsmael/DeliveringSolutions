@@ -78,6 +78,14 @@ public class GestorRestaurante {
             List<CartaMenu> menus = serviceCartaMenu.findByRestaurante(restaurante);
             model.addAttribute("restaurante", restaurante);
             model.addAttribute("menus", menus);
+
+            Direccion direccion = serviceDireccion.findByUsuario(restaurante);
+
+            if (direccion != null) {
+                model.addAttribute("direccion", direccion);
+            }else {
+                model.addAttribute("direccion", new Direccion());
+            }
             return "interfazGestionRestaurante"; // Nombre del archivo HTML sin la extensión
         } else {
             model.addAttribute("error", "Restaurante no encontrado");

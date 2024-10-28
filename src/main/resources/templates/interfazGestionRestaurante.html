@@ -16,6 +16,19 @@
             <div class="mb-4">
                 <h2>Nombre del Restaurante: <span th:text="${restaurante.nombre}"></span></h2>                
             </div>
+
+            <div th:if="${direccion != null}">
+                <!-- Sección para mostrar la dirección del restaurante -->
+                <div class="mb-4">
+                    <h3>Dirección:</h3>
+                    <p th:text="${direccion.calle + ', ' + direccion.numero + ', ' + direccion.complemento + ', ' + direccion.municipio + ', ' + direccion.codigoPostal }"></p>
+                </div>
+            </div>
+
+            <!-- Boton modificar direccion -->
+            <div class="mb-4">
+                <button type="button" onclick="location.href='/direccion/formularioRegistro'">Registrar Nueva Dirección</button>
+            </div>
     
             <!-- Sección para mostrar las cartas/menús asignados al restaurante -->
             <div>
