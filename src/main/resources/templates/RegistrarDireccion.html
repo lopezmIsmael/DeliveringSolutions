@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Dirección</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="/direccion/registro" method="post">
+        <table>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <h2 th:text="'Registro de Dirección de ' + ${usuario.idUsuario}">Registro de Dirección</h2>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="calle">Calle:</label></td>
+                <td><input type="text" id="calle" name="calle" required maxlength="50" th:value="${direccion.calle}"></td>
+            </tr>
+            <tr>
+                <td><label for="numero">Número:</label></td>
+                <td><input type="text" id="numero" name="numero" required maxlength="10" th:value="${direccion.numero}"></td>
+            </tr>
+            <tr>
+                <td><label for="complemento">Complemento:</label></td>
+                <td><input type="text" id="complemento" name="complemento" maxlength="50" th:value="${direccion.complemento}"></td>
+            </tr>
+            <tr>
+                <td><label for="municipio">Municipio:</label></td>
+                <td><input type="text" id="municipio" name="municipio" required maxlength="50" th:value="${direccion.municipio}"></td>
+            </tr>
+            <tr>
+                <td><label for="codigoPostal">Código Postal:</label></td>
+                <td>
+                    <select id="codigoPostal" name="codigoPostal" required>
+                        <option value="" disabled selected>Seleccione un código postal</option>
+                        <option th:each="cp : ${codigosPostales}" th:value="${cp.id}" th:text="${cp.codigo}"></option>
+                    </select>
+                </td>
+
+                <td><input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <button type="submit">Registrar Dirección</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

@@ -17,8 +17,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
 import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
 
 @Controller
@@ -32,6 +34,9 @@ public class GestorRestaurante {
 
     @Autowired
     private ServiceCartaMenu serviceCartaMenu;
+
+    @Autowired
+    private ServiceDireccion serviceDireccion;
 
 
     @GetMapping("/findAll")
@@ -71,6 +76,14 @@ public class GestorRestaurante {
             List<CartaMenu> menus = serviceCartaMenu.findByRestaurante(restaurante);
             model.addAttribute("restaurante", restaurante);
             model.addAttribute("menus", menus);
+
+            Direccion direccion = serviceDireccion.findByUsuario(restaurante);
+
+            if (direccion != null) {
+                model.addAttribute("direccion", direccion);
+            }else {
+                model.addAttribute("direccion", new Direccion());
+            }
             return "interfazGestionRestaurante"; // Nombre del archivo HTML sin la extensión
         } else {
             model.addAttribute("error", "Restaurante no encontrado");

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Datos del Cliente</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        input[type="text"], input[readonly] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        button[type="button"] {
+            background-color: #008CBA;
+        }
+
+        button[type="button"]:hover {
+            background-color: #007B9A;
+        }
+    </style>
+</head>
+<body>
+    <form th:action="@{/clientes/modificarDireccion/{idUsuario}(idUsuario=${cliente.idUsuario})}" method="post">
+        <table>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <h2 th:text="'Editar Datos del Cliente: ' + ${cliente.idUsuario}">Editar Datos del Cliente</h2>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="idUsuario">ID Usuario:</label></td>
+                <td><input type="text" id="idUsuario" name="idUsuario" th:value="${usuario.idUsuario}" readonly></td>
+            </tr>
+            <tr>
+                <td><label for="pass">Contraseña:</label></td>
+                <td><input type="text" id="pass" name="pass" th:value="${cliente.pass}" readonly></td>
+            </tr>
+            <tr>
+                <td><label for="nombre">Nombre:</label></td>
+                <td><input type="text" id="nombre" name="nombre" th:value="${cliente.nombre}" readonly></td>
+            </tr>
+            <tr>
+                <td><label for="apellido">Apellido:</label></td>
+                <td><input type="text" id="apellido" name="apellido" th:value="${cliente.apellido}" readonly></td>
+            </tr>
+            <tr>
+                <td><label for="dni">DNI:</label></td>
+                <td><input type="text" id="dni" name="dni" th:value="${cliente.dni}" readonly></td>
+            </tr>
+            <tr>
+                <td><label for="direccion">Dirección:</label></td>
+                <td><input type="text" id="direccion" name="direccion" th:value="${direccion != null ? direccion.id : 'null'}" readonly></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <button type="button" onclick="location.href='/direccion/formularioRegistro'">Registrar Nueva Dirección</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

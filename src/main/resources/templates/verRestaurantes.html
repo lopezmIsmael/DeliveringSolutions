@@ -102,11 +102,11 @@
 
 <body>
     <div class="container">
-        <!-- Saludo al usuario -->
-        <div style="text-align: left;">
-            <p>Hola <span th:text="${usuario.idUsuario}"></span></p>
-            <!-- Mostrar enlace de cerrar sesión si el usuario no es anónimo -->
+        <!-- Verificar si el usuario está autenticado -->
+        <div th:if="${usuario != null}">
             <div th:if="${usuario.idUsuario} != 'anónimo'">
+                <p>Hola <span th:text="${usuario.idUsuario}"></span></p>
+                <a th:href="@{/clientes/editarDatos}">Editar datos</a>
                 <a th:href="@{/clientes/logout}">Cerrar sesión</a>
             </div>
         </div>

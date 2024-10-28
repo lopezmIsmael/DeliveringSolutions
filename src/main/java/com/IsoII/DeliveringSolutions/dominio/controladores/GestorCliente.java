@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
@@ -32,6 +33,7 @@ import jakarta.servlet.http.HttpSession;
 import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
 
 @Controller
 @RequestMapping("/clientes")
@@ -47,6 +49,9 @@ public class GestorCliente {
 
     @Autowired
     private ServiceCartaMenu serviceCartaMenu;
+
+    @Autowired
+    private ServiceDireccion serviceDireccion;
 
     @Autowired
     private ItemMenuDAO itemMenuDAO;
@@ -89,8 +94,6 @@ public class GestorCliente {
         model.addAttribute("restaurantes", restaurantes);
         return "verRestaurantes";
     }
-
-
 
     @GetMapping("/listar")
     public String listarRestaurantes(Model model) {
@@ -136,7 +139,7 @@ public class GestorCliente {
 
             if (menus.isEmpty()) {
                 model.addAttribute("error", "No hay menús disponibles");
-                return "error"; 
+                return "error";
             }
 
             model.addAttribute("restaurante", restaurante);
@@ -149,13 +152,37 @@ public class GestorCliente {
         }
     }
 
+    @GetMapping("/editarDatos")
+    public String editarDatos(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+        System.out.println("<<USUARIO>>:: " + usuario);
+
+        model.addAttribute("usuario", usuario);
+        
+        Direccion direccionOptional = serviceDireccion.findByUsuario(usuario);
+
+        System.out.println("<<DIRECCION>>: " + direccionOptional);
+        if (direccionOptional == null) {
+            direccionOptional = new Direccion();
+        }
+        model.addAttribute("direccion", direccionOptional);
+
+
+        Cliente cliente = clienteDAO.findById(usuario.getIdUsuario()).orElse(null);
+        model.addAttribute("cliente", usuario);
+
+        System.out.println("<<DIRECCION>>: " + direccionOptional);
+
+        return "editarDatosCliente"; // Vista para editar los datos del cliente
+    }
+
     @GetMapping("/logout")
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
         session.invalidate(); // Invalida la sesión actual
         redirectAttributes.addFlashAttribute("mensaje", "Has cerrado sesión.");
         return "redirect:/";
     }
-
 
     // ************************************************** POSTMAPPING
     // ********************************************** */
