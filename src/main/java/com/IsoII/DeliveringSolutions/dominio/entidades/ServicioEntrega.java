@@ -30,20 +30,21 @@ public class ServicioEntrega {
 
     @OneToOne
     @JoinColumn(name = "idPedido", nullable = false)
-    private Pedido pedido;
+    private Pedido idpedido;
 
     @ManyToOne
     @JoinColumn(name = "idRepartidor", nullable = false)
-    private Repartidor repartidor;
+    private Repartidor idrepartidor;
 
     public ServicioEntrega() {
     }
 
-    public ServicioEntrega(Date fechaRecepcion, Date fechaEntrega, Pedido pedido, Repartidor repartidor) {
+    public ServicioEntrega(int idServicioEntrega, Date fechaRecepcion, Date fechaEntrega, Pedido idpedido, Repartidor idrepartidor) {
+        this.idServicioEntrega = idServicioEntrega;
         this.fechaRecepcion = fechaRecepcion;
         this.fechaEntrega = fechaEntrega;
-        this.pedido = pedido;
-        this.repartidor = repartidor;
+        this.idpedido = idpedido;
+        this.idrepartidor = idrepartidor;
     }
 
     // Getters y setters para los atributos específicos de ServicioEntrega
@@ -73,24 +74,19 @@ public class ServicioEntrega {
     }
 
     public Pedido getPedido() {
-        return pedido;
+        return idpedido;
     }
 
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
+    public void setPedido(Pedido idpedido) {
+        this.idpedido = idpedido;
     }
 
     public Repartidor getRepartidor() {
-        return repartidor;
+        return idrepartidor;
     }
 
-    public void setRepartidor(Repartidor repartidor) {
-        this.repartidor = repartidor;
-    }
-
-    @Override
-    public String toString() {
-        return "ServicioEntrega [idServicioEntrega=" + idServicioEntrega + ", fechaRecepcion=" + fechaRecepcion + ", fechaEntrega=" + fechaEntrega + ", pedido=" + pedido + ", repartidor=" + repartidor + "]";
+    public void setRepartidor(Repartidor idrepartidor) {
+        this.idrepartidor = idrepartidor;
     }
 
 }
