@@ -4,8 +4,10 @@
 
 Durante este Sprint 1 nos hemos centrado en la parte inicial del proyecto. Hemos importado el proyecto desde Visual Paradigm a Visual Studio Code (IDE en el cual estamos trabajando).
 
-![Ilustración 1: Captura completa del Sprint 1](/doc/imagenesSprint/Imagen01.png)  
-*Captura completa del Sprint 1.*
+<div style="text-align: center;">
+    <img src="/doc/imagenesSprint/Imagen01.png" alt="Ilustración 1: Captura completa del Sprint 1" width="100%">
+    <p><em>Captura completa del Sprint 1.</em></p>
+</div>
 
 Las tareas realizadas en este sprint incluyen:
 
@@ -24,8 +26,10 @@ Las tareas realizadas en este sprint incluyen:
 
 Para esta tarea, hemos añadido una capa `service` para la sintaxis SQL inexistente usando Hibernate para SQLite. Se han creado las entidades con JPA, junto con sus correspondientes `Gestor` y `DAO`, permitiendo funcionalidad en la base de datos y accesibilidad para las entidades **Usuario**, **Cliente**, **Repartidor** y **Restaurante**.
 
-![Ilustración 2: Crear entidades Usuario, Cliente, Repartidor y Restaurante](/doc/imagenesSprint/Imagen02.png)  
-*Captura de la tarea “Crear entidades Usuario, Cliente, Repartidor y Restaurante”.*
+<div style="text-align: center;">
+    <img src="/doc/imagenesSprint/Imagen02.png" alt="Ilustración 2: Crear entidades Usuario, Cliente, Repartidor y Restaurante" width="100%">
+    <p><em>Captura de la tarea “Crear entidades Usuario, Cliente, Repartidor y Restaurante”.</em></p>
+</div>
 
 ---
 
@@ -36,8 +40,10 @@ Para esta tarea, hemos añadido una capa `service` para la sintaxis SQL inexiste
 
 Al igual que en la tarea anterior, se ha añadido una capa `service` con Hibernate para la sintaxis SQL en SQLite. Se han creado las entidades correspondientes **CodigoPostal**, **Zona** y **ZonaCodigoPostal**, con sus `Gestor` y `DAO` para acceso en base de datos.
 
-![Ilustración 3: Crear entidades CodigoPostal, Zona, ZonaCodigoPostal](/doc/imagenesSprint/Imagen03.png)  
-*Captura de la tarea “Crear entidades CodigoPostal, Zona, ZonaCodigoPostal”.*
+<div style="text-align: center;">
+    <img src="/doc/imagenesSprint/Imagen03.png" alt="Ilustración 3: Crear entidades CodigoPostal, Zona, ZonaCodigoPostal" width="100%">
+    <p><em>Captura de la tarea “Crear entidades CodigoPostal, Zona, ZonaCodigoPostal”.</em></p>
+</div>
 
 ---
 
@@ -48,8 +54,10 @@ Al igual que en la tarea anterior, se ha añadido una capa `service` con Hiberna
 
 Esta funcionalidad permite registrar cualquier tipo de usuario, sea cliente, repartidor o restaurante. Al añadir un usuario, este se guarda en la base de datos, quedando disponible para futuras operaciones de acceso o gestión.
 
-![Ilustración 4: Feature Registro](/doc/imagenesSprint/Imagen04.png)  
-*Tarea de “Feature Registro”.*
+<div style="text-align: center;">
+    <img src="/doc/imagenesSprint/Imagen04.png" alt="Ilustración 4: Feature Registro" width="100%">
+    <p><em>Tarea de “Feature Registro”.</em></p>
+</div>
 
 ---
 
@@ -60,8 +68,10 @@ Esta funcionalidad permite registrar cualquier tipo de usuario, sea cliente, rep
 
 Se ha desarrollado una interfaz gráfica para el registro de usuarios, facilitando la entrada de datos para los diferentes tipos de usuarios del sistema.
 
-![Ilustración 5: Interfaz de Registro](/doc/imagenesSprint/Imagen05.png)  
-*Tarea de “Interfaz de Registro”.*
+<div style="text-align: center;">
+    <img src="/doc/imagenesSprint/Imagen05.png" alt="Ilustración 5: Interfaz de Registro" width="100%">
+    <p><em>Tarea de “Interfaz de Registro”.</em></p>
+</div>
 
 ---
 
