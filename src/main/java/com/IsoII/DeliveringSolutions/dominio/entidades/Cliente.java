@@ -1,5 +1,8 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.*;
 
 /**
@@ -25,6 +28,10 @@ public class Cliente extends Usuario {
 
     @Column(name = "dni", nullable = false, length = 9)
     private String dni;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "cliente_restaurante_favoritos", joinColumns = @JoinColumn(name = "idCliente"), inverseJoinColumns = @JoinColumn(name = "idRestaurante"))
+    private Set<Restaurante> favoritos = new HashSet<>();
 
     public Cliente() {
     }
@@ -71,6 +78,22 @@ public class Cliente extends Usuario {
 
     public void setDni(String dni) {
         this.dni = dni;
+    }
+
+    public Set<Restaurante> getFavoritos() {
+        return favoritos;
+    }
+
+    public void setFavoritos(Set<Restaurante> favoritos) {
+        this.favoritos = favoritos;
+    }
+
+    public void addFavorito(Restaurante restaurante) {
+        this.favoritos.add(restaurante);
+    }
+
+    public void removeFavorito(Restaurante restaurante) {
+        this.favoritos.remove(restaurante);
     }
 
     @Override

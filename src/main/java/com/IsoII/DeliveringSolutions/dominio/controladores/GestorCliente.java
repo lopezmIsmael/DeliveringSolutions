@@ -3,6 +3,7 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 import java.util.List;
 
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,17 +82,23 @@ public class GestorCliente {
     @GetMapping("/verRestaurantes")
     public String verRestaurantes(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
+
         if (usuario == null) {
             // Si el usuario no está autenticado, se muestra como "anónimo"
             Usuario anonimo = new Usuario();
             anonimo.setIdUsuario("anónimo");
             model.addAttribute("usuario", anonimo);
+        } else if (usuario instanceof Cliente cliente) {
+            // Si el usuario es un Cliente, lo añadimos como tal para acceder a favoritos
+            model.addAttribute("usuario", cliente);
         } else {
+            // Si el usuario no es de tipo Cliente, lo añadimos sin la lista de favoritos
             model.addAttribute("usuario", usuario);
         }
 
         List<Restaurante> restaurantes = RestauranteDAO.findAll();
         model.addAttribute("restaurantes", restaurantes);
+        model.addAttribute("vistaFavoritos", false); // Indica que es la vista general
         return "verRestaurantes";
     }
 
@@ -159,7 +166,7 @@ public class GestorCliente {
         System.out.println("<<USUARIO>>:: " + usuario);
 
         model.addAttribute("usuario", usuario);
-        
+
         Direccion direccionOptional = serviceDireccion.findByUsuario(usuario);
 
         System.out.println("<<DIRECCION>>: " + direccionOptional);
@@ -167,7 +174,6 @@ public class GestorCliente {
             direccionOptional = new Direccion();
         }
         model.addAttribute("direccion", direccionOptional);
-
 
         Cliente cliente = clienteDAO.findById(usuario.getIdUsuario()).orElse(null);
         model.addAttribute("cliente", usuario);
@@ -206,4 +212,54 @@ public class GestorCliente {
         clienteDAO.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/favoritos")
+    public String verFavoritos(Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+        if (usuario instanceof Cliente cliente) {
+            model.addAttribute("usuario", cliente);
+            model.addAttribute("restaurantes", cliente.getFavoritos());
+            model.addAttribute("vistaFavoritos", true); // Indica que es la vista de favoritos
+            return "verRestaurantes"; // Muestra solo los favoritos en la misma vista
+        }
+
+        return "redirect:/clientes/verRestaurantes";
+    }
+
+    @PostMapping("/marcarFavorito/{idRestaurante}")
+    public String marcarComoFavorito(@PathVariable String idRestaurante, HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+        // Verificar si el usuario está autenticado y es un cliente
+        if (usuario == null || !(usuario instanceof Cliente)) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Debes estar autenticado como cliente para marcar favoritos.");
+            return "redirect:/clientes/verRestaurantes";
+        }
+
+        Cliente cliente = (Cliente) usuario;
+        Optional<Restaurante> restauranteOpt = RestauranteDAO.findById(idRestaurante);
+
+        // Verificar si el restaurante existe
+        if (restauranteOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Restaurante no encontrado.");
+            return "redirect:/clientes/verRestaurantes";
+        }
+
+        Restaurante restaurante = restauranteOpt.get();
+
+        // Solo añadir si no está ya en favoritos
+        if (cliente.getFavoritos().contains(restaurante)) {
+            redirectAttributes.addFlashAttribute("info", "El restaurante ya está en tus favoritos.");
+        } else {
+            cliente.addFavorito(restaurante);
+            clienteDAO.save(cliente); // Guardar el cambio en la base de datos
+            redirectAttributes.addFlashAttribute("success", "Restaurante marcado como favorito.");
+        }
+
+        return "redirect:/clientes/verRestaurantes";
+    }
+
 }

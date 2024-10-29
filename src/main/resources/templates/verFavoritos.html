@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Restaurantes Favoritos</title>
+    <style>
+        /* Estilos para la vista */
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .restaurant-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .restaurant-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Mis Restaurantes Favoritos</h2>
+
+        <div th:if="${favoritos.isEmpty()}">
+            <p>No tienes restaurantes favoritos actualmente.</p>
+        </div>
+
+        <div th:each="restaurante : ${favoritos}" class="restaurant-card">
+            <div class="restaurant-name" th:text="${restaurante.nombre}"></div>
+            <a th:href="@{/clientes/verMenusRestaurante/{id}(id=${restaurante.idUsuario})}">Ver Menús</a>
+        </div>
+    </div>
+</body>
+
+</html>

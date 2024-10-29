@@ -30,6 +30,21 @@
             margin-bottom: 20px;
         }
 
+        /* Botón para alternar vista de favoritos */
+        .toggle-favorites {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 10px auto;
+            text-align: center;
+            text-decoration: none;
+        }
+
         /* Estilos del formulario */
         form {
             display: flex;
@@ -63,13 +78,14 @@
         /* Grid para mostrar restaurantes */
         .restaurant-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Cuadrados de mínimo 250px */
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             grid-gap: 20px;
             margin-top: 20px;
         }
 
         /* Tarjetas para restaurantes */
         .restaurant-card {
+            position: relative;
             background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -79,7 +95,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 150px; /* Altura fija para uniformidad */
+            height: 200px;
         }
 
         .restaurant-name {
@@ -89,13 +105,25 @@
             margin-bottom: 10px;
         }
 
-        /* Estilos del pie de página */
-        .footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 20px;
-            color: #aaa;
-            font-size: 14px;
+        /* Estilos de la estrella de favorito */
+        .favorite-star {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: #ccc;
+        }
+
+        .favorite-star.favorited {
+            color: #FFD700;
+        }
+
+        /* Icono de favorito */
+        .favorite-icon {
+            font-size: inherit;
         }
     </style>
 </head>
@@ -110,9 +138,13 @@
                 <a th:href="@{/clientes/logout}">Cerrar sesión</a>
             </div>
         </div>
-        
+
         <!-- Título -->
         <h2>Buscar y Ver Restaurantes</h2>
+
+        <!-- Botones para alternar entre ver todos los restaurantes y solo favoritos -->
+        <a th:href="@{/clientes/verRestaurantes}" th:if="${vistaFavoritos}" class="toggle-favorites">Ver Todos</a>
+        <a th:href="@{/clientes/favoritos}" th:if="${!vistaFavoritos}" class="toggle-favorites">Ver Favoritos</a>
 
         <!-- Formulario para filtrar restaurantes por nombre -->
         <form th:action="@{/clientes/filtrar}" method="get">
@@ -122,13 +154,23 @@
 
         <!-- Grid de restaurantes -->
         <div class="restaurant-grid">
-            <!-- Cada restaurante aparece en una tarjeta con el nombre -->
             <div th:each="restaurante : ${restaurantes}" class="restaurant-card">
                 <div class="restaurant-name" th:text="${restaurante.nombre}"></div>
-                <!-- Enlace que redirige a verMenusRestaurante pasando el idUsuario del restaurante -->
                 <a th:href="@{/clientes/verMenusRestaurante/{id}(id=${restaurante.idUsuario})}">Ver Menús</a>
+
+                <!-- Estrella de favorito, muestra según estado de favorito -->
+                <form th:action="@{/clientes/marcarFavorito/{idRestaurante}(idRestaurante=${restaurante.idUsuario})}"
+                      th:if="${usuario != null && usuario.idUsuario != 'anónimo'}" method="post" class="favorite-form">
+                    <button type="submit" class="favorite-star"
+                            th:classappend="${#lists.contains(usuario.favoritos, restaurante) ? 'favorited' : ''}"
+                            title="Marcar como Favorito">
+                        <span class="favorite-icon"
+                              th:text="${#lists.contains(usuario.favoritos, restaurante) ? '★' : '☆'}"></span>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </body>
+
 </html>
