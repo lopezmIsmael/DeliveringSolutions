@@ -219,31 +219,6 @@ public class GestorCliente {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/marcarFavorito/{id}")
-    public String marcarFavorito(@PathVariable String id, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-
-        System.out.println("<<USUARIO>> marcarFavorito(id) Postmapping: " + usuario);
-
-        if (usuario == null) {
-            return "redirect:http://localhost:8080/"; // Redirige a la URL especificada si el usuario no está en sesión
-        }
-
-        Cliente cliente = clienteDAO.findById(usuario.getIdUsuario()).orElse(null);
-        if (cliente == null) {
-            return "redirect:http://localhost:8080/"; // Redirige a la URL especificada si el cliente no está en sesión
-        }
-
-        // Lógica para obtener el restaurante por ID y marcarlo como favorito
-        Restaurante restaurante = restauranteDAO.findById(id).orElse(null);
-        if (restaurante != null) {
-            cliente.getFavoritos().add(restaurante);
-            clienteDAO.save(cliente);
-        }
-
-        return "redirect:/clientes/verFavoritos"; // Redirige a la vista de favoritos
-    }
-
     @PostMapping("/toggleFavorito/{id}")
     public String toggleFavorito(@PathVariable String id, HttpSession session,
             @RequestParam(value = "favoritos", required = false) String favoritosParam) {
