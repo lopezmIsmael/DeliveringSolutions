@@ -223,6 +223,8 @@ public class GestorCliente {
     public String marcarFavorito(@PathVariable String id, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
+        System.out.println("<<USUARIO>> marcarFavorito(id) Postmapping: " + usuario);
+
         if (usuario == null) {
             return "redirect:http://localhost:8080/"; // Redirige a la URL especificada si el usuario no está en sesión
         }
@@ -246,6 +248,8 @@ public class GestorCliente {
     public String toggleFavorito(@PathVariable String id, HttpSession session,
             @RequestParam(value = "favoritos", required = false) String favoritosParam) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+        System.out.println("<<USUARIO>> toogleFavorito Postmapping: " + usuario);
 
         if (usuario == null) {
             return "redirect:/"; // Redirige si el usuario no está autenticado
