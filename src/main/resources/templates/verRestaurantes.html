@@ -131,8 +131,8 @@
         <div th:if="${usuario != null}">
             <div th:if="${usuario.idUsuario} != 'anónimo'">
                 <p>Hola <span th:text="${usuario.idUsuario}"></span></p>
-                <a th:href="@{/clientes/editarDatos}">Editar datos</a>
-                <a th:href="@{/clientes/logout}">Cerrar sesión</a>
+                <button onclick="location.href='/clientes/editarDatos'" class="toggle-favorites">Editar datos</button>
+                <button onclick="location.href='/clientes/logout'" class="toggle-favorites">Cerrar sesión</button>
             </div>
         </div>
 
