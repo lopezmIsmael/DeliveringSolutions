@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Menús del Restaurante</title>
     <style>
-        /* Estilos omitidos por brevedad */
         body, html {
             margin: 0;
             padding: 0;
@@ -45,6 +44,60 @@
         th {
             background-color: #f4f4f4;
         }
+
+        .add-to-cart-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-to-cart-btn img {
+            width: 30px; /* Ajusta el tamaño de la imagen aquí */
+            height: 30px; /* Ajusta el tamaño de la imagen aquí */
+        }
+
+        .add-to-cart-btn img:hover {
+            transform: scale(1.1); /* Efecto hover para agrandar la imagen */
+        }
+
+        #cart {
+            position: fixed;
+            top: -100%;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+            transition: top 0.3s ease;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        #cart.open {
+            top: 0;
+        }
+
+        #cart h3 {
+            margin-top: 0;
+        }
+
+        #cart button {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        #cart button:hover {
+            background-color: darkgreen;
+        }
     </style>
 </head>
 
@@ -67,6 +120,7 @@
                             <th>Nombre del Item</th>
                             <th>Precio</th>
                             <th>Tipo</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,11 +128,56 @@
                             <td th:text="${item.nombre}"></td>
                             <td th:text="${item.precio}"></td>
                             <td th:text="${item.tipo}"></td>
+                            <td>
+                                <form method="post" action="/add-to-cart">
+                                    <input type="hidden" name="nombre" th:value="${item.nombre}" />
+                                    <input type="hidden" name="precio" th:value="${item.precio}" />
+                                    <button type="submit" class="add-to-cart-btn">
+                                        <img src="/Carrito2.png" alt="Carrito"/>
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
+    <!-- Contenedor del carrito de compras -->
+    <div id="cart">
+        <h3>Carrito</h3>
+        <ul id="cart-items"></ul>
+        <button onclick="finalizePurchase()">Finalizar compra</button>
+    </div>
+
+    <script>
+        const cartItems = [];
+
+        function addToCart(nombre, precio) {
+            cartItems.push({ nombre, precio });
+            updateCart();
+            openCart();
+        }
+
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = '';
+            cartItems.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.nombre} - ${item.precio}`;
+                cartItemsContainer.appendChild(li);
+            });
+        }
+
+        function openCart() {
+            document.getElementById('cart').classList.add('open');
+        }
+
+        function finalizePurchase() {
+            alert('Compra finalizada');
+            // Aquí puedes agregar la lógica para finalizar la compra
+        }
+    </script>
 </body>
 </html>
