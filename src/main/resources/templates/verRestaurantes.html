@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <title>Ver Restaurantes</title>
     <style>
         /* Agregar estilos */
-        body,
-        html {
+        body, html {
             margin: 0;
             padding: 0;
             height: 100%;
@@ -127,7 +125,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container" th:with="vistaFavoritos=${vistaFavoritos != null ? vistaFavoritos : false}">
         <!-- Verificar si el usuario está autenticado -->
@@ -139,12 +136,14 @@
             </div>
         </div>
 
-        <h2>Buscar y Ver Restaurantes</h2>
+        <h2 th:text="${vistaFavoritos} ? 'Mis Restaurantes Favoritos' : 'Buscar y Ver Restaurantes'"></h2>
 
-        <a th:href="@{/clientes/verRestaurantes}" th:if="${vistaFavoritos}" class="toggle-favorites">Ver Todos</a>
-        <a th:href="@{/clientes/verFavoritos}" th:if="${!vistaFavoritos}" class="toggle-favorites">Ver Favoritos</a>
+        <!-- Enlace para cambiar entre ver todos y ver favoritos -->
+        <a th:if="${vistaFavoritos}" th:href="@{/clientes/verRestaurantes}" class="toggle-favorites">Ver Todos</a>
+        <a th:if="${!vistaFavoritos}" th:href="@{/clientes/verRestaurantes(favoritos=true)}" class="toggle-favorites">Ver Favoritos</a>
 
-        <form th:action="@{/clientes/filtrar}" method="get">
+        <!-- Formulario de búsqueda (solo se muestra cuando no se están viendo favoritos) -->
+        <form th:action="@{/clientes/filtrar}" method="get" th:if="${!vistaFavoritos}">
             <input type="text" id="nombre" name="nombre" placeholder="Filtrar restaurante por nombre">
             <button type="submit">Filtrar</button>
         </form>
@@ -154,20 +153,18 @@
                 <div class="restaurant-name" th:text="${restaurante.nombre}"></div>
                 <a th:href="@{/clientes/verMenusRestaurante/{id}(id=${restaurante.idUsuario})}">Ver Menús</a>
 
-                <!-- Estrella de favorito, muestra según estado de favorito -->
-                <form th:action="@{/clientes/marcarFavorito/{idRestaurante}(idRestaurante=${restaurante.idUsuario})}"
-                    th:if="${usuario != null && usuario.idUsuario != 'anónimo'}" method="post" class="favorite-form">
+                <!-- Estrella de favorito -->
+                <form th:action="@{/clientes/toggleFavorito/{id}(id=${restaurante.idUsuario}, favoritos=${vistaFavoritos})}"
+                      th:if="${usuario != null && usuario.idUsuario != 'anónimo'}" method="post" class="favorite-form">
                     <button type="submit" class="favorite-star"
-                        th:classappend="${#lists.contains(usuario.favoritos, restaurante) ? 'favorited' : ''}"
-                        title="Marcar como Favorito">
+                            th:classappend="${cliente != null && cliente.favoritos.contains(restaurante) ? 'favorited' : ''}"
+                            title="Marcar/Desmarcar como Favorito">
                         <span class="favorite-icon"
-                            th:text="${#lists.contains(usuario.favoritos, restaurante) ? '★' : '☆'}"></span>
+                              th:text="${cliente != null && cliente.favoritos.contains(restaurante) ? '★' : '☆'}"></span>
                     </button>
                 </form>
-
             </div>
         </div>
     </div>
 </body>
-
 </html>

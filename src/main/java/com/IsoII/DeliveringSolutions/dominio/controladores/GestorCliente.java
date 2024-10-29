@@ -1,7 +1,7 @@
 package com.IsoII.DeliveringSolutions.dominio.controladores;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class GestorCliente {
     private ClienteDAO clienteDAO;
 
     @Autowired
-    private RestauranteDAO RestauranteDAO;
+    private RestauranteDAO restauranteDAO;
 
     @Autowired
     private ServiceCartaMenu serviceCartaMenu;
@@ -80,25 +80,40 @@ public class GestorCliente {
     }
 
     @GetMapping("/verRestaurantes")
-    public String verRestaurantes(Model model, HttpSession session) {
+    public String verRestaurantes(@RequestParam(value = "favoritos", required = false) String favoritosParam,
+            Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
+        model.addAttribute("usuario", usuario);
 
-        if (usuario == null) {
-            // Opcional: En lugar de cerrar la sesión, mostrar un mensaje
-            return "redirect:/login"; // Cambia a tu vista de login si el usuario no está en sesión
+        boolean vistaFavoritos = "true".equalsIgnoreCase(favoritosParam);
+        model.addAttribute("vistaFavoritos", vistaFavoritos);
+
+        List<Restaurante> restaurantes;
+
+        if (vistaFavoritos) {
+            if (usuario != null) {
+                Cliente cliente = clienteDAO.findById(usuario.getIdUsuario()).orElse(null);
+                if (cliente != null) {
+                    restaurantes = new ArrayList<>(cliente.getFavoritos());
+                    model.addAttribute("cliente", cliente); // Agregamos el cliente al modelo
+                } else {
+                    restaurantes = new ArrayList<>();
+                }
+            } else {
+                return "redirect:/"; // Redirige si el usuario no está autenticado
+            }
+        } else {
+            restaurantes = restauranteDAO.findAll();
         }
-        model.addAttribute("usuario", usuario); // Usuario de la sesión
 
-        List<Restaurante> restaurantes = RestauranteDAO.findAll();
         model.addAttribute("restaurantes", restaurantes);
-        model.addAttribute("vistaFavoritos", false); // Indica que se ven todos los restaurantes
         return "verRestaurantes";
     }
 
     @GetMapping("/listar")
     public String listarRestaurantes(Model model) {
         // Obtener todos los restaurantes de la base de datos
-        List<Restaurante> restaurantes = RestauranteDAO.findAll();
+        List<Restaurante> restaurantes = restauranteDAO.findAll();
 
         // Agregar la lista de restaurantes al modelo para que Thymeleaf pueda acceder a
         // ella
@@ -114,7 +129,7 @@ public class GestorCliente {
         model.addAttribute("usuario", usuario);
         model.addAttribute("vistaFavoritos", false); // Filtrar en "todos" por defecto
 
-        List<Restaurante> restaurantes = RestauranteDAO.findAll();
+        List<Restaurante> restaurantes = restauranteDAO.findAll();
         if (nombre != null && !nombre.trim().isEmpty()) {
             restaurantes = restaurantes.stream()
                     .filter(r -> r.getNombre() != null && r.getNombre().toLowerCase().contains(nombre.toLowerCase()))
@@ -128,7 +143,7 @@ public class GestorCliente {
     @GetMapping("/verMenusRestaurante/{id}")
     public String verMenusRestaurante(@PathVariable String id, Model model) {
         // Buscar el restaurante por su idUsuario
-        Optional<Restaurante> optionalRestaurante = RestauranteDAO.findById(id);
+        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(id);
 
         // Si el restaurante existe, pasarlo al modelo
         if (optionalRestaurante.isPresent()) {
@@ -204,28 +219,8 @@ public class GestorCliente {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping("/verFavoritos")
-    public String verFavoritos(Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-
-        if (usuario == null) {
-            return "redirect:http://localhost:8080/"; // Redirige a la URL especificada si el usuario no está en sesión
-        }
-        model.addAttribute("usuario", usuario); // Usuario de la sesión
-
-        Cliente cliente = clienteDAO.findById(usuario.getIdUsuario()).orElse(null);
-        if (cliente == null) {
-            return "redirect:http://localhost:8080/"; // Redirige a la URL especificada si el cliente no está en sesión
-        }
-
-        Set<Restaurante> favoritos = cliente.getFavoritos();
-        model.addAttribute("restaurantes", favoritos);
-        model.addAttribute("vistaFavoritos", true); // Indica que se ven los favoritos
-        return "verRestaurantes";
-    }
-
-    @PostMapping("/marcarFavorito/{nombre}")
-    public String marcarFavorito(@PathVariable String nombre, HttpSession session) {
+    @PostMapping("/marcarFavorito/{id}")
+    public String marcarFavorito(@PathVariable String id, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
         if (usuario == null) {
@@ -237,12 +232,42 @@ public class GestorCliente {
             return "redirect:http://localhost:8080/"; // Redirige a la URL especificada si el cliente no está en sesión
         }
 
-        // Lógica para marcar el restaurante como favorito
-        Restaurante restaurante = // lógica para obtener el restaurante por nombre
-        RestauranteDAO.findById(nombre).orElse(null);
-        clienteDAO.save(cliente);
+        // Lógica para obtener el restaurante por ID y marcarlo como favorito
+        Restaurante restaurante = restauranteDAO.findById(id).orElse(null);
+        if (restaurante != null) {
+            cliente.getFavoritos().add(restaurante);
+            clienteDAO.save(cliente);
+        }
 
         return "redirect:/clientes/verFavoritos"; // Redirige a la vista de favoritos
     }
 
+    @PostMapping("/toggleFavorito/{id}")
+    public String toggleFavorito(@PathVariable String id, HttpSession session,
+            @RequestParam(value = "favoritos", required = false) String favoritosParam) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+
+        if (usuario == null) {
+            return "redirect:/"; // Redirige si el usuario no está autenticado
+        }
+
+        Cliente cliente = clienteDAO.findById(usuario.getIdUsuario()).orElse(null);
+        if (cliente == null) {
+            return "redirect:/"; // Redirige si el cliente no existe
+        }
+
+        Restaurante restaurante = restauranteDAO.findById(id).orElse(null);
+        if (restaurante != null) {
+            if (cliente.getFavoritos().contains(restaurante)) {
+                cliente.removeFavorito(restaurante);
+            } else {
+                cliente.addFavorito(restaurante);
+            }
+            clienteDAO.save(cliente);
+        }
+
+        boolean vistaFavoritos = "true".equalsIgnoreCase(favoritosParam);
+        String redirectUrl = vistaFavoritos ? "/clientes/verRestaurantes?favoritos=true" : "/clientes/verRestaurantes";
+        return "redirect:" + redirectUrl;
+    }
 }
