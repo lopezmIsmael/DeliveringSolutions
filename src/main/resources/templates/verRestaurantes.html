@@ -21,6 +21,27 @@
             background-color: #ffffff;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header-left {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            text-align: left;
+        }
+
+        .header-left p {
+            margin: 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .user-actions {
+            font-size: 14px;
+            margin-top: 5px;
+            display: flex;
+            gap: 8px;
         }
 
         h2 {
@@ -30,7 +51,7 @@
             margin-bottom: 20px;
         }
 
-        .toggle-favorites {
+        .toggle-favorites, .user-action-button, button[type="submit"] {
             background-color: #4CAF50;
             color: white;
             padding: 10px 20px;
@@ -38,19 +59,19 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            display: block;
-            margin: 10px auto;
-            text-align: center;
             text-decoration: none;
+            display: inline-block;
         }
 
-        .toggle-favorites:hover {
+        .toggle-favorites:hover, .user-action-button:hover, button[type="submit"]:hover {
             background-color: #45a049;
         }
 
         form {
             display: flex;
+            align-items: center;
             justify-content: center;
+            gap: 10px;
             margin-bottom: 20px;
         }
 
@@ -59,22 +80,7 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            margin-right: 10px;
             font-size: 16px;
-        }
-
-        form button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        form button:hover {
-            background-color: #45a049;
         }
 
         .restaurant-grid {
@@ -127,26 +133,28 @@
 </head>
 <body>
     <div class="container" th:with="vistaFavoritos=${vistaFavoritos != null ? vistaFavoritos : false}">
-        <!-- Verificar si el usuario está autenticado -->
-        <div th:if="${usuario != null}">
-            <div th:if="${usuario.idUsuario} != 'anónimo'">
-                <p>Hola <span th:text="${usuario.idUsuario}"></span></p>
-                <button onclick="location.href='/clientes/editarDatos'" class="toggle-favorites">Editar datos</button>
-                <button onclick="location.href='/clientes/logout'" class="toggle-favorites">Cerrar sesión</button>
+        <!-- Saludo y botones en la esquina superior izquierda -->
+        <div class="header-left" th:if="${usuario != null}">
+            <p>¡Hola, <span th:text="${usuario.idUsuario}"></span>!</p>
+            <div class="user-actions">
+                <button onclick="location.href='/clientes/editarDatos'" class="user-action-button">Editar datos</button>
+                <button onclick="location.href='/clientes/logout'" class="user-action-button">Cerrar sesión</button>
             </div>
         </div>
 
         <h2 th:text="${vistaFavoritos} ? 'Mis Restaurantes Favoritos' : 'Buscar y Ver Restaurantes'"></h2>
 
-        <!-- Enlace para cambiar entre ver todos y ver favoritos -->
-        <a th:if="${vistaFavoritos}" th:href="@{/clientes/verRestaurantes}" class="toggle-favorites">Ver Todos</a>
-        <a th:if="${!vistaFavoritos}" th:href="@{/clientes/verRestaurantes(favoritos=true)}" class="toggle-favorites">Ver Favoritos</a>
-
-        <!-- Formulario de búsqueda (solo se muestra cuando no se están viendo favoritos) -->
+        <!-- Formulario de búsqueda con "Ver Favoritos" a la derecha -->
         <form th:action="@{/clientes/filtrar}" method="get" th:if="${!vistaFavoritos}">
             <input type="text" id="nombre" name="nombre" placeholder="Filtrar restaurante por nombre">
             <button type="submit">Filtrar</button>
+            <a th:href="@{/clientes/verRestaurantes(favoritos=true)}" class="toggle-favorites">Ver Favoritos</a>
         </form>
+
+        <!-- Botón "Ver Todos" solo si estamos en vista de favoritos -->
+        <div th:if="${vistaFavoritos}" style="text-align: center;">
+            <a th:href="@{/clientes/verRestaurantes}" class="toggle-favorites">Ver Todos</a>
+        </div>
 
         <div class="restaurant-grid">
             <div th:each="restaurante : ${restaurantes}" class="restaurant-card">
