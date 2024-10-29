@@ -129,7 +129,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" th:with="vistaFavoritos=${vistaFavoritos}">
         <!-- Verificar si el usuario está autenticado -->
         <div th:if="${usuario != null}">
             <div th:if="${usuario.idUsuario} != 'anónimo'">

@@ -84,21 +84,16 @@ public class GestorCliente {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
         if (usuario == null) {
-            // Si el usuario no está autenticado, se muestra como "anónimo"
             Usuario anonimo = new Usuario();
             anonimo.setIdUsuario("anónimo");
             model.addAttribute("usuario", anonimo);
-        } else if (usuario instanceof Cliente cliente) {
-            // Si el usuario es un Cliente, lo añadimos como tal para acceder a favoritos
-            model.addAttribute("usuario", cliente);
         } else {
-            // Si el usuario no es de tipo Cliente, lo añadimos sin la lista de favoritos
             model.addAttribute("usuario", usuario);
         }
 
         List<Restaurante> restaurantes = RestauranteDAO.findAll();
         model.addAttribute("restaurantes", restaurantes);
-        model.addAttribute("vistaFavoritos", false); // Indica que es la vista general
+        model.addAttribute("vistaFavoritos", false); // Por defecto es "todos"
         return "verRestaurantes";
     }
 
@@ -116,22 +111,20 @@ public class GestorCliente {
     }
 
     @GetMapping("/filtrar")
-    public String filtrarRestaurantes(@RequestParam(required = false) String nombre, Model model) {
-        List<Restaurante> restaurantes;
+    public String filtrarRestaurantes(@RequestParam(required = false) String nombre, Model model, HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("vistaFavoritos", false); // Filtrar en "todos" por defecto
 
-        // Si se proporciona el nombre, filtramos por nombre, de lo contrario listamos
-        // todos los restaurantes
-        if (nombre != null && !nombre.isEmpty()) {
-            restaurantes = RestauranteDAO.findAll().stream()
+        List<Restaurante> restaurantes = RestauranteDAO.findAll();
+        if (nombre != null && !nombre.trim().isEmpty()) {
+            restaurantes = restaurantes.stream()
                     .filter(r -> r.getNombre() != null && r.getNombre().toLowerCase().contains(nombre.toLowerCase()))
                     .toList();
-        } else {
-            restaurantes = RestauranteDAO.findAll();
         }
 
-        // Añadimos la lista de restaurantes filtrados o completos al modelo
         model.addAttribute("restaurantes", restaurantes);
-        return "verRestaurantes"; // Nombre de la vista que contiene la lista de restaurantes
+        return "verRestaurantes";
     }
 
     @GetMapping("/verMenusRestaurante/{id}")
@@ -216,14 +209,12 @@ public class GestorCliente {
     @GetMapping("/favoritos")
     public String verFavoritos(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-
         if (usuario instanceof Cliente cliente) {
             model.addAttribute("usuario", cliente);
             model.addAttribute("restaurantes", cliente.getFavoritos());
-            model.addAttribute("vistaFavoritos", true); // Indica que es la vista de favoritos
-            return "verRestaurantes"; // Muestra solo los favoritos en la misma vista
+            model.addAttribute("vistaFavoritos", true); // Para ver solo favoritos
+            return "verRestaurantes";
         }
-
         return "redirect:/clientes/verRestaurantes";
     }
 

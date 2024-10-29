@@ -1,60 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
-    <title>Mis Restaurantes Favoritos</title>
+    <title>Ver Restaurantes</title>
     <style>
-        /* Estilos para la vista */
-        .container {
-            width: 90%;
-            max-width: 1000px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            font-family: Arial, sans-serif;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .restaurant-card {
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            text-align: center;
-            margin: 15px 0;
-        }
-
-        .restaurant-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-        }
+        /* Agregar estilos */
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <h2>Mis Restaurantes Favoritos</h2>
-
-        <div th:if="${favoritos.isEmpty()}">
-            <p>No tienes restaurantes favoritos actualmente.</p>
+    <div class="container" th:with="vistaFavoritos=${vistaFavoritos != null ? vistaFavoritos : false}">
+        <!-- Verificar si el usuario está autenticado -->
+        <div th:if="${usuario != null}">
+            <div th:if="${usuario.idUsuario} != 'anónimo'">
+                <p>Hola <span th:text="${usuario.idUsuario}"></span></p>
+                <a th:href="@{/clientes/editarDatos}">Editar datos</a>
+                <a th:href="@{/clientes/logout}">Cerrar sesión</a>
+            </div>
         </div>
 
-        <div th:each="restaurante : ${favoritos}" class="restaurant-card">
-            <div class="restaurant-name" th:text="${restaurante.nombre}"></div>
-            <a th:href="@{/clientes/verMenusRestaurante/{id}(id=${restaurante.idUsuario})}">Ver Menús</a>
+        <!-- Título -->
+        <h2>Buscar y Ver Restaurantes</h2>
+
+        <!-- Botones para alternar entre ver todos los restaurantes y solo favoritos -->
+        <a th:href="@{/clientes/verRestaurantes}" th:if="${vistaFavoritos}" class="toggle-favorites">Ver Todos</a>
+        <a th:href="@{/clientes/favoritos}" th:if="${!vistaFavoritos}" class="toggle-favorites">Ver Favoritos</a>
+
+        <!-- Formulario para filtrar restaurantes por nombre -->
+        <form th:action="@{/clientes/filtrar}" method="get">
+            <input type="text" id="nombre" name="nombre" placeholder="Filtrar restaurante por nombre">
+            <button type="submit">Filtrar</button>
+        </form>
+
+        <!-- Grid de restaurantes -->
+        <div class="restaurant-grid">
+            <div th:each="restaurante : ${restaurantes}" class="restaurant-card">
+                <div class="restaurant-name" th:text="${restaurante.nombre}"></div>
+                <a th:href="@{/clientes/verMenusRestaurante/{id}(id=${restaurante.idUsuario})}">Ver Menús</a>
+
+                <!-- Estrella de favorito, muestra según estado de favorito -->
+                <form th:action="@{/clientes/marcarFavorito/{idRestaurante}(idRestaurante=${restaurante.idUsuario})}"
+                      th:if="${usuario != null && usuario.idUsuario != 'anónimo'}" method="post" class="favorite-form">
+                    <button type="submit" class="favorite-star"
+                            th:classappend="${#lists.contains(usuario.favoritos, restaurante) ? 'favorited' : ''}"
+                            title="Marcar como Favorito">
+                        <span class="favorite-icon"
+                              th:text="${#lists.contains(usuario.favoritos, restaurante) ? '★' : '☆'}"></span>
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </body>
-
 </html>
