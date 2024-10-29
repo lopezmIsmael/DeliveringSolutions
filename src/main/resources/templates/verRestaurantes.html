@@ -154,17 +154,44 @@
                 <a th:href="@{/clientes/verMenusRestaurante/{id}(id=${restaurante.idUsuario})}">Ver Menús</a>
 
                 <!-- Estrella de favorito -->
-                <form th:action="@{/clientes/toggleFavorito/{id}(id=${restaurante.idUsuario}, favoritos=${vistaFavoritos})}"
-                      th:if="${usuario != null && usuario.idUsuario != 'anónimo'}" method="post" class="favorite-form">
-                    <button type="submit" class="favorite-star"
-                            th:classappend="${cliente != null && cliente.favoritos.contains(restaurante) ? 'favorited' : ''}"
-                            title="Marcar/Desmarcar como Favorito">
-                        <span class="favorite-icon"
-                              th:text="${cliente != null && cliente.favoritos.contains(restaurante) ? '★' : '☆'}"></span>
-                    </button>
-                </form>
+                <button type="button" class="favorite-star"
+                        th:classappend="${cliente != null && cliente.favoritos.contains(restaurante) ? 'favorited' : ''}"
+                        title="Marcar/Desmarcar como Favorito"
+                        th:data-id="${restaurante.idUsuario}"
+                        onclick="toggleFavorite(this)">
+                    <span class="favorite-icon"
+                          th:text="${cliente != null && cliente.favoritos.contains(restaurante) ? '★' : '☆'}"></span>
+                </button>
             </div>
         </div>
     </div>
+
+    <!-- JavaScript para manejar favoritos -->
+    <script>
+        function toggleFavorite(button) {
+            const restaurantId = button.getAttribute('data-id');
+            const isFavorited = button.classList.contains('favorited');
+
+            fetch(`/clientes/toggleFavorito/${restaurantId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ favorited: !isFavorited })
+            })
+            .then(response => {
+                if (response.ok) {
+                    button.classList.toggle('favorited');
+                    button.querySelector('.favorite-icon').textContent = isFavorited ? '☆' : '★';
+                } else {
+                    console.error('Error al actualizar el estado de favorito');
+                }
+            })
+            .catch(error => {
+                console.error('Error en la solicitud:', error);
+            });
+        }
+    </script>
 </body>
 </html>
