@@ -1,225 +1,245 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <title>Menús del Restaurante</title>
-        <style>
-            body, html {
-                margin: 0;
-                padding: 0;
-                height: 100%;
-                font-family: 'Arial', sans-serif;
-                background-color: #f4f7f9;
-            }
+<head>
+    <meta charset="UTF-8">
+    <title>Menús del Restaurante</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f9;
+        }
 
-            .container {
-                width: 90%;
-                max-width: 1000px;
-                margin: 50px auto;
-                padding: 20px;
-                background-color: #ffffff;
-                border-radius: 12px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            }
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-            h2 {
-                text-align: center;
-                color: #333;
-                font-size: 24px;
-                margin-bottom: 20px;
-            }
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
 
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 20px;
-            }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
 
-            th, td {
-                padding: 10px;
-                border: 1px solid #ddd;
-                text-align: left;
-            }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
 
-            th {
-                background-color: #f4f4f4;
-            }
+        th {
+            background-color: #f4f4f4;
+        }
 
-            .add-to-cart-btn {
-                background: none;
-                border: none;
-                padding: 0;
-                cursor: pointer;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
+        .add-to-cart-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-            .add-to-cart-btn img {
-                width: 30px; /* Ajusta el tamaño de la imagen aquí */
-                height: 30px; /* Ajusta el tamaño de la imagen aquí */
-            }
+        .add-to-cart-btn img {
+            width: 30px; /* Ajusta el tamaño de la imagen aquí */
+            height: 30px; /* Ajusta el tamaño de la imagen aquí */
+        }
 
-            .add-to-cart-btn img:hover {
-                transform: scale(1.1); /* Efecto hover para agrandar la imagen */
-            }
+        .add-to-cart-btn img:hover {
+            transform: scale(1.1); /* Efecto hover para agrandar la imagen */
+        }
 
-            #cart {
-                position: fixed;
-                top: -100%;
-                right: 0;
-                width: 300px;
-                height: 100%;
-                background-color: white;
-                box-shadow: -2px 0 5px rgba(0,0,0,0.5);
-                transition: top 0.3s ease;
-                padding: 20px;
-                overflow-y: auto;
-            }
+        #cart {
+            position: fixed;
+            top: -100%;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+            transition: top 0.3s ease;
+            padding: 20px;
+            overflow-y: auto;
+        }
 
-            #cart.open {
-                top: 0;
-            }
+        #cart.open {
+            top: 0;
+        }
 
-            #cart h3 {
-                margin-top: 0;
-            }
+        #cart h3 {
+            margin-top: 0;
+        }
 
-            #cart button {
-                background-color: green;
-                color: white;
-                border: none;
-                padding: 10px;
-                cursor: pointer;
-                width: 100%;
-                margin-top: 20px;
-            }
+        #cart button {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
 
-            #cart button:hover {
-                background-color: darkgreen;
-            }
+        #cart button:hover {
+            background-color: darkgreen;
+        }
 
-            #cart-total {
-                font-weight: bold;
-                margin-top: 20px;
-            }
-        </style>
-    </head>
+        #cart-total {
+            font-weight: bold;
+            margin-top: 20px;
+        }
 
-    <body>
-        <div class="container">
-            <!-- Mostrar el nombre del restaurante -->
-            <h2>Menús del Restaurante: <span th:text="${restaurante.nombre}"></span></h2>
-            <!-- Si no hay menús, mostrar un mensaje -->
-            <div th:if="${#lists.isEmpty(menus)}">
-                <p>No hay menús disponibles en este momento.</p>
-            </div>
+        .remove-btn {
+            background: none;
+            border: none;
+            color: red;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 12px; /* Ajusta el tamaño del texto aquí */
+            padding: 2px 5px; /* Ajusta el tamaño del botón aquí */
+        }
+    </style>
+</head>
 
-            <!-- Si hay menús, mostrarlos en una tabla -->
-            <div th:if="${not #lists.isEmpty(menus)}">
-                <div th:each="menu : ${menus}">
-                    <h3 th:text="${menu.nombre}"></h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nombre del Item</th>
-                                <th>Precio</th>
-                                <th>Tipo</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="item : ${menu.items}">
-                                <td th:text="${item.nombre}"></td>
-                                <td th:text="${item.precio}"></td>
-                                <td th:text="${item.tipo}"></td>
-                                <td>
-                                    <form onsubmit="addToCart(event, this)">
-                                        <input type="hidden" name="nombre" th:value="${item.nombre}" />
-                                        <input type="hidden" name="precio" th:value="${item.precio}" />
-                                        <button type="submit" class="add-to-cart-btn">
-                                            <img src="/Carrito2.png" alt="Carrito"/>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<body>
+    <div class="container">
+        <!-- Mostrar el nombre del restaurante -->
+        <h2>Menús del Restaurante: <span th:text="${restaurante.nombre}"></span></h2>
+        <!-- Si no hay menús, mostrar un mensaje -->
+        <div th:if="${#lists.isEmpty(menus)}">
+            <p>No hay menús disponibles en este momento.</p>
         </div>
 
-        <!-- Contenedor del carrito de compras -->
-        <div id="cart" onclick="toggleCart()">
-            <h3>Carrito</h3>
-            <ul id="cart-items"></ul>
-            <div id="cart-total">Total: $0.00</div>
-            <button onclick="finalizePurchase()">Finalizar compra</button>
+        <!-- Si hay menús, mostrarlos en una tabla -->
+        <div th:if="${not #lists.isEmpty(menus)}">
+            <div th:each="menu : ${menus}">
+                <h3 th:text="${menu.nombre}"></h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre del Item</th>
+                            <th>Precio</th>
+                            <th>Tipo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${menu.items}">
+                            <td th:text="${item.nombre}"></td>
+                            <td th:text="${item.precio}"></td>
+                            <td th:text="${item.tipo}"></td>
+                            <td>
+                                <form onsubmit="addToCart(event, this)">
+                                    <input type="hidden" name="nombre" th:value="${item.nombre}" />
+                                    <input type="hidden" name="precio" th:value="${item.precio}" />
+                                    <button type="submit" class="add-to-cart-btn">
+                                        <img src="/Carrito2.png" alt="Carrito"/>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+    </div>
 
-        <script>
-            const cartItems = [];
+    <!-- Contenedor del carrito de compras -->
+    <div id="cart" onclick="toggleCart()">
+        <h3>Carrito</h3>
+        <ul id="cart-items"></ul>
+        <div id="cart-total">Total: $0.00</div>
+        <button onclick="finalizePurchase()">Finalizar compra</button>
+    </div>
 
-            function addToCart(event, form) {
-                event.preventDefault(); // Evita el envío del formulario
-                const nombre = form.nombre.value;
-                const precio = parseFloat(form.precio.value);
-                cartItems.push({ nombre, precio });
-                updateCart();
+    <script>
+        const cartItems = [];
+
+        function addToCart(event, form) {
+            event.preventDefault(); // Evita el envío del formulario
+            const nombre = form.nombre.value;
+            const precio = parseFloat(form.precio.value);
+            cartItems.push({ nombre, precio });
+            updateCart();
+            openCart();
+        }
+
+        function removeFromCart(index) {
+            cartItems.splice(index, 1);
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalContainer = document.getElementById('cart-total');
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            cartItems.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${item.nombre} - $${item.precio.toFixed(2)}`;
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = 'Eliminar';
+                removeBtn.classList.add('remove-btn');
+                removeBtn.onclick = () => removeFromCart(index);
+                li.appendChild(removeBtn);
+                cartItemsContainer.appendChild(li);
+                total += item.precio;
+            });
+            cartTotalContainer.textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        function openCart() {
+            document.getElementById('cart').classList.add('open');
+        }
+
+        function closeCart() {
+            document.getElementById('cart').classList.remove('open');
+        }
+
+        function toggleCart() {
+            const cart = document.getElementById('cart');
+            if (cart.classList.contains('open')) {
+                closeCart();
+            } else {
                 openCart();
             }
+        }
 
-            function updateCart() {
-                const cartItemsContainer = document.getElementById('cart-items');
-                const cartTotalContainer = document.getElementById('cart-total');
-                cartItemsContainer.innerHTML = '';
-                let total = 0;
-                cartItems.forEach(item => {
-                    const li = document.createElement('li');
-                    li.textContent = `${item.nombre} - $${item.precio.toFixed(2)}`;
-                    cartItemsContainer.appendChild(li);
-                    total += item.precio;
-                });
-                cartTotalContainer.textContent = `Total: $${total.toFixed(2)}`;
+        function finalizePurchase() {
+            alert('Compra finalizada');
+            // Aquí puedes agregar la lógica para finalizar la compra
+        }
+
+        // Mostrar y cerrar el carrito cuando se hace clic fuera de él
+        document.addEventListener('click', function(event) {
+            const cart = document.getElementById('cart');
+            const isClickInsideCart = cart.contains(event.target);
+            const isCartOpen = cart.classList.contains('open');
+
+            if (!isClickInsideCart && isCartOpen) {
+                closeCart();
             }
+        });
 
-            function openCart() {
-                document.getElementById('cart').classList.add('open');
-            }
-
-            function closeCart() {
-                document.getElementById('cart').classList.remove('open');
-            }
-
-            function toggleCart() {
-                const cart = document.getElementById('cart');
-                if (cart.classList.contains('open')) {
-                    closeCart();
-                } else {
-                    openCart();
-                }
-            }
-
-            function finalizePurchase() {
-                alert('Compra finalizada');
-                // Aquí puedes agregar la lógica para finalizar la compra
-            }
-
-            // Mostrar y cerrar el carrito cuando se hace clic fuera de él
-            document.addEventListener('click', function(event) {
-                const cart = document.getElementById('cart');
-                const isClickInsideCart = cart.contains(event.target);
-                const isCartOpen = cart.classList.contains('open');
-
-                if (!isClickInsideCart && isCartOpen) {
-                    closeCart();
-                }
-            });
-
-            // Evitar que el clic dentro del carrito cierre el carrito
-            document.getElementById('cart').addEventListener('click', function(event) {
-                event.stopPropagation();
-            });
-        </script>
-    </body>
+        // Evitar que el clic dentro del carrito cierre el carrito
+        document.getElementById('cart').addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    </script>
+</body>
 </html>
