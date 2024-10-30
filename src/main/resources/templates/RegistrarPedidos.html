@@ -22,20 +22,75 @@
                 border-radius: 12px;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             }
+
+            .header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+
+            .table th, .table td {
+                padding: 12px;
+                border-bottom: 1px solid #dddddd;
+            }
+
+            .table th {
+                background-color: #f2f2f2;
+            }
+
+            h1, h2, h3 {
+                color: #333333;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 8px;
+                color: #555555;
+            }
+
+            select {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: 1px solid #cccccc;
+                border-radius: 8px;
+                background-color: #ffffff;
+            }
+
+            button {
+                width: 100%;
+                padding: 15px;
+                background-color: #28a745;
+                color: #ffffff;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            button:hover {
+                background-color: #218838;
+            }
         </style>
     </head>
     <body>
         <div class="container">
             <div class="header">
-                Finalizar Compra
+                <h1>Finalizar Compra</h1>
             </div>
             <div>
                 <h2>Items en el carrito</h2>
-                <table>
+                <table id="tabla" class="table">
                     <thead>
                         <tr>
                             <th>Producto</th>
-                            <th>Cantidad</th>
                             <th>Precio</th>
                         </tr>
                     </thead>
@@ -43,7 +98,6 @@
                         <!-- Aquí se iteran los items del carrito -->
                         <tr th:each="item : ${carrito}">
                             <td th:text="${item.nombre}">Nombre del Producto</td>
-                            <td th:text="${item.cantidad}">1</td>
                             <td th:text="${item.precio}">$0.00</td>
                         </tr>
                     </tbody>
