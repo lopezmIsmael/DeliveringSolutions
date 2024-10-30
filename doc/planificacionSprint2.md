@@ -1,16 +1,16 @@
 # Documentación Sprint 2
 
-**Fecha**: 6 de noviembre de 2024
+**Fecha**: 23 de octubre de 2024
 
 Durante este Sprint 2, nos hemos centrado en la continuación del proyecto. Nos hemos encargado de todo lo relacionado con la gestión de los restaurantes. Esto incluye la creación de una interfaz de restaurante, ajustes en las tablas, y la adición de menús e ítems, que pueden ser visualizados, registrados y modificados según sea necesario.
 
 <div style="text-align: center;">
-    <img src="/doc/imagenesSprint/Imagen06.png" alt="Ilustración 6: Captura completa de Sprint 2" width="100%">
+    <img src="/doc/imagenesSprint/Imagen06.png" alt="Ilustración 6: Captura completa de Sprint 2 pt1" width="100%">
     <p><em>Captura completa del Sprint 2.</em></p>
 </div>
 
 <div style="text-align: center;">
-    <img src="/doc/imagenesSprint/Imagen07.png" alt="Ilustración 7: Captura completa de Sprint 2" width="100%">
+    <img src="/doc/imagenesSprint/Imagen07.png" alt="Ilustración 7: Captura completa de Sprint 2 pt2" width="100%">
     <p><em>Captura completa del Sprint 2.</em></p>
 </div>
 
