@@ -27,7 +27,7 @@ public class GestorPago {
 
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
-        return "Pruebas-RegisterPago"; // Nombre del archivo HTML sin la extensión
+        return "RegistrarPedidos"; // Nombre del archivo HTML sin la extensión
     }
 
     @GetMapping("/findById/{id}")
