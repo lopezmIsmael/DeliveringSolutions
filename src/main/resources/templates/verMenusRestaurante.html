@@ -180,6 +180,7 @@
         }
 
         function removeFromCart(index) {
+            event.stopPropagation();
             cartItems.splice(index, 1);
             updateCart();
         }
@@ -233,6 +234,7 @@
             if (!isClickInsideCart && isCartOpen) {
                 closeCart();
             }
+          
         });
 
         // Evitar que el clic dentro del carrito cierre el carrito
