@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Registrar Pedidos</title>
+        <style>
+            body, html {
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                font-family: 'Arial', sans-serif;
+                background-color: #f4f7f9;
+            }
+
+            .container {
+                width: 90%;
+                max-width: 1000px;
+                margin: 50px auto;
+                padding: 20px;
+                background-color: #ffffff;
+                border-radius: 12px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                Finalizar Compra
+            </div>
+            <div>
+                <h2>Items en el carrito</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Aquí se iteran los items del carrito -->
+                        <tr th:each="item : ${carrito}">
+                            <td th:text="${item.nombre}">Nombre del Producto</td>
+                            <td th:text="${item.cantidad}">1</td>
+                            <td th:text="${item.precio}">$0.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Total: <span th:text="${total}">$0.00</span></h3>
+                <h2>Método de Pago</h2>
+                <form action="#" method="post">
+                    <label for="metodoPago">Seleccione el método de pago:</label>
+                    <select id="metodoPago" name="metodoPago">
+                        <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                        <option value="paypal">PayPal</option>
+                    </select>
+                    <button type="submit">Finalizar Compra</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
