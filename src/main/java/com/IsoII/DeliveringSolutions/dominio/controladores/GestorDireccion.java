@@ -39,7 +39,6 @@ public class GestorDireccion {
         return "RegistrarDireccion";
     }
 
-    // Método para registrar una dirección
     @PostMapping("/registro")
     public String registrarDireccion(@ModelAttribute Direccion direccion,
             @RequestParam("codigoPostal") Integer codigoPostalId,
@@ -55,8 +54,7 @@ public class GestorDireccion {
 
         // Recuperar el Código Postal y el Usuario de la base de datos
         CodigoPostal codigoPostal = serviceCodigoPostal.findById(codigoPostalId).orElse(null);
-        Optional<Usuario> usuarioOptional = serviceDireccion.findUsuarioById(idUsuario); // Añade este método en el
-                                                                                         // ServiceDireccion
+        Optional<Usuario> usuarioOptional = serviceDireccion.findUsuarioById(idUsuario);
 
         if (codigoPostal == null || usuarioOptional.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Código Postal o Usuario no válido");
@@ -80,18 +78,19 @@ public class GestorDireccion {
         Optional<Direccion> direccion = serviceDireccion.findById(id);
         if (direccion.isPresent()) {
             model.addAttribute("direccion", direccion.get());
-            return "verDireccion";
+            return "/administrador/verDireccion"; // Coincide con el archivo en /templates/administrador/
         } else {
             model.addAttribute("error", "Dirección no encontrada");
-            return "error";
+            return "error"; // Redirige a una página de error si no se encuentra
         }
-    }
+    }    
 
     @GetMapping("/findAll")
     public String listarDirecciones(Model model) {
         List<Direccion> direcciones = serviceDireccion.findAll();
         model.addAttribute("direcciones", direcciones);
-        return "listaDirecciones"; // Asegúrate de tener un archivo Thymeleaf llamado listaDirecciones.html
+        return "/administrador/listaDirecciones"; // Asegúrate de tener un archivo Thymeleaf llamado
+                                                 // listaDirecciones.html
     }
 
 }
