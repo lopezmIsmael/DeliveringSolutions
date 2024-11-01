@@ -21,6 +21,7 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
 import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
 
 @Controller
@@ -31,13 +32,14 @@ public class GestorRestaurante {
     @Autowired
     private RestauranteDAO restauranteDAO;
 
-
     @Autowired
     private ServiceCartaMenu serviceCartaMenu;
 
     @Autowired
     private ServiceDireccion serviceDireccion;
 
+    @Autowired
+    private ServiceRestaurant serviceRestaurant;
 
     @GetMapping("/findAll")
     @ResponseBody
@@ -81,7 +83,7 @@ public class GestorRestaurante {
 
             if (direccion != null) {
                 model.addAttribute("direccion", direccion);
-            }else {
+            } else {
                 model.addAttribute("direccion", new Direccion());
             }
             return "interfazGestionRestaurante"; // Nombre del archivo HTML sin la extensión
@@ -90,7 +92,6 @@ public class GestorRestaurante {
             return "error"; // Nombre del archivo HTML de la página de error
         }
     }
-
 
     @PostMapping("/registrarRestaurante")
     public String registrarRestaurante(@ModelAttribute Restaurante restaurante, Model model) {
@@ -103,4 +104,32 @@ public class GestorRestaurante {
         System.out.println("Restaurante registrado: " + restauranteRegistrado);
         return "redirect:/restaurantes/gestion/" + restauranteRegistrado.getIdUsuario();
     }
+
+    // Método que devuelve una lista de todos los restaurantes
+    @GetMapping("/mostrarRestaurantes")
+    public String mostrarRestaurantes(Model model) {
+        List<Restaurante> restaurantes = serviceRestaurant.findAll();
+        if (restaurantes != null && !restaurantes.isEmpty()) {
+            model.addAttribute("restaurantes", restaurantes);
+            return "/administrador/ListaRestaurantes"; // Vista para listar restaurantes
+        } else {
+            model.addAttribute("error", "No se encontraron restaurantes");
+            return "error"; // Vista de error si no se encuentran restaurantes
+        }
+    }
+
+    // Método que muestra los detalles de un restaurante
+    @GetMapping("/mostrarRestaurante/{id}")
+    public String mostrarRestaurante(@PathVariable String id, Model model) {
+        Optional<Restaurante> optionalRestaurante = serviceRestaurant.findById(id);
+        if (optionalRestaurante.isPresent()) {
+            Restaurante restaurante = optionalRestaurante.get();
+            model.addAttribute("restaurante", restaurante);
+            return "/administrador/VerRestaurante"; // Vista para ver detalles de un restaurante
+        } else {
+            model.addAttribute("error", "Restaurante no encontrado");
+            return "error"; // Vista de error si no se encuentra el restaurante
+        }
+    }
+
 }
