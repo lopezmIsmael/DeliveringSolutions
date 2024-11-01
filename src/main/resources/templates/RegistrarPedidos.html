@@ -85,26 +85,26 @@
             <div class="header">
                 <h1>Finalizar Compra</h1>
             </div>
-            <div>
-                <h2>Items en el carrito</h2>
-                <table id="tabla" class="table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Aquí se iteran los items del carrito -->
-                        <tr th:each="item : ${carrito}">
-                            <td th:text="${item.nombre}">Nombre del Producto</td>
-                            <td th:text="${item.precio}">$0.00</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <h3>Total: <span th:text="${total}">$0.00</span></h3>
-                <h2>Método de Pago</h2>
-                <form action="#" method="post">
+                <form action="registrarPedido" method="post">
+                    <!-- Tabla de productos en el carrito -->
+                    <table id="tabla" class="table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="item : ${carrito}">
+                                <input type="hidden" name="items[${item.index}].nombre" th:value="${item.nombre}"/>
+                                <input type="hidden" name="items[${item.index}].precio" th:value="${item.precio}"/>
+                                <td th:text="${item.nombre}">Nombre del Producto</td>
+                                <td th:text="${item.precio}">$0.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3>Total: <span th:text="${total}">$0.00</span></h3>
+                    <h2>Método de Pago</h2>
                     <label for="metodoPago">Seleccione el método de pago:</label>
                     <select id="metodoPago" name="metodoPago">
                         <option value="tarjeta">Tarjeta de Crédito/Débito</option>
@@ -112,6 +112,7 @@
                     </select>
                     <button type="submit">Finalizar Compra</button>
                 </form>
+                
             </div>
         </div>
     </body>

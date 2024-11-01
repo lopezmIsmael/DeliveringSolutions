@@ -1,10 +1,18 @@
 package com.IsoII.DeliveringSolutions.dominio.controladores;
 
+import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Pago;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Pedido;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
+import com.IsoII.DeliveringSolutions.dominio.service.ServicePedido;
 import com.IsoII.DeliveringSolutions.persistencia.PagoDAO;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.servlet.http.HttpSession;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,15 +83,29 @@ public String mostrarFormularioRegistro(@RequestParam("cartData") String cartDat
         return pagoDAO.findById(id).orElse(null);
     }
 
-    @PostMapping("/registrarPago")
-    public ResponseEntity<Pago> registrarPago(@ModelAttribute Pago pago) {
-        System.out.println("Pago recibido: " + pago.toString());
-        if (pago.getMetodoPago() == null || pago.getMetodoPago().isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @PostMapping("/registrarPedido")
+    public String registrarPedido(String metodoPago, List<ItemMenu> carrito, HttpSession session) {
+        System.out.println("<<ESTOY EN REGISTRAR PEDIDO: GestorPago>>");
+        System.out.println("<<Metodo de pago>>: " + metodoPago);
+        System.out.println("<<Carrito size>>: " + carrito.size());
+        for (ItemMenu item : carrito) {
+            System.out.println("<<Item>>: " + item.getNombre() + ", Precio: " + item.getPrecio());
         }
-        Pago pagoRegistrado = pagoDAO.save(pago);
-        System.out.println("Pago registrado: " + pagoRegistrado);
-        return new ResponseEntity<>(pagoRegistrado, HttpStatus.CREATED);
+
+        Cliente cliente = (Cliente) session.getAttribute("usuario");
+        Restaurante restaurante = new Restaurante();
+        
+        Pedido pedido = new Pedido();
+        pedido.setFecha(System.currentTimeMillis());
+        pedido.setEstadoPedido("Pendiente");
+        pedido.setCliente(cliente);
+        pedido.setRestaurante(restaurante);
+
+        ServicePedido.save(pedido);
+
+        System.out.println("<<Pedido registrado>>: " + pedido.toString());
+
+
+        return "RegistrarPedidos";
     }
-    
 }
