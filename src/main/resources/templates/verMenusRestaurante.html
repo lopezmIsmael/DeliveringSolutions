@@ -147,6 +147,7 @@
                                 <form onsubmit="addToCart(event, this)">
                                     <input type="hidden" name="nombre" th:value="${item.nombre}" />
                                     <input type="hidden" name="precio" th:value="${item.precio}" />
+                                    <input type="hidden" name="tipo" th:value="${item.tipo}" />
                                     <button type="submit" class="add-to-cart-btn">
                                         <img src="/Carrito2.png" alt="Carrito"/>
                                     </button>
@@ -221,9 +222,25 @@
             }
         }
 
+        // In verMenusRestaurante.html, update the finalizePurchase() function
         function finalizePurchase() {
-            window.location.href = '/pago/register';
+            const total = cartItems.reduce((acc, item) => acc + item.precio, 0);
+            const cartData = JSON.stringify(cartItems); // Convierte el carrito en JSON para enviarlo
+            
+            const form = document.createElement('form');
+            form.action = '/pago/register'; // Add leading slash to make it absolute
+            form.method = 'post'; // Specify the form method
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'cartData';
+            input.value = cartData;
+            
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
         }
+
 
         // Mostrar y cerrar el carrito cuando se hace clic fuera de él
         document.addEventListener('click', function(event) {

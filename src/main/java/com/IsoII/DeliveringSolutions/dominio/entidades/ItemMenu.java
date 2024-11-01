@@ -6,6 +6,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 
 /**
@@ -28,6 +30,7 @@ public class ItemMenu {
 
     @ManyToOne
     @JoinColumn(name = "idCarta")
+    @JsonIgnore
     private CartaMenu cartamenu;
 
     @Column(name = "tipo", nullable = false, length = 50)
