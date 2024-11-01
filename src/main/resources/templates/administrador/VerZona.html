@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de la Zona</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            max-width: 600px;
+            width: 100%;
+            margin: 20px;
+            text-align: center;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .content {
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: top;
+        }
+        td:first-child {
+            font-weight: bold;
+            color: #555;
+            width: 150px;
+        }
+        td:last-child {
+            color: #333;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin: 20px 0;
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            background-color: #e7f5e7;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .back-link:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            Detalles de la Zona
+        </div>
+        <div class="content">
+            <table>
+                <tr>
+                    <td>Nombre:</td>
+                    <td th:text="${zona.nombre}">Nombre de ejemplo</td>
+                </tr>
+            </table>
+            <a th:href="@{/zona/mostrarZonas}" class="back-link">Volver a la lista de zonas</a>
+        </div>
+    </div>
+</body>
+
+</html>
