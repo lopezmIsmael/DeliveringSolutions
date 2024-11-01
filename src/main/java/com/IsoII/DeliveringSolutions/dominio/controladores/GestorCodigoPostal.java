@@ -11,7 +11,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.CodigoPostal;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceCodigoPostal;
 import com.IsoII.DeliveringSolutions.persistencia.CodigoPostalDAO;
+
+import org.springframework.ui.Model;
 
 @Controller
 @RequestMapping("/codigoPostal")
@@ -21,10 +24,20 @@ public class GestorCodigoPostal {
     @Autowired
     private CodigoPostalDAO codigoPostalDAO;
 
+    @Autowired
+    private ServiceCodigoPostal serviceCodigoPostal;
+
     @GetMapping("/findAll")
     @ResponseBody
     public List<CodigoPostal> findAll() {
         return codigoPostalDAO.findAll();
+    }
+
+    @GetMapping("/mostrarCodigos")
+    public String mostrarCodigosPostales(Model model) {
+        List<CodigoPostal> codigosPostales = serviceCodigoPostal.findAll();
+        model.addAttribute("codigosPostales", codigosPostales);
+        return "/administrador/ListaCodigoPostales"; // Nombre del archivo HTML sin la extensión
     }
 
     @GetMapping("/register")
