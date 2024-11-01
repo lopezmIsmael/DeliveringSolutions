@@ -77,24 +77,20 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
+                    <th>DNI</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="cliente : ${clientes}">
-                    <td th:text="${cliente.id}">1</td>
                     <td th:text="${cliente.nombre}">Nombre de ejemplo</td>
                     <td th:text="${cliente.apellido}">Apellido de ejemplo</td>
-                    <td th:text="${cliente.email}">email@ejemplo.com</td>
-                    <td th:text="${cliente.telefono}">123456789</td>
-                    <td>
+                    <td th:text="${cliente.dni}">12345678X</td>
+                    <!-- <td>
                         <a th:href="@{/cliente/findById/{id}(id=${cliente.id})}">Ver detalles</a>
-                    </td>
+                    </td> -->
                 </tr>
             </tbody>
         </table>

@@ -34,6 +34,7 @@ import jakarta.servlet.http.HttpSession;
 import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceClient;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
 
 @Controller
@@ -55,6 +56,9 @@ public class GestorCliente {
     private ServiceDireccion serviceDireccion;
 
     @Autowired
+    private ServiceClient serviceClient;
+
+    @Autowired
     private ItemMenuDAO itemMenuDAO;
 
     // ************************************************** GETMAPPING
@@ -64,6 +68,18 @@ public class GestorCliente {
     @ResponseBody
     public List<Cliente> findAll() {
         return clienteDAO.findAll();
+    }
+
+    @GetMapping("/mostrarCliente")
+    public String mostrarCliente(Model model) {
+        List<Cliente> clientes = serviceClient.findAll();
+        if (clientes != null && !clientes.isEmpty()) {
+            model.addAttribute("clientes", clientes);
+            return "/administrador/listaClientes"; // Nombre del archivo HTML sin la extensión
+        } else {
+            model.addAttribute("error", "Clientes no encontrados");
+            return "error"; // Vista de error si no se encuentran clientes
+        }
     }
 
     // Método que muestra el formulario de registro de cliente
