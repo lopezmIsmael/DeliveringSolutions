@@ -127,9 +127,18 @@ public class GestorPago {
         pedido.setRestaurante(restaurante);
 
         servicePedido.save(pedido);
-
-        // Logging
         System.out.println("<<Pedido registrado>>: " + pedido.toString());
+
+        Pago pago = new Pago();
+        pago.setMetodoPago(metodoPago);
+        pago.setPedido(pedido);
+        pagoDAO.save(pago);
+
+        System.out.println("<<Pago registrado>>: " + pago.toString());
+
+        // Actualizar estado pedido a pagado
+        pedido.setEstadoPedido("Pagado");
+        servicePedido.save(pedido);
 
         // Redirect with Flash Attributes
         redirectAttributes.addFlashAttribute("pedido", pedido);
