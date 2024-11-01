@@ -119,7 +119,8 @@
 <body>
     <div class="container">
         <!-- Mostrar el nombre del restaurante -->
-        <h2>Menús del Restaurante: <span th:text="${restaurante.nombre}"></span></h2>
+        <h2>Menús del Restaurante: <span th:text="${restaurante.nombre}" th:attr="data-restaurante-id=${restaurante.idUsuario}"></span>
+        </h2>
         <!-- Si no hay menús, mostrar un mensaje -->
         <div th:if="${#lists.isEmpty(menus)}">
             <p>No hay menús disponibles en este momento.</p>
@@ -228,18 +229,27 @@
             const cartData = JSON.stringify(cartItems); // Convierte el carrito en JSON para enviarlo
             
             const form = document.createElement('form');
-            form.action = '/pago/register'; // Add leading slash to make it absolute
-            form.method = 'post'; // Specify the form method
+            form.action = '/pago/register'; // Ruta donde se envía el formulario
+            form.method = 'post'; 
             
             const input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'cartData';
             input.value = cartData;
+
+            // Obtener el id del restaurante
+            const restauranteId = document.querySelector('[data-restaurante-id]').getAttribute('data-restaurante-id');
+            const inputRestaurante = document.createElement('input');
+            inputRestaurante.type = 'hidden';
+            inputRestaurante.name = 'restauranteId';
+            inputRestaurante.value = restauranteId;
             
             form.appendChild(input);
+            form.appendChild(inputRestaurante);
             document.body.appendChild(form);
             form.submit();
         }
+
 
 
         // Mostrar y cerrar el carrito cuando se hace clic fuera de él

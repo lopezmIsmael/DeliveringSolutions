@@ -104,12 +104,14 @@
                         </tbody>
                     </table>
                     <h3>Total: <span th:text="${total}">$0.00</span></h3>
+                    <h3>Restaurante: <span th:text="${restaurante.idUsuario}">$Id del restaurante</span></h3>
                     <h2>Método de Pago</h2>
                     <label for="metodoPago">Seleccione el método de pago:</label>
                     <select id="metodoPago" name="metodoPago">
                         <option value="tarjeta">Tarjeta de Crédito/Débito</option>
                         <option value="paypal">PayPal</option>
                     </select>
+                    <input type="hidden" name="restauranteId" th:value="${restaurante.idUsuario}"/>
                     <button type="submit">Finalizar Compra</button>
                 </form>
                 

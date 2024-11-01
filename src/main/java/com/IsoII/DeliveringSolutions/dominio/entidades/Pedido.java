@@ -37,7 +37,6 @@ public class Pedido {
     @JoinColumn(name = "idRestaurante", nullable = false)
     private Restaurante idRestaurante;
 
-
     public Pedido() {
     }
     
@@ -89,5 +88,11 @@ public class Pedido {
 
     public void setRestaurante(Restaurante idRestaurante) {
         this.idRestaurante = idRestaurante;
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido [estadoPedido=" + estadoPedido + ", fecha=" + fecha + ", idCliente=" + idCliente + ", idPedido="
+                + idPedido + ", idRestaurante=" + idRestaurante + "]";
     }
 }

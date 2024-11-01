@@ -10,7 +10,7 @@ import java.util.Optional;
 @Service
 public class ServicePedido {
     @Autowired
-    private static PedidoDAO pedidoDAO;
+    private PedidoDAO pedidoDAO;
     
         public List<Pedido> findAll(){
             return pedidoDAO.findAll();
@@ -20,7 +20,7 @@ public class ServicePedido {
             return pedidoDAO.findById(id);
         }
     
-        public static Pedido save(Pedido pedido){
+        public Pedido save(Pedido pedido){
             return pedidoDAO.save(pedido);
     }
 
