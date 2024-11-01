@@ -82,6 +82,19 @@ public class GestorCliente {
         }
     }
 
+    @GetMapping("/mostrarCliente/{id}")
+    public String mostrarCliente(@PathVariable String id, Model model) {
+        Optional<Cliente> optionalCliente = serviceClient.findById(id);
+        if (optionalCliente.isPresent()) {
+            Cliente cliente = optionalCliente.get();
+            model.addAttribute("cliente", cliente);
+            return "/administrador/VerCliente"; // Nombre del archivo HTML sin la extensión
+        } else {
+            model.addAttribute("error", "Cliente no encontrado");
+            return "error"; // Vista de error si no se encuentra el cliente
+        }
+    }
+
     // Método que muestra el formulario de registro de cliente
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
