@@ -20,6 +20,7 @@
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            text-align: center;
         }
 
         table {
@@ -80,7 +81,6 @@
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Restaurante</th>
-                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -88,9 +88,6 @@
                     <td th:text="${carta.idCarta}">1</td>
                     <td th:text="${carta.nombre}">Nombre del menú</td>
                     <td th:text="${carta.restaurante.nombre}">Nombre del restaurante</td>
-                    <!-- <td>
-                        <a th:href="@{/cartas/findById/{id}(id=${menu.idCarta})}">Ver detalles</a>
-                    </td> -->
                 </tr>
             </tbody>
         </table>
