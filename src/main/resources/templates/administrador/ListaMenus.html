@@ -84,10 +84,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="menu : ${menus}">
-                    <td th:text="${menu.idCarta}">1</td>
-                    <td th:text="${menu.nombre}">Nombre del menú</td>
-                    <td th:text="${menu.cif}">Nombre del restaurante</td>
+                <tr th:each="carta : ${cartas}">
+                    <td th:text="${carta.idCarta}">1</td>
+                    <td th:text="${carta.nombre}">Nombre del menú</td>
+                    <td th:text="${carta.restaurante.nombre}">Nombre del restaurante</td>
                     <!-- <td>
                         <a th:href="@{/cartas/findById/{id}(id=${menu.idCarta})}">Ver detalles</a>
                     </td> -->

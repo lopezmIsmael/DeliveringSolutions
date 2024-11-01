@@ -3,6 +3,7 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
 import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
@@ -33,6 +34,9 @@ public class GestorMenu {
     @Autowired
     private RestauranteDAO restauranteDAO;
 
+    @Autowired
+    private ServiceCartaMenu serviceCartaMenu;
+
     // ************************************************** GETMAPPING
     // ********************************************** */
 
@@ -41,6 +45,13 @@ public class GestorMenu {
     @ResponseBody
     public List<CartaMenu> findAll() {
         return cartaMenuDAO.findAll();
+    }
+
+    @GetMapping("/mostrarMenu")
+    public String mostrarMenu(Model model) {
+        List<CartaMenu> cartas = serviceCartaMenu.findAll();
+        model.addAttribute("cartas", cartas);
+        return "/administrador/ListaMenus";
     }
 
     @GetMapping("/register/{id}")
