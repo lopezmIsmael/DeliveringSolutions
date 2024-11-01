@@ -88,9 +88,9 @@
                     <td th:text="${cliente.nombre}">Nombre de ejemplo</td>
                     <td th:text="${cliente.apellido}">Apellido de ejemplo</td>
                     <td th:text="${cliente.dni}">12345678X</td>
-                    <!-- <td>
-                        <a th:href="@{/cliente/findById/{id}(id=${cliente.id})}">Ver detalles</a>
-                    </td> -->
+                    <td>
+                        <a th:href="@{/clientes/findById/{id}(id=${cliente.idUsuario})}">Ver detalles</a>
+                    </td>
                 </tr>
             </tbody>
         </table>

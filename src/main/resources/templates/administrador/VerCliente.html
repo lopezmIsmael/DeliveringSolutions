@@ -102,10 +102,6 @@
                     <td th:text="${cliente.dni}">12345678A</td>
                 </tr>
                 <tr>
-                    <td>Email:</td>
-                    <td th:text="${cliente.email}">email@ejemplo.com</td>
-                </tr>
-                <tr>
                     <td>Favoritos:</td>
                     <td>
                         <ul>
@@ -114,7 +110,7 @@
                     </td>
                 </tr>
             </table>
-            <a th:href="@{/cliente/findAll}" class="back-link">Volver a la lista de clientes</a>
+            <a th:href="@{/cliente/mostrarCliente}" class="back-link">Volver a la lista de clientes</a>
         </div>
     </div>
 </body>
