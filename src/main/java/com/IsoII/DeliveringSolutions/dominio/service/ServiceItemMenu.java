@@ -16,7 +16,7 @@ public class ServiceItemMenu {
         return itemMenuDAO.findAll();
     }
 
-    public Optional<ItemMenu> findById(String id){
+    public Optional<ItemMenu> findById(Integer id){
         return itemMenuDAO.findById(id);
     }
 
@@ -24,7 +24,7 @@ public class ServiceItemMenu {
         return itemMenuDAO.save(itemMenu);
     }
 
-    public void deleteById(String id){
+    public void deleteById(Integer id){
         itemMenuDAO.deleteById(id);
     }
 }

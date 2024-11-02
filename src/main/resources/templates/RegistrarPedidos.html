@@ -95,11 +95,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="item : ${carrito}">
-                                <input type="hidden" name="items[${item.index}].nombre" th:value="${item.nombre}"/>
-                                <input type="hidden" name="items[${item.index}].precio" th:value="${item.precio}"/>
-                                <td th:text="${item.nombre}">Nombre del Producto</td>
-                                <td th:text="${item.precio}">$0.00</td>
+                            <tr th:each="item, iterStat : ${carrito}">
+                                <td>
+                                    <!-- Use multiple inputs with the same name "itemIds" -->
+                                    <input type="hidden" name="itemIds" th:value="${item.idItemMenu}" />
+                                    <span th:text="${item.idItemMenu}">Id del Producto</span>
+                                    <span th:text="${item.nombre}">Nombre del Producto</span>
+                                </td>
+                                <td>
+                                    <span th:text="${item.precio}">$0.00</span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

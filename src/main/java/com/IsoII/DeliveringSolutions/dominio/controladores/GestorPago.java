@@ -2,6 +2,7 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
+import com.IsoII.DeliveringSolutions.dominio.entidades.ItemsPedidos;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Pago;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Pedido;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
@@ -9,6 +10,10 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
 import com.IsoII.DeliveringSolutions.dominio.service.ServicePedido;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
 import com.IsoII.DeliveringSolutions.persistencia.PagoDAO;
+import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemsPedido;
+import com.IsoII.DeliveringSolutions.persistencia.DAOItemsPedido;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemMenu;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -43,7 +48,11 @@ public class GestorPago {
     @Autowired
     private ServicePedido servicePedido;
 
+    @Autowired
+    private ServiceItemMenu serviceItemMenu;
 
+    @Autowired
+    private ServiceItemsPedido serviceItemsPedido;
 
     @GetMapping("/findAll")
     @ResponseBody
@@ -108,6 +117,7 @@ public class GestorPago {
             @RequestParam("metodoPago") String metodoPago,
             @RequestParam("restauranteId") String restauranteId,
             HttpSession session,
+            @RequestParam("itemIds") List<Integer> itemIds,
             RedirectAttributes redirectAttributes) {
 
         // Logging
@@ -126,9 +136,28 @@ public class GestorPago {
         pedido.setCliente(cliente);
         pedido.setRestaurante(restaurante);
 
+        // Registrar pedido
         servicePedido.save(pedido);
         System.out.println("<<Pedido registrado>>: " + pedido.toString());
 
+        // Fetch items from database based on IDs
+        List<ItemMenu> items = new ArrayList<>();
+        for (Integer itemId : itemIds) {
+            System.out.println("<<Item ID>>: " + itemId);
+            // Assuming you have a service or repository to fetch items
+            Optional<ItemMenu> optionalItem = serviceItemMenu.findById(itemId);
+            if (optionalItem.isPresent()) {
+                ItemsPedidos itemsPedidos = new ItemsPedidos();
+                items.add(optionalItem.get());
+                System.out.println("<<Item encontrado>>: " + optionalItem.toString());
+                itemsPedidos.setItemMenu(optionalItem.get());
+                itemsPedidos.setPedido(pedido);
+                serviceItemsPedido.save(itemsPedidos);
+                System.out.println("<<ItemPedido registrado>>: " + itemsPedidos.toString());
+            }
+        }
+
+        // Registrar pago
         Pago pago = new Pago();
         pago.setMetodoPago(metodoPago);
         pago.setPedido(pedido);

@@ -149,6 +149,7 @@
                                     <input type="hidden" name="nombre" th:value="${item.nombre}" />
                                     <input type="hidden" name="precio" th:value="${item.precio}" />
                                     <input type="hidden" name="tipo" th:value="${item.tipo}" />
+                                    <input type="hidden" name="idItemMenu" th:value="${item.idItemMenu}" />
                                     <button type="submit" class="add-to-cart-btn">
                                         <img src="/Carrito2.png" alt="Carrito"/>
                                     </button>
@@ -174,9 +175,10 @@
 
         function addToCart(event, form) {
             event.preventDefault(); // Evita el envío del formulario
+            const idItemMenu = form.idItemMenu.value;
             const nombre = form.nombre.value;
             const precio = parseFloat(form.precio.value);
-            cartItems.push({ nombre, precio });
+            cartItems.push({ idItemMenu, nombre, precio });
             updateCart();
             openCart();
         }
