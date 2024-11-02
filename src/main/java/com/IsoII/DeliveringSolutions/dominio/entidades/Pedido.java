@@ -1,5 +1,9 @@
 package com.IsoII.DeliveringSolutions.dominio.entidades;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 
@@ -36,7 +40,7 @@ public class Pedido {
     public Pedido() {
     }
     
-    public Pedido(int idPedido, long fecha, String estadoPedido, Cliente idCliente, Restaurante idRestaurante, ServicioEntrega servicioEntrega, Pago pago) {
+    public Pedido(int idPedido, long fecha, String estadoPedido, Cliente idCliente, Restaurante idRestaurante) {
         this.idPedido = idPedido;
         this.fecha = fecha;
         this.estadoPedido = estadoPedido;
@@ -85,5 +89,10 @@ public class Pedido {
     public void setRestaurante(Restaurante idRestaurante) {
         this.idRestaurante = idRestaurante;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Pedido [estadoPedido=" + estadoPedido + ", fecha=" + fecha + ", idCliente=" + idCliente + ", idPedido="
+                + idPedido + ", idRestaurante=" + idRestaurante + "]";
+    }
 }

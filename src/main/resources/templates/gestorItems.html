@@ -21,7 +21,7 @@
                     <span th:text="${item.precio}">Precio del Item</span> - 
                     <span th:text="${item.tipo}">Tipo del Item</span>
                 </span>
-                <button class="btn btn-danger btn-sm" th:attr="data-id=${item.nombre}" onclick="eliminarItem(this)">Eliminar</button>
+                <button class="btn btn-danger btn-sm" th:attr="data-id=${item.idItemMenu}" onclick="eliminarItem(this)">Eliminar</button>
             </li>
         </ul>
 

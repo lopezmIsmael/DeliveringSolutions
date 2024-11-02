@@ -18,9 +18,6 @@ public class Pago {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int idPago;
 
-    @Column(name = "fecha", nullable = false, length = 10)
-    private long fecha;
-
     @Column(name = "metodoPago", nullable = false, length = 50)
     private String metodoPago;
 
@@ -31,9 +28,8 @@ public class Pago {
     public Pago() {
     }
 
-    public Pago(int idPago, long fecha, String metodoPago, Pedido pedido) {
+    public Pago(int idPago, String metodoPago, Pedido pedido) {
         this.idPago = idPago;
-        this.fecha = fecha;
         this.metodoPago = metodoPago;
         this.pedido = pedido;
     }
@@ -46,14 +42,6 @@ public class Pago {
 
     public void setIdPago(int idPago) {
         this.idPago = idPago;
-    }
-
-    public long getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(long fecha) {
-        this.fecha = fecha;
     }
 
     public String getMetodoPago() {
@@ -74,6 +62,6 @@ public class Pago {
 
     @Override
     public String toString() {
-        return "Pago [idPago=" + idPago + ", fecha=" + fecha + ", metodoPago=" + metodoPago + ", pedido=" + pedido + "]";
+        return "Pago [idPago=" + idPago + ", metodoPago=" + metodoPago + ", pedido=" + pedido + "]";
     }
 }

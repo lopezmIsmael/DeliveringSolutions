@@ -10,7 +10,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
-public interface ItemMenuDAO extends JpaRepository<ItemMenu, String> {
+public interface ItemMenuDAO extends JpaRepository<ItemMenu, Integer> {
     List<ItemMenu> findByCartamenu(CartaMenu cartaMenu);
 }
 

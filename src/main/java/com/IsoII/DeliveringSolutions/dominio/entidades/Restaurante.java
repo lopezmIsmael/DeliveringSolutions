@@ -57,4 +57,12 @@ public class Restaurante extends Usuario {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "Restaurante{" +
+                "cif='" + cif + '\'' +
+                ", nombre='" + nombre + '\'' +
+                '}';
+    }
 }

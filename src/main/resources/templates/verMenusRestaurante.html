@@ -119,7 +119,8 @@
 <body>
     <div class="container">
         <!-- Mostrar el nombre del restaurante -->
-        <h2>Menús del Restaurante: <span th:text="${restaurante.nombre}"></span></h2>
+        <h2>Menús del Restaurante: <span th:text="${restaurante.nombre}" th:attr="data-restaurante-id=${restaurante.idUsuario}"></span>
+        </h2>
         <!-- Si no hay menús, mostrar un mensaje -->
         <div th:if="${#lists.isEmpty(menus)}">
             <p>No hay menús disponibles en este momento.</p>
@@ -147,6 +148,8 @@
                                 <form onsubmit="addToCart(event, this)">
                                     <input type="hidden" name="nombre" th:value="${item.nombre}" />
                                     <input type="hidden" name="precio" th:value="${item.precio}" />
+                                    <input type="hidden" name="tipo" th:value="${item.tipo}" />
+                                    <input type="hidden" name="idItemMenu" th:value="${item.idItemMenu}" />
                                     <button type="submit" class="add-to-cart-btn">
                                         <img src="/Carrito2.png" alt="Carrito"/>
                                     </button>
@@ -172,14 +175,16 @@
 
         function addToCart(event, form) {
             event.preventDefault(); // Evita el envío del formulario
+            const idItemMenu = form.idItemMenu.value;
             const nombre = form.nombre.value;
             const precio = parseFloat(form.precio.value);
-            cartItems.push({ nombre, precio });
+            cartItems.push({ idItemMenu, nombre, precio });
             updateCart();
             openCart();
         }
 
         function removeFromCart(index) {
+            event.stopPropagation();
             cartItems.splice(index, 1);
             updateCart();
         }
@@ -220,10 +225,34 @@
             }
         }
 
+        // In verMenusRestaurante.html, update the finalizePurchase() function
         function finalizePurchase() {
-            alert('Compra finalizada');
-            // Aquí puedes agregar la lógica para finalizar la compra
+            const total = cartItems.reduce((acc, item) => acc + item.precio, 0);
+            const cartData = JSON.stringify(cartItems); // Convierte el carrito en JSON para enviarlo
+            
+            const form = document.createElement('form');
+            form.action = '/pago/register'; // Ruta donde se envía el formulario
+            form.method = 'post'; 
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'cartData';
+            input.value = cartData;
+
+            // Obtener el id del restaurante
+            const restauranteId = document.querySelector('[data-restaurante-id]').getAttribute('data-restaurante-id');
+            const inputRestaurante = document.createElement('input');
+            inputRestaurante.type = 'hidden';
+            inputRestaurante.name = 'restauranteId';
+            inputRestaurante.value = restauranteId;
+            
+            form.appendChild(input);
+            form.appendChild(inputRestaurante);
+            document.body.appendChild(form);
+            form.submit();
         }
+
+
 
         // Mostrar y cerrar el carrito cuando se hace clic fuera de él
         document.addEventListener('click', function(event) {
@@ -234,6 +263,7 @@
             if (!isClickInsideCart && isCartOpen) {
                 closeCart();
             }
+          
         });
 
         // Evitar que el clic dentro del carrito cierre el carrito
