@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Reparto</title>
+</head>
+<body>
+    <div class="ticket">
+        <div class="header">
+            <h2>Pedidos Pendientes</h2>
+        </div>
+        <div class="items">
+            <div class="item">
+                <span><strong>Restaurante</strong></span>
+                <span><strong>Entrega</strong></span>
+                <span><strong>Estado</strong></span>
+                <span><strong>Fecha</strong></span>
+            </div>
+            <div th:if="${pedidosPendientes != null and !pedidosPendientes.isEmpty()}">
+                <div th:each="entry : ${pedidosPendientes.entrySet()}">
+                    <div class="item">
+                        <span th:text="${entry.key.restaurante.nombre}"></span>
+                        <span th:text="|${entry.value.calle}, ${entry.value.numero}|"></span>
+                        <span th:text="${entry.key.estadoPedido}"></span>
+                        <span th:text="${#dates.format(new java.util.Date(entry.key.fecha), 'dd/MM/yyyy HH:mm')}"></span>
+                    </div>
+                </div>
+            </div>
+            <div th:unless="${pedidosPendientes != null and !pedidosPendientes.isEmpty()}">
+                <p>No hay pedidos pendientes.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

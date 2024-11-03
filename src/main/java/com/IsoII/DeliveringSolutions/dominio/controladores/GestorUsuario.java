@@ -101,7 +101,7 @@ public class GestorUsuario {
             if(usuarioLogueado.gettipoUsuario().equals("CLIENTE"))
                 return "redirect:/clientes/verRestaurantes";
             else if(usuarioLogueado.gettipoUsuario().equals("REPARTIDOR"))
-                return "redirect:/";
+                return "redirect:/repartidores/login";
             else if(usuarioLogueado.gettipoUsuario().equals("RESTAURANTE"))
                 return "redirect:/restaurantes/gestion/" + username;
         } else {
