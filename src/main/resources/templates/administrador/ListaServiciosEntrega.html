@@ -11,7 +11,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f2f5;
         }
-
         .container {
             max-width: 800px;
             margin: 40px auto;
@@ -21,36 +20,29 @@
             border-radius: 8px;
             text-align: center;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-
         th, td {
             padding: 12px;
             border-bottom: 1px solid #dddddd;
         }
-
         th {
             background-color: #4CAF50;
             color: white;
         }
-
         tr:hover {
             background-color: #f1f1f1;
         }
-
         a {
             color: #4CAF50;
             text-decoration: none;
         }
-
         a:hover {
             text-decoration: underline;
         }
-
         .back-link {
             display: block;
             text-align: center;
@@ -63,7 +55,6 @@
             border-radius: 5px;
             transition: background-color 0.3s, color 0.3s;
         }
-
         .back-link:hover {
             background-color: #4CAF50;
             color: white;
@@ -87,8 +78,8 @@
             <tbody>
                 <tr th:each="servicio : ${serviciosEntrega}">
                     <td th:text="${servicio.idServicioEntrega}">ID de Ejemplo</td>
-                    <td th:text="${servicio.fechaRecepcion}">Fecha de Recepción</td>
-                    <td th:text="${servicio.fechaEntrega}">Fecha de Entrega</td>
+                    <td th:text="${#dates.format(servicio.fechaRecepcion, 'dd-MM-yyyy HH:mm:ss')}">Fecha de Recepción</td>
+                    <td th:text="${#dates.format(servicio.fechaEntrega, 'dd-MM-yyyy HH:mm:ss')}">Fecha de Entrega</td>
                     <td th:text="${servicio.pedido.idPedido}">ID Pedido</td>
                     <td th:text="${servicio.repartidor.nombre}">Nombre del Repartidor</td>
                     <td>

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles del Servicio de Entrega</title>
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             height: 100%;
@@ -81,11 +83,10 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <div class="header">
-            Detalles del Servicio de Entrega
-        </div>
+        <div class="header">Detalles del Servicio de Entrega</div>
         <div class="content">
             <table>
                 <tr>
@@ -94,11 +95,13 @@
                 </tr>
                 <tr>
                     <td>Fecha Recepción:</td>
-                    <td th:text="${servicioEntrega.fechaRecepcion}">Fecha de Recepción</td>
+                    <td th:text="${#dates.format(servicioEntrega.fechaRecepcion, 'dd-MM-yyyy HH:mm:ss')}">Fecha de
+                        Recepción</td>
                 </tr>
                 <tr>
                     <td>Fecha Entrega:</td>
-                    <td th:text="${servicioEntrega.fechaEntrega}">Fecha de Entrega</td>
+                    <td th:text="${#dates.format(servicioEntrega.fechaEntrega, 'dd-MM-yyyy HH:mm:ss')}">Fecha de Entrega
+                    </td>
                 </tr>
                 <tr>
                     <td>Pedido:</td>
@@ -109,8 +112,10 @@
                     <td th:text="${servicioEntrega.repartidor.nombre}">Nombre del Repartidor</td>
                 </tr>
             </table>
-            <a th:href="@{/servicioEntrega/mostrarServiciosEntrega}" class="back-link">Volver a la lista de servicios de entrega</a>
+            <a th:href="@{/servicioEntrega/mostrarServiciosEntrega}" class="back-link">Volver a la lista de servicios de
+                entrega</a>
         </div>
     </div>
 </body>
+
 </html>
