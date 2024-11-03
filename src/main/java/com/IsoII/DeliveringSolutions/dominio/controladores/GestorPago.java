@@ -1,6 +1,7 @@
 package com.IsoII.DeliveringSolutions.dominio.controladores;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemsPedidos;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Pago;
@@ -9,11 +10,14 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
 import com.IsoII.DeliveringSolutions.dominio.service.ServicePedido;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceUser;
 import com.IsoII.DeliveringSolutions.persistencia.PagoDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemsPedido;
 import com.IsoII.DeliveringSolutions.persistencia.DAOItemsPedido;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemMenu;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -53,6 +57,12 @@ public class GestorPago {
 
     @Autowired
     private ServiceItemsPedido serviceItemsPedido;
+
+    @Autowired
+    private ServiceDireccion serviceDireccion;
+
+    @Autowired
+    private ServiceUser serviceUsuario;
 
     @GetMapping("/findAll")
     @ResponseBody
@@ -118,6 +128,7 @@ public class GestorPago {
             @RequestParam("restauranteId") String restauranteId,
             HttpSession session,
             @RequestParam("itemIds") List<Integer> itemIds,
+            Model model,
             RedirectAttributes redirectAttributes) {
 
         // Logging
@@ -139,7 +150,7 @@ public class GestorPago {
         // Registrar pedido
         servicePedido.save(pedido);
         System.out.println("<<Pedido registrado>>: " + pedido.toString());
-
+        Double total = 0.0;
         // Fetch items from database based on IDs
         List<ItemMenu> items = new ArrayList<>();
         for (Integer itemId : itemIds) {
@@ -149,6 +160,7 @@ public class GestorPago {
             if (optionalItem.isPresent()) {
                 ItemsPedidos itemsPedidos = new ItemsPedidos();
                 items.add(optionalItem.get());
+                total += optionalItem.get().getPrecio();
                 System.out.println("<<Item encontrado>>: " + optionalItem.toString());
                 itemsPedidos.setItemMenu(optionalItem.get());
                 itemsPedidos.setPedido(pedido);
@@ -169,14 +181,32 @@ public class GestorPago {
         pedido.setEstadoPedido("Pagado");
         servicePedido.save(pedido);
 
-        // Redirect with Flash Attributes
-        redirectAttributes.addFlashAttribute("pedido", pedido);
+        //Obtener direccion recogida
+        Usuario usuarioRestaurante = serviceUsuario.findById(restaurante.getIdUsuario()).orElse(null);
+        Direccion direccionRecogida = serviceDireccion.findByUsuario(usuarioRestaurante);
 
+        //Obtener direccion entrega
+        Usuario usuarioCliente = serviceUsuario.findById(cliente.getIdUsuario()).orElse(null);
+        Direccion direccionEntrega = serviceDireccion.findByUsuario(usuarioCliente);
+
+
+        // Add attributes to redirectAttributes instead of model
+        redirectAttributes.addFlashAttribute("pedido", pedido);
+        redirectAttributes.addFlashAttribute("items", items);
+        redirectAttributes.addFlashAttribute("pago", pago);
+        redirectAttributes.addFlashAttribute("restaurante", restaurante);
+        redirectAttributes.addFlashAttribute("cliente", cliente);
+        redirectAttributes.addFlashAttribute("total", total);
+        redirectAttributes.addFlashAttribute("direccionRecogida", direccionRecogida);
+        redirectAttributes.addFlashAttribute("direccionEntrega", direccionEntrega);
+        
+        System.out.println("<<MODELO:>>" + pedido.toString() + items.toString() + pago.toString()
+                + restaurante.toString() + cliente.toString() + total + direccionRecogida.toString() + direccionEntrega.toString());
         return "redirect:/pago/confirmacion";
     }
 
     @GetMapping("/confirmacion")
-    public String mostrarConfirmacion() {
+    public String mostrarConfirmacion(Model model) {
         return "ConfirmacionPedido";
     }
 }
