@@ -87,7 +87,6 @@ public class GestorZona {
             for (ZonaCodigoPostal zonaCodigoPostal : zonasCodigosPostales) {
                 if (zona.getId() == (zonaCodigoPostal.getZona().getId())) {
                     codigosPostales.add(zonaCodigoPostal.getCodigoPostal());
-                    System.out.println("Codigo postal: " + zonaCodigoPostal.getCodigoPostal().getCodigo());
                 }
             }
 

@@ -2,6 +2,7 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.Pedido;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemPedido;
+import com.IsoII.DeliveringSolutions.dominio.service.ServicePedido;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemPedido;
 import com.IsoII.DeliveringSolutions.persistencia.PedidoDAO;
@@ -29,6 +30,9 @@ public class GestorPedido {
 
     @Autowired
     private PedidoDAO pedidoDAO;
+
+    @Autowired
+    private ServicePedido servicePedido;
 
     @Autowired
     private ServiceItemPedido serviceItemPedido;
@@ -102,4 +106,43 @@ public class GestorPedido {
         }
     }
 
+    // Método para listar todos los pedidos
+    @GetMapping("/mostrarPedidos")
+    public String mostrarPedidos(Model model) {
+        List<Pedido> pedidos = servicePedido.findAll();
+        if (pedidos != null && !pedidos.isEmpty()) {
+            model.addAttribute("pedidos", pedidos);
+            return "/administrador/ListaPedidos";
+        } else {
+            model.addAttribute("error", "No se encontraron pedidos");
+            return "error";
+        }
+    }
+
+    // Método para ver detalles de un pedido específico
+    @GetMapping("/mostrarPedido/{id}")
+    public String mostrarPedido(@PathVariable Integer id, Model model) {
+        Optional<Pedido> optionalPedido = servicePedido.findById(id);
+        List<ItemPedido> itemsPedidos = serviceItemPedido.findAll();
+        List<ItemPedido> itemsPedido = new ArrayList();
+        if (optionalPedido.isPresent()) {
+
+            Pedido pedido = optionalPedido.get();
+            for (ItemPedido itemPedido : itemsPedidos) {
+
+                if (itemPedido.getPedido().getIdPedido() == pedido.getIdPedido()) {
+                    itemsPedido.add(itemPedido);
+                }
+
+            }
+
+            model.addAttribute("pedido", pedido);
+            model.addAttribute("itemsPedido", itemsPedido);
+
+            return "/administrador/VerPedido";
+        } else {
+            model.addAttribute("error", "Pedido no encontrado");
+            return "error";
+        }
+    }
 }

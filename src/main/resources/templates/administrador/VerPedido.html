@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles del Pedido</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            max-width: 600px;
+            width: 100%;
+            margin: 20px;
+            text-align: center;
+        }
+
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        h3 {
+            color: #4CAF50;
+            font-size: 1.3em;
+            margin: 20px 0;
+            text-transform: uppercase;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            background-color: #e7f5e7;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .back-link:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">Detalles del Pedido</div>
+        <div class="content">
+            <table>
+                <tr>
+                    <td><strong>ID del Pedido:</strong></td>
+                    <td th:text="${pedido.idPedido}">ID</td>
+                </tr>
+                <tr>
+                    <td><strong>Fecha:</strong></td>
+                    <td th:text="${pedido.fecha}">Fecha</td>
+                </tr>
+                <tr>
+                    <td><strong>Estado del Pedido:</strong></td>
+                    <td th:text="${pedido.estadoPedido}">Estado</td>
+                </tr>
+                <tr>
+                    <td><strong>Cliente:</strong></td>
+                    <td th:text="${pedido.cliente.nombre}">Cliente</td>
+                </tr>
+                <tr>
+                    <td><strong>Restaurante:</strong></td>
+                    <td th:text="${pedido.restaurante.nombre}">Restaurante</td>
+                </tr>
+            </table>
+
+            <!-- Sección de Items del Pedido -->
+            <h3>Items Asociados al Pedido</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID del Item</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${itemsPedido}">
+                        <td th:text="${item.id}">ID</td>
+                        <td th:text="${item.itemMenu.nombre}">Nombre del Item</td>
+                        <td th:text="${item.itemMenu.precio}">0.00</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a th:href="@{/pedido/mostrarPedidos}" class="back-link">Volver a la lista de pedidos</a>
+        </div>
+    </div>
+</body>
+
+</html>
