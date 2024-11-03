@@ -64,6 +64,12 @@ public class GestorPago {
     @Autowired
     private ServiceUser serviceUsuario;
 
+    @Autowired
+    private ServiceDireccion serviceDireccion;
+
+    @Autowired
+    private ServiceUser serviceUsuario;
+
     @GetMapping("/findAll")
     @ResponseBody
     public List<Pago> findAll() {
