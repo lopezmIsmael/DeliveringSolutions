@@ -1,0 +1,19 @@
+.mensaje {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.mensaje-exito {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.mensaje-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.text-danger {
+    margin-top: 5px;
+}
