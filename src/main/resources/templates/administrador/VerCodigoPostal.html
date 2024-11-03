@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles del Código Postal</title>
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             height: 100%;
@@ -15,16 +16,17 @@
             align-items: center;
             background-color: #f0f2f5;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center; /* Centrar el texto */
         }
 
         .container {
             background-color: #ffffff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            max-width: 400px;
+            overflow: hidden;
+            max-width: 600px;
             width: 100%;
-            padding: 20px;
+            margin: 20px;
+            text-align: center;
         }
 
         .header {
@@ -33,7 +35,6 @@
             padding: 15px;
             font-size: 1.5em;
             font-weight: bold;
-            border-radius: 10px 10px 0 0;
         }
 
         .content {
@@ -43,28 +44,41 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 0;
         }
 
         td {
             padding: 12px;
-            text-align: center; /* Centrar el texto en cada celda */
             border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+            text-align: center;
         }
 
         td:first-child {
             font-weight: bold;
             color: #555;
-            width: 50%; /* Ajusta el ancho para que no ocupe demasiado espacio */
+            width: 150px;
+            text-align: center;
+            vertical-align: middle;
         }
 
         td:last-child {
             color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        ul {
+            padding: 0;
+            list-style-type: none;
             text-align: center;
         }
 
         .back-link {
             display: inline-block;
+            margin-top: 20px;
             text-decoration: none;
             color: #4CAF50;
             font-weight: bold;
@@ -72,7 +86,6 @@
             padding: 10px 20px;
             border-radius: 5px;
             transition: background-color 0.3s, color 0.3s;
-            margin-top: 15px;
         }
 
         .back-link:hover {
