@@ -229,7 +229,7 @@ public class GestorMenu {
 
     @DeleteMapping("/eliminarItem/{id}")
     @ResponseBody
-    public ResponseEntity<Void> eliminarItem(@PathVariable String id) {
+    public ResponseEntity<Void> eliminarItem(@PathVariable Integer id) {
         System.out.println("\nBuscando item: " + id + "\n");
         Optional<ItemMenu> optionalItemMenu = itemMenuDAO.findById(id);
         System.out.println("\nItem encontrado: " + optionalItemMenu + "\n");

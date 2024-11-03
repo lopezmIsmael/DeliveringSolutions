@@ -11,17 +11,17 @@ import java.util.Optional;
 public class ServicePedido {
     @Autowired
     private PedidoDAO pedidoDAO;
-
-    public List<Pedido> findAll(){
-        return pedidoDAO.findAll();
-    }
-
-    public Optional<Pedido> findById(Integer id){
-        return pedidoDAO.findById(id);
-    }
-
-    public Pedido save(Pedido pedido){
-        return pedidoDAO.save(pedido);
+    
+        public List<Pedido> findAll(){
+            return pedidoDAO.findAll();
+        }
+    
+        public Optional<Pedido> findById(Integer id){
+            return pedidoDAO.findById(id);
+        }
+    
+        public Pedido save(Pedido pedido){
+            return pedidoDAO.save(pedido);
     }
 
     public void deleteById(Integer id){

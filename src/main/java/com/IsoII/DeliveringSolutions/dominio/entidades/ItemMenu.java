@@ -4,7 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.validation.constraints.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 
@@ -17,8 +21,11 @@ import jakarta.persistence.Column;
 
 @Entity
 public class ItemMenu {
-    
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idItemMenu;
+
     @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
 
@@ -28,6 +35,7 @@ public class ItemMenu {
 
     @ManyToOne
     @JoinColumn(name = "idCarta")
+    @JsonIgnore
     private CartaMenu cartamenu;
 
     @Column(name = "tipo", nullable = false, length = 50)
@@ -36,11 +44,20 @@ public class ItemMenu {
     public ItemMenu() {
     }
 
-    public ItemMenu(String nombre, double precio, CartaMenu cartamenu, String tipo) {
+    public ItemMenu(int idItemMenu, String nombre, double precio, CartaMenu cartamenu, String tipo) {
+        this.idItemMenu = idItemMenu;
         this.nombre = nombre;
         this.precio = precio;
         this.cartamenu = cartamenu;
         this.tipo = tipo;
+    }
+
+    public int getIdItemMenu() {
+        return idItemMenu;
+    }
+
+    public void setIdItemMenu(int idItemMenu) {
+        this.idItemMenu = idItemMenu;
     }
 
     public String getNombre() {
