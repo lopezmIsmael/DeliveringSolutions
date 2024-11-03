@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Códigos Postales</title>
+    <title>Detalles del Código Postal</title>
     <style>
         body, html {
             margin: 0;
@@ -15,16 +15,16 @@
             align-items: center;
             background-color: #f0f2f5;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
+            text-align: center; /* Centrar el texto */
         }
 
         .container {
             background-color: #ffffff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            max-width: 600px;
+            max-width: 400px;
             width: 100%;
-            margin: 20px;
+            padding: 20px;
         }
 
         .header {
@@ -33,53 +33,38 @@
             padding: 15px;
             font-size: 1.5em;
             font-weight: bold;
+            border-radius: 10px 10px 0 0;
         }
 
         .content {
             padding: 20px;
-            max-height: 400px;
-            overflow-y: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #f0f0f0;
-            text-align: center; /* Centra el texto en las celdas */
-        }
-
-        th {
-            background-color: #f0f2f5;
-            color: #555;
+            margin: 20px 0;
         }
 
         td {
-            color: #333;
+            padding: 12px;
+            text-align: center; /* Centrar el texto en cada celda */
+            border-bottom: 1px solid #f0f0f0;
         }
 
-        .action-link {
-            color: #4CAF50;
-            text-decoration: none;
+        td:first-child {
             font-weight: bold;
-            padding: 5px 10px;
-            border: 1px solid #4CAF50;
-            border-radius: 4px;
-            transition: background-color 0.3s, color 0.3s;
+            color: #555;
+            width: 50%; /* Ajusta el ancho para que no ocupe demasiado espacio */
         }
 
-        .action-link:hover {
-            background-color: #4CAF50;
-            color: white;
+        td:last-child {
+            color: #333;
+            text-align: center;
         }
 
         .back-link {
             display: inline-block;
-            margin-top: 20px;
-            margin-bottom: 30px; /* Añade más espacio en la parte inferior */
             text-decoration: none;
             color: #4CAF50;
             font-weight: bold;
@@ -87,6 +72,7 @@
             padding: 10px 20px;
             border-radius: 5px;
             transition: background-color 0.3s, color 0.3s;
+            margin-top: 15px;
         }
 
         .back-link:hover {
@@ -99,29 +85,21 @@
 <body>
     <div class="container">
         <div class="header">
-            Lista de Códigos Postales
+            Detalles del Código Postal
         </div>
         <div class="content">
             <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Código Postal</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="codigoPostal : ${codigosPostales}">
-                        <td th:text="${codigoPostal.id}">1</td>
-                        <td th:text="${codigoPostal.codigo}">12345</td>
-                        <td>
-                            <a th:href="@{/codigoPostal/mostrarCodigo/{id}(id=${codigoPostal.id})}" class="action-link">Ver detalles</a>
-                        </td>
-                    </tr>
-                </tbody>
+                <tr>
+                    <td>ID:</td>
+                    <td th:text="${codigoPostal.id}">1</td>
+                </tr>
+                <tr>
+                    <td>Código Postal:</td>
+                    <td th:text="${codigoPostal.codigo}">12345</td>
+                </tr>
             </table>
+            <a th:href="@{/codigoPostal/mostrarCodigos}" class="back-link">Volver a la lista de códigos</a>
         </div>
-        <a th:href="@{/}" class="back-link">Volver al inicio</a>
     </div>
 </body>
 

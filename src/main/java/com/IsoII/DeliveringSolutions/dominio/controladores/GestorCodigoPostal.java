@@ -15,12 +15,13 @@ import com.IsoII.DeliveringSolutions.dominio.service.ServiceCodigoPostal;
 import com.IsoII.DeliveringSolutions.persistencia.CodigoPostalDAO;
 
 import org.springframework.ui.Model;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/codigoPostal")
 public class GestorCodigoPostal {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
-    
+
     @Autowired
     private CodigoPostalDAO codigoPostalDAO;
 
@@ -38,6 +39,18 @@ public class GestorCodigoPostal {
         List<CodigoPostal> codigosPostales = serviceCodigoPostal.findAll();
         model.addAttribute("codigosPostales", codigosPostales);
         return "/administrador/ListaCodigoPostales"; // Nombre del archivo HTML sin la extensión
+    }
+
+    @GetMapping("/mostrarCodigo/{id}")
+    public String mostrarCodigoPostal(@PathVariable Integer id, Model model) {
+        Optional<CodigoPostal> optionalCodigoPostal = serviceCodigoPostal.findById(id);
+        if (optionalCodigoPostal.isPresent()) {
+            model.addAttribute("codigoPostal", optionalCodigoPostal.get());
+            return "/administrador/VerCodigoPostal"; // Vista para ver detalles de un código postal
+        } else {
+            model.addAttribute("error", "Código postal no encontrado");
+            return "error"; // Vista de error si no se encuentra el código postal
+        }
     }
 
     @GetMapping("/register")
@@ -61,5 +74,5 @@ public class GestorCodigoPostal {
         System.out.println("CodigoPostal registrado: " + codigoPostalRegistrado);
         return new ResponseEntity<>(codigoPostalRegistrado, HttpStatus.CREATED);
     }
-    
+
 }
