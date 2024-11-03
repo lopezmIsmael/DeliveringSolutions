@@ -78,29 +78,7 @@ nav a.active {
 
 /* Botones para avanzar/retroceder */
 .boton {
-  position: fixed;
-  top: 0;
-  width: 60px;
-  height: 100vh;
-  font-size: 2.5em;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.3);
-  /* Color sólido más oscuro que el fondo */
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-  transition: background-color 0.3s, transform 0.3s;
-  border-radius: 30px;
-  /* Botón redondeado */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.boton:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-  transform: scale(1.05);
-  /* Efecto de agrandado al pasar el mouse */
+  display: none;
 }
 
 /* Botón de retroceder */
@@ -116,8 +94,8 @@ nav a.active {
 /* Botón para volver al index */
 .boton-index {
   position: fixed;
-  bottom: 20px;
-  left: 46%;
+  top: 10px;
+  right: 10px;
   padding: 10px 20px;
   font-size: 1.2em;
   color: white;
@@ -131,6 +109,34 @@ nav a.active {
   background-color: rgba(255, 255, 255, 0.8);
   color: black;
   transform: scale(1.05);
+}
+
+/* Estilos para los puntos de navegación */
+.puntos-nav {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.punto {
+  width: 15px;
+  height: 15px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.punto.active {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.punto:hover {
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 /* Estilos para el contenido dentro de las secciones */
