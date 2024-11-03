@@ -32,7 +32,6 @@
             background-color: #4CAF50;
             color: white;
             padding: 15px;
-            text-align: center;
             font-size: 1.5em;
             font-weight: bold;
         }
@@ -41,35 +40,50 @@
             padding: 20px;
         }
 
+        .zone-details {
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #4CAF50;
+            font-size: 1.3em;
+            margin: 20px 0;
+            text-transform: uppercase;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 0 auto;
-            table-layout: fixed;
+            margin: 0;
         }
 
-        td {
+        th, td {
             padding: 12px;
             border-bottom: 1px solid #f0f0f0;
-            vertical-align: middle;
             text-align: center;
         }
 
-        td:first-child {
+        th {
+            background-color: #4CAF50;
+            color: white;
             font-weight: bold;
-            color: #555;
-            width: 50%;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
 
         .back-link {
-            display: block;
-            text-align: center;
-            margin: 20px 0;
+            display: inline-block;
+            margin-top: 20px;
             text-decoration: none;
             color: #4CAF50;
             font-weight: bold;
             background-color: #e7f5e7;
-            padding: 10px;
+            padding: 10px 20px;
             border-radius: 5px;
             transition: background-color 0.3s, color 0.3s;
         }
@@ -89,9 +103,22 @@
         <div class="content">
             <table>
                 <tr>
-                    <td>Nombre:</td>
-                    <td th:text="${zona.nombre}">Nombre de ejemplo</td>
+                    <td><strong>Nombre de la Zona:</strong></td>
+                    <td th:text="${zona.nombre}">Nombre de la Zona</td>
                 </tr>
+            </table>
+            <h3>Códigos Postales Asociados</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código Postal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="codigoPostal : ${codigosPostales}">
+                        <td th:text="${codigoPostal.codigo}">Código Postal</td>
+                    </tr>
+                </tbody>
             </table>
             <a th:href="@{/zona/mostrarZonas}" class="back-link">Volver a la lista de zonas</a>
         </div>

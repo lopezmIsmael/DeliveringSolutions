@@ -85,27 +85,29 @@ public class GestorZonaCodigoPostal {
         return "redirect:/repartidores/register";
     }
 
+    // Método para listar todas las zonas con códigos postales asociados
     @GetMapping("/mostrarZonasCodigoPostal")
     public String mostrarZonasCodigoPostal(Model model) {
         List<ZonaCodigoPostal> zonasCodigosPostales = serviceZonaCodigoPostal.findAll();
         if (zonasCodigosPostales != null && !zonasCodigosPostales.isEmpty()) {
             model.addAttribute("zonasCodigosPostales", zonasCodigosPostales);
-            return "administrador/ListaZonasCodigoPostal";
+            return "/administrador/ListaZonasCodigoPostal"; // Vista para mostrar la lista de zonas con códigos postales
         } else {
             model.addAttribute("error", "No se encontraron zonas con códigos postales.");
-            return "error";
+            return "error"; // Vista de error si no se encuentran zonas con códigos postales
         }
     }
 
+    // Método para mostrar los detalles de una zona específica con su código postal
     @GetMapping("/mostrarZonaCodigoPostal/{id}")
     public String mostrarZonaCodigoPostal(@PathVariable Long id, Model model) {
         Optional<ZonaCodigoPostal> optionalZonaCodigoPostal = serviceZonaCodigoPostal.findById(id);
         if (optionalZonaCodigoPostal.isPresent()) {
             model.addAttribute("zonaCodigoPostal", optionalZonaCodigoPostal.get());
-            return "administrador/VerZonaCodigoPostal";
+            return "/administrador/VerZonaCodigoPostal"; // Vista para mostrar los detalles de la zona específica
         } else {
             model.addAttribute("error", "Zona con código postal no encontrada.");
-            return "error";
+            return "error"; // Vista de error si no se encuentra la zona específica
         }
     }
 

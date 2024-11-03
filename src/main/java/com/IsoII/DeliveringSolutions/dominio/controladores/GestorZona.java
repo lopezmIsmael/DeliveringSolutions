@@ -1,5 +1,6 @@
 package com.IsoII.DeliveringSolutions.dominio.controladores;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import org.springframework.ui.Model;
 
+import com.IsoII.DeliveringSolutions.dominio.entidades.CodigoPostal;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Zona;
+import com.IsoII.DeliveringSolutions.dominio.entidades.ZonaCodigoPostal;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceZona;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceZonaCodigoPostal;
 import com.IsoII.DeliveringSolutions.persistencia.ZonaDAO;
 
 @Controller
@@ -24,6 +28,9 @@ public class GestorZona {
 
     @Autowired
     private ServiceZona serviceZona;
+
+    @Autowired
+    private ServiceZonaCodigoPostal serviceZonaCodigoPostal;
 
     @GetMapping("/findAll")
     @ResponseBody
@@ -72,8 +79,19 @@ public class GestorZona {
     @GetMapping("/mostrarZona/{id}")
     public String mostrarZona(@PathVariable Integer id, Model model) {
         Optional<Zona> optionalZona = serviceZona.findById(id);
+        List<ZonaCodigoPostal> zonasCodigosPostales = serviceZonaCodigoPostal.findAll();
+        List<CodigoPostal> codigosPostales = new ArrayList();
         if (optionalZona.isPresent()) {
             Zona zona = optionalZona.get();
+
+            for (ZonaCodigoPostal zonaCodigoPostal : zonasCodigosPostales) {
+                if (zona.getId() == (zonaCodigoPostal.getZona().getId())) {
+                    codigosPostales.add(zonaCodigoPostal.getCodigoPostal());
+                    System.out.println("Codigo postal: " + zonaCodigoPostal.getCodigoPostal().getCodigo());
+                }
+            }
+
+            model.addAttribute("codigosPostales", codigosPostales);
             model.addAttribute("zona", zona);
             return "/administrador/VerZona"; // Vista para detalles de zona
         } else {
@@ -81,4 +99,5 @@ public class GestorZona {
             return "error"; // Vista de error si la zona no existe
         }
     }
+
 }
