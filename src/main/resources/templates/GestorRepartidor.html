@@ -3,6 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Gestión de Reparto</title>
+    <style>
+        .item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .item span {
+            width: 20%;
+        }
+        .item .acciones {
+            width: 20%;
+            text-align: right;
+        }
+        .item .acciones a {
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .item .acciones a:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <div class="ticket">
@@ -15,6 +39,7 @@
                 <span><strong>Entrega</strong></span>
                 <span><strong>Estado</strong></span>
                 <span><strong>Fecha</strong></span>
+                <span class="acciones"><strong>Acciones</strong></span> <!-- Nueva columna para el botón -->
             </div>
             <div th:if="${pedidosPendientes != null and !pedidosPendientes.isEmpty()}">
                 <div th:each="entry : ${pedidosPendientes.entrySet()}">
@@ -23,6 +48,10 @@
                         <span th:text="|${entry.value.calle}, ${entry.value.numero}|"></span>
                         <span th:text="${entry.key.estadoPedido}"></span>
                         <span th:text="${#dates.format(new java.util.Date(entry.key.fecha), 'dd/MM/yyyy HH:mm')}"></span>
+                        <!-- Botón para ver detalles del pedido -->
+                        <span class="acciones">
+                            <a th:href="@{/pedido/gestionar/{id}(id=${entry.key.idPedido})}">Seleccionar pedido</a>
+                        </span>
                     </div>
                 </div>
             </div>
