@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Menús</title>
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -29,7 +30,8 @@
             margin-bottom: 20px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px;
             border-bottom: 1px solid #dddddd;
         }
@@ -78,20 +80,22 @@
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
+                    <th>Nombre del Menú</th>
                     <th>Restaurante</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="carta : ${cartas}">
-                    <td th:text="${carta.idCarta}">1</td>
-                    <td th:text="${carta.nombre}">Nombre del menú</td>
-                    <td th:text="${carta.restaurante.nombre}">Nombre del restaurante</td>
+                <tr th:each="menu : ${cartas}">
+                    <td th:text="${menu.nombre}">Nombre del Menú</td>
+                    <td th:text="${menu.restaurante.nombre}">Nombre del Restaurante</td>
+                    <td>
+                        <a th:href="@{/cartas/mostrarMenu/{id}(id=${menu.idCarta})}">Ver detalles</a>
+                    </td>
                 </tr>
             </tbody>
         </table>
-        <a href="/" class="back-link">Volver al inicio</a>
+        <a th:href="@{/}" class="back-link">Volver al inicio</a>
     </div>
 </body>
 

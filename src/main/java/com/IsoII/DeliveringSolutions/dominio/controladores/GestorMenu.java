@@ -51,11 +51,30 @@ public class GestorMenu {
         return cartaMenuDAO.findAll();
     }
 
-    @GetMapping("/mostrarMenu")
-    public String mostrarMenu(Model model) {
+    // Método que devuelve la lista de todos los menús
+    @GetMapping("/mostrarMenus")
+    public String mostrarMenus(Model model) {
         List<CartaMenu> cartas = serviceCartaMenu.findAll();
-        model.addAttribute("cartas", cartas);
-        return "/administrador/ListaMenus";
+        if (cartas != null && !cartas.isEmpty()) {
+            model.addAttribute("cartas", cartas);
+            return "/administrador/ListaMenus"; // Vista para mostrar la lista de menús
+        } else {
+            model.addAttribute("error", "No se encontraron menús");
+            return "error"; // Vista de error si no hay menús
+        }
+    }
+
+    // Método que muestra los detalles de un menú específico por su ID
+    @GetMapping("/mostrarMenu/{id}")
+    public String mostrarMenu(@PathVariable Integer id, Model model) {
+        Optional<CartaMenu> optionalCartaMenu = serviceCartaMenu.findById(id);
+        if (optionalCartaMenu.isPresent()) {
+            model.addAttribute("cartaMenu", optionalCartaMenu.get());
+            return "/administrador/VerMenu"; // Vista para ver detalles de un menú
+        } else {
+            model.addAttribute("error", "Menú no encontrado");
+            return "error"; // Vista de error si no se encuentra el menú
+        }
     }
 
     @GetMapping("/register/{id}")
