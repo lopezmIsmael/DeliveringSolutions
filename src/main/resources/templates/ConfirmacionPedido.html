@@ -3,9 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmación de Pedido</title>
+    <title>Ticket de Pedido</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .ticket { max-width: 300px; margin: auto; border: 1px solid #000; padding: 10px; }
+        .header { text-align: center; }
+        .items { margin-top: 10px; }
+        .item { display: flex; justify-content: space-between; }
+        .total { font-weight: bold; margin-top: 10px; }
+    </style>
 </head>
 <body>
-    <h1>Gracias por tu pedido</h1>
+    <div class="ticket">
+        <div class="header">
+            <h2 th:text="${restaurante != null ? restaurante.nombre : 'Nombre no disponible'}"></h2>
+        </div>
+        <hr/>
+        <p>Cliente: <span th:text="${cliente.idUsuario}"></span> <span th:text="${cliente.apellido}"></span></p>
+        <p>Fecha: <span th:text="${#dates.format(new java.util.Date(pedido.fecha), 'dd/MM/yyyy HH:mm')}"></span></p>
+        <p>Dirección de Recogida:
+            <span th:text="${direccionRecogida.calle}"></span>
+            <span th:text="${direccionRecogida.numero}"></span>
+            <span th:text="${direccionRecogida.complemento}"></span>,
+            <span th:text="${direccionRecogida.municipio}"></span>,
+            <span th:text="${direccionRecogida.codigoPostal.codigo}"></span>
+        </p>
+        <p>Dirección de Entrega:
+            <span th:text="${direccionEntrega.calle}"></span>
+            <span th:text="${direccionEntrega.numero}"></span>
+            <span th:text="${direccionEntrega.complemento}"></span>,
+            <span th:text="${direccionEntrega.municipio}"></span>,
+            <span th:text="${direccionEntrega.codigoPostal.codigo}"></span>
+        </p>
+        <hr/>
+        <div class="items">
+            <div class="item">
+                <span><strong>Producto</strong></span>
+                <span><strong>Precio</strong></span>
+            </div>
+            <div th:each="item : ${items}">
+                <div class="item">
+                    <span th:text="${item.nombre}"></span>
+                    <span th:text="${item.precio}"></span>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="total">
+            <span>Total:</span>
+            <span th:text="${total}"></span>
+        </div>
+        <p>Método de Pago: <span th:text="${pago.metodoPago}"></span></p>
+    </div>
 </body>
 </html>
