@@ -6,6 +6,7 @@
     <title>Gestor de Items</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/gestorItems.css">
+    <script src="/js/gestorItems.js"></script>
 </head>
 <body>
     <div class="container mt-5">
@@ -56,27 +57,5 @@
             <button type="submit" class="btn btn-success">Añadir Item</button>
         </form>
     </div>
-
-    <script>
-        function eliminarItem(button) {
-            const itemId = button.getAttribute('data-id');
-            if (confirm('¿Estás seguro de que deseas eliminar este item?')) {
-                fetch(`/cartas/eliminarItem/${itemId}`, {
-                    method: 'DELETE'
-                })
-                .then(response => {
-                    if (response.ok) {
-                        button.closest('li').remove();
-                    } else {
-                        alert('Error al eliminar el item');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error al eliminar el item');
-                });
-            }
-        }
-    </script>
 </body>
 </html>
