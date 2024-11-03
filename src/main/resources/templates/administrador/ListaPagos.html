@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Pagos</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            background-color: #e7f5e7;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .back-link:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Lista de Pagos</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID del Pago</th>
+                    <th>Método de Pago</th>
+                    <th>ID del Pedido</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pago : ${pagos}">
+                    <td th:text="${pago.idPago}">ID Pago</td>
+                    <td th:text="${pago.metodoPago}">Método de Pago</td>
+                    <td th:text="${pago.pedido.idPedido}">ID Pedido</td>
+                    <td>
+                        <a th:href="@{/pago/mostrarPago/{id}(id=${pago.idPago})}">Ver detalles</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="/" class="back-link">Volver al inicio</a>
+    </div>
+</body>
+
+</html>

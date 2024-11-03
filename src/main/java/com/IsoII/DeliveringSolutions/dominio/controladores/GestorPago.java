@@ -12,6 +12,7 @@ import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
 import com.IsoII.DeliveringSolutions.persistencia.PagoDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemPedido;
+import com.IsoII.DeliveringSolutions.dominio.service.ServicePago;
 import com.IsoII.DeliveringSolutions.persistencia.ItemPedidoDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemMenu;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -53,6 +54,9 @@ public class GestorPago {
 
     @Autowired
     private ServiceItemPedido serviceItemPedido;
+
+    @Autowired
+    private ServicePago servicePago;
 
     @GetMapping("/findAll")
     @ResponseBody
@@ -179,4 +183,30 @@ public class GestorPago {
     public String mostrarConfirmacion() {
         return "ConfirmacionPedido";
     }
+
+      // Método para listar todos los pagos
+      @GetMapping("/mostrarPagos")
+      public String mostrarPagos(Model model) {
+          List<Pago> pagos = servicePago.findAll();
+          if (!pagos.isEmpty()) {
+              model.addAttribute("pagos", pagos);
+              return "/administrador/ListaPagos";
+          } else {
+              model.addAttribute("error", "No se encontraron pagos");
+              return "error";
+          }
+      }
+  
+      // Método para mostrar los detalles de un pago específico
+      @GetMapping("/mostrarPago/{id}")
+      public String mostrarPago(@PathVariable Integer id, Model model) {
+          Optional<Pago> optionalPago = servicePago.findById(id);
+          if (optionalPago.isPresent()) {
+              model.addAttribute("pago", optionalPago.get());
+              return "/administrador/VerPago";
+          } else {
+              model.addAttribute("error", "Pago no encontrado");
+              return "error";
+          }
+      }
 }
