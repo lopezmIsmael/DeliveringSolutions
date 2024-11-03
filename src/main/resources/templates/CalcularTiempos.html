@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Calcular Tiempos de Entrega</title>
+    <style>
+        .container {
+            width: 60%;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            color: #333;
+        }
+
+        .info {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Mensaje de error -->
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+
+        <!-- Información del pedido -->
+        <div class="section">
+            <h2>Información del Pedido</h2>
+            <div class="info">
+                <p><strong>ID del Pedido:</strong> <span th:text="${pedido.idPedido}"></span></p>
+                <p><strong>Estado del Pedido:</strong> <span th:text="${pedido.estadoPedido}"></span></p>
+            </div>
+        </div>
+
+        <!-- Información del repartidor -->
+        <div class="section">
+            <h2>Información del Repartidor</h2>
+            <div class="info">
+                <p><strong>Nombre del Repartidor:</strong> <span th:text="${repartidor.nombre}"></span></p>
+                <p><strong>DNI:</strong> <span th:text="${repartidor.dni}"></span></p>
+            </div>
+        </div>
+
+        <!-- Información del servicio de entrega -->
+        <div class="section">
+            <h2>Detalles del Servicio de Entrega</h2>
+            <div class="info">
+                <p><strong>Fecha de Recepción:</strong> <span
+                        th:text="${#dates.format(new java.util.Date(servicioEntrega.fechaRecepcion), 'dd/MM/yyyy HH:mm')}"></span>
+                </p>
+                <p><strong>Fecha de Entrega:</strong> <span
+                        th:text="${#dates.format(new java.util.Date(servicioEntrega.fechaEntrega), 'dd/MM/yyyy HH:mm')}"></span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Tiempo total -->
+        <div class="section">
+            <h2>Tiempo Total de Entrega</h2>
+            <div class="info">
+                <p><strong>Tiempo Total:</strong> <span th:text="${tiempoTotalFormatted}"></span></p>
+            </div>
+        </div>
+
+
+        <!-- Eficiencia -->
+        <div class="section">
+            <h2>Eficiencia del Repartidor</h2>
+            <div class="info">
+                <p><strong>Eficiencia:</strong>
+                    <!-- Mostrar estrellas llenas hasta el valor de eficiencia -->
+                    <!-- Mostrar estrellas según la eficiencia -->
+                    <span th:each="i : ${#numbers.sequence(1, 5)}">
+                        <span th:text="${i <= repartidor.eficiencia ? '★' : '☆'}"></span>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

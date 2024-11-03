@@ -34,7 +34,6 @@ import jakarta.servlet.http.HttpSession;
 import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
-import com.IsoII.DeliveringSolutions.dominio.service.ServiceClient;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
 
 @Controller
@@ -56,9 +55,6 @@ public class GestorCliente {
     private ServiceDireccion serviceDireccion;
 
     @Autowired
-    private ServiceClient serviceClient;
-
-    @Autowired
     private ItemMenuDAO itemMenuDAO;
 
     // ************************************************** GETMAPPING
@@ -68,31 +64,6 @@ public class GestorCliente {
     @ResponseBody
     public List<Cliente> findAll() {
         return clienteDAO.findAll();
-    }
-
-    @GetMapping("/mostrarClientes")
-    public String mostrarClientes(Model model) {
-        List<Cliente> clientes = serviceClient.findAll();
-        if (clientes != null && !clientes.isEmpty()) {
-            model.addAttribute("clientes", clientes);
-            return "/administrador/ListaClientes"; // Nombre del archivo HTML sin la extensión
-        } else {
-            model.addAttribute("error", "Clientes no encontrados");
-            return "error"; // Vista de error si no se encuentran clientes
-        }
-    }
-
-    @GetMapping("/mostrarCliente/{id}")
-    public String mostrarCliente(@PathVariable String id, Model model) {
-        Optional<Cliente> optionalCliente = serviceClient.findById(id);
-        if (optionalCliente.isPresent()) {
-            Cliente cliente = optionalCliente.get();
-            model.addAttribute("cliente", cliente);
-            return "/administrador/VerCliente"; // Nombre del archivo HTML sin la extensión
-        } else {
-            model.addAttribute("error", "Cliente no encontrado");
-            return "error"; // Vista de error si no se encuentra el cliente
-        }
     }
 
     // Método que muestra el formulario de registro de cliente
