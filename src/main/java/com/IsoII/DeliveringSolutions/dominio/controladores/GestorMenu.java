@@ -256,7 +256,7 @@ public class GestorMenu {
 
     // Método que muestra los detalles de un item del menú
     @GetMapping("/items/mostrarItem/{id}")
-    public String mostrarItem(@PathVariable String id, Model model) {
+    public String mostrarItem(@PathVariable Integer id, Model model) {
         Optional<ItemMenu> optionalItem = serviceItemMenu.findById(id);
         if (optionalItem.isPresent()) {
             ItemMenu itemMenu = optionalItem.get();

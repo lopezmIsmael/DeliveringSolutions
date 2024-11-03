@@ -92,7 +92,7 @@
                     <td th:text="${item.tipo}">Tipo de ejemplo</td>
                     <td th:text="${item.cartamenu.nombre}">Carta de ejemplo</td>
                     <td>
-                        <a th:href="@{/cartas/items/mostrarItem/{id}(id=${item.nombre})}">Ver detalles</a>
+                        <a th:href="@{/cartas/items/mostrarItem/{id}(id=${item.idItemMenu})}">Ver detalles</a>
                     </td>
                 </tr>
             </tbody>
