@@ -37,8 +37,13 @@ public class GestorCodigoPostal {
     @GetMapping("/mostrarCodigos")
     public String mostrarCodigosPostales(Model model) {
         List<CodigoPostal> codigosPostales = serviceCodigoPostal.findAll();
-        model.addAttribute("codigosPostales", codigosPostales);
-        return "/administrador/ListaCodigoPostales"; // Nombre del archivo HTML sin la extensión
+        if (codigosPostales != null && !codigosPostales.isEmpty()) {
+            model.addAttribute("codigosPostales", codigosPostales);
+            return "/administrador/ListaCodigoPostales"; // Nombre del archivo HTML sin la extensión
+        } else {
+            model.addAttribute("error", "No se encontraron códigos postales");
+            return "error"; // Vista de error si no se encuentran códigos postales
+        }
     }
 
     @GetMapping("/mostrarCodigo/{id}")
