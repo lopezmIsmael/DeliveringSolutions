@@ -53,6 +53,24 @@
         a:hover {
             text-decoration: underline;
         }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin: 20px 0;
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+            background-color: #e7f5e7;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .back-link:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
     </style>
 </head>
 
@@ -78,6 +96,7 @@
                 </tr>
             </tbody>
         </table>
+        <a th:href="@{/}" class="back-link">Volver al inicio</a>
     </div>
 </body>
 
