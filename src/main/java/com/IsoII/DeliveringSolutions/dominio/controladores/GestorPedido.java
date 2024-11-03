@@ -1,7 +1,9 @@
 package com.IsoII.DeliveringSolutions.dominio.controladores;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.Pedido;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemPedido;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
+import com.IsoII.DeliveringSolutions.dominio.entidades.ItemPedido;
 import com.IsoII.DeliveringSolutions.persistencia.PedidoDAO;
 
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/pedido")
@@ -23,9 +26,12 @@ public class GestorPedido {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     private List<ItemMenu> carrito = new ArrayList<>();
-    
+
     @Autowired
     private PedidoDAO pedidoDAO;
+
+    @Autowired
+    private ServiceItemPedido serviceItemPedido;
 
     @GetMapping("/findAll")
     @ResponseBody
@@ -69,5 +75,31 @@ public class GestorPedido {
         // Aquí puedes agregar la lógica para mostrar el carrito
         return "verMenusRestaurante"; // Nombre del archivo HTML sin la extensión
     }
-    
+
+    // Método que devuelve una lista de todos los items en pedidos
+    @GetMapping("/mostrarItemsPedido")
+    public String mostrarItemsPedido(Model model) {
+        List<ItemPedido> itemsPedidos = serviceItemPedido.findAll();
+        if (itemsPedidos != null && !itemsPedidos.isEmpty()) {
+            model.addAttribute("itemsPedidos", itemsPedidos);
+            return "/administrador/ListaItemsPedido";
+        } else {
+            model.addAttribute("error", "Items de pedido no encontrados");
+            return "error";
+        }
+    }
+
+    // Método que muestra los detalles de un item en pedido específico
+    @GetMapping("/mostrarItemPedido/{id}")
+    public String mostrarItemPedido(@PathVariable int id, Model model) {
+        Optional<ItemPedido> optionalItemPedido = serviceItemPedido.findById(id);
+        if (optionalItemPedido.isPresent()) {
+            model.addAttribute("itemPedido", optionalItemPedido.get());
+            return "/administrador/VerItemPedido"; // Vista para ver detalles de un item en pedido
+        } else {
+            model.addAttribute("error", "Item de pedido no encontrado");
+            return "error"; // Vista de error si no se encuentra el item
+        }
+    }
+
 }

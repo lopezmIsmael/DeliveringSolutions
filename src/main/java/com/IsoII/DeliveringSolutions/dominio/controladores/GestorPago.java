@@ -2,7 +2,7 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
-import com.IsoII.DeliveringSolutions.dominio.entidades.ItemsPedidos;
+import com.IsoII.DeliveringSolutions.dominio.entidades.ItemPedido;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Pago;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Pedido;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
@@ -11,8 +11,8 @@ import com.IsoII.DeliveringSolutions.dominio.service.ServicePedido;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
 import com.IsoII.DeliveringSolutions.persistencia.PagoDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
-import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemsPedido;
-import com.IsoII.DeliveringSolutions.persistencia.DAOItemsPedido;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemPedido;
+import com.IsoII.DeliveringSolutions.persistencia.ItemPedidoDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemMenu;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,7 +52,7 @@ public class GestorPago {
     private ServiceItemMenu serviceItemMenu;
 
     @Autowired
-    private ServiceItemsPedido serviceItemsPedido;
+    private ServiceItemPedido serviceItemPedido;
 
     @GetMapping("/findAll")
     @ResponseBody
@@ -147,12 +147,12 @@ public class GestorPago {
             // Assuming you have a service or repository to fetch items
             Optional<ItemMenu> optionalItem = serviceItemMenu.findById(itemId);
             if (optionalItem.isPresent()) {
-                ItemsPedidos itemsPedidos = new ItemsPedidos();
+                ItemPedido itemsPedidos = new ItemPedido();
                 items.add(optionalItem.get());
                 System.out.println("<<Item encontrado>>: " + optionalItem.toString());
                 itemsPedidos.setItemMenu(optionalItem.get());
                 itemsPedidos.setPedido(pedido);
-                serviceItemsPedido.save(itemsPedidos);
+                serviceItemPedido.save(itemsPedidos);
                 System.out.println("<<ItemPedido registrado>>: " + itemsPedidos.toString());
             }
         }
