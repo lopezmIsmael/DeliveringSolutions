@@ -50,7 +50,7 @@
                         <span th:text="${#dates.format(new java.util.Date(entry.key.fecha), 'dd/MM/yyyy HH:mm')}"></span>
                         <!-- Botón para ver detalles del pedido -->
                         <span class="acciones">
-                            <a th:href="@{/pedido/gestionar/{id}(id=${entry.key.idPedido})}">Seleccionar pedido</a>
+                            <a th:href="@{/repartidores/gestionar/{id}(id=${entry.key.idPedido})}">Seleccionar pedido</a>
                         </span>
                     </div>
                 </div>
