@@ -242,12 +242,12 @@ public class GestorMenu {
     }
 
     // Método que devuelve una lista de todos los items del menú
-    @GetMapping("/items/mostrarItems")
+    @GetMapping("/mostrarItems")
     public String mostrarItems(Model model) {
         List<ItemMenu> items = serviceItemMenu.findAll();
         if (items != null && !items.isEmpty()) {
             model.addAttribute("items", items);
-            return "/administrador/ListaItemsMenu"; 
+            return "/administrador/ListaItemsMenu";
         } else {
             model.addAttribute("error", "No se encontraron items");
             return "error"; // Vista de error si no se encuentran items
@@ -255,7 +255,7 @@ public class GestorMenu {
     }
 
     // Método que muestra los detalles de un item del menú
-    @GetMapping("/items/mostrarItem/{id}")
+    @GetMapping("/mostrarItem/{id}")
     public String mostrarItem(@PathVariable Integer id, Model model) {
         Optional<ItemMenu> optionalItem = serviceItemMenu.findById(id);
         if (optionalItem.isPresent()) {

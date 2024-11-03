@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles del Item del Menú</title>
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             height: 100%;
@@ -107,7 +108,7 @@
                     <td th:text="${itemMenu.cartamenu.nombre}">Carta de ejemplo</td>
                 </tr>
             </table>
-            <a th:href="@{/cartas/items/mostrarItems}" class="back-link">Volver a la lista de items</a>
+            <a th:href="@{/cartas/mostrarItems}" class="back-link">Volver a la lista de items</a>
         </div>
     </div>
 </body>

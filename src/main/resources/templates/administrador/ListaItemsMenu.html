@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Items del Menú</title>
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -29,7 +30,8 @@
             margin-bottom: 20px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px;
             border-bottom: 1px solid #dddddd;
         }
@@ -92,7 +94,7 @@
                     <td th:text="${item.tipo}">Tipo de ejemplo</td>
                     <td th:text="${item.cartamenu.nombre}">Carta de ejemplo</td>
                     <td>
-                        <a th:href="@{/cartas/items/mostrarItem/{id}(id=${item.idItemMenu})}">Ver detalles</a>
+                        <a th:href="@{/cartas/mostrarItem/{id}(id=${item.idItemMenu})}">Ver detalles</a>
                     </td>
                 </tr>
             </tbody>
