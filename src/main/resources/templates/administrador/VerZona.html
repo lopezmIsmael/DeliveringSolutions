@@ -16,6 +16,7 @@
             background-color: #f0f2f5;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         .container {
             background-color: #ffffff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -26,6 +27,7 @@
             margin: 20px;
             text-align: center;
         }
+
         .header {
             background-color: #4CAF50;
             color: white;
@@ -34,27 +36,31 @@
             font-size: 1.5em;
             font-weight: bold;
         }
+
         .content {
             padding: 20px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 0;
+            margin: 0 auto;
+            table-layout: fixed;
         }
+
         td {
             padding: 12px;
             border-bottom: 1px solid #f0f0f0;
-            vertical-align: top;
+            vertical-align: middle;
+            text-align: center;
         }
+
         td:first-child {
             font-weight: bold;
             color: #555;
-            width: 150px;
+            width: 50%;
         }
-        td:last-child {
-            color: #333;
-        }
+
         .back-link {
             display: block;
             text-align: center;
@@ -67,6 +73,7 @@
             border-radius: 5px;
             transition: background-color 0.3s, color 0.3s;
         }
+
         .back-link:hover {
             background-color: #4CAF50;
             color: white;
