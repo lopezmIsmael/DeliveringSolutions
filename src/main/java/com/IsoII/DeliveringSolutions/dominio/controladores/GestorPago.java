@@ -74,14 +74,20 @@ public class GestorPago {
     // In GestorPago.java
     @PostMapping("/register")
     public String mostrarFormularioRegistro(@RequestParam("cartData") String cartData,
-            @RequestParam("restauranteId") String restauranteId, Model model) {
+            @RequestParam("restauranteId") String restauranteId, Model model, HttpSession session) {
         System.out.println("<<ESTOY EN REGISTER: GestorPago>>");
         System.out.println("<<RestauranteId>>: " + restauranteId);
         System.out.println("<<CartData>>: " + cartData);
 
-        // Find restaurante by id
+        // Find direccion by usuario
         Restaurante restaurante = new Restaurante();
+        Usuario usuario = (Usuario) session.getAttribute("usuario");   
 
+        if (serviceDireccion.findByUsuario(usuario) == null) {
+          return "redirect:/direccion/formularioRegistro";
+        }
+
+        // Find restaurante by id
         restaurante = serviceRestaurant.findById(restauranteId).orElse(null);
 
         System.out.println("<<Restaurante>>: " + restaurante.getNombre());
