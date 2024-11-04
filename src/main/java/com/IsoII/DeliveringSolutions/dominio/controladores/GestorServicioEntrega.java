@@ -1,8 +1,6 @@
 package com.IsoII.DeliveringSolutions.dominio.controladores;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.ServicioEntrega;
-import com.IsoII.DeliveringSolutions.persistencia.ServicioEntregaDAO;
-
 import org.springframework.ui.Model;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,41 +14,43 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import java.util.List;
 import java.util.Optional;
 
+// Controlador para gestionar los servicios de entrega
 @Controller
 @RequestMapping("/servicioEntrega")
 public class GestorServicioEntrega {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     @Autowired
-    private ServicioEntregaDAO servicioEntregaDAO;
-
-    @Autowired
     private ServiceServicioEntrega serviceServicioEntrega;
 
+    // Método para mostrar todos los servicios de entrega
     @GetMapping("/findAll")
     @ResponseBody
     public List<ServicioEntrega> findAll() {
-        return servicioEntregaDAO.findAll();
+        return serviceServicioEntrega.findAll();
     }
 
+    // Método para mostrar el formulario de registro de servicio de entrega
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
-        return "Pruebas-RegisterServicioEntrega"; // Nombre del archivo HTML sin la extensión
+        return "Pruebas-RegisterServicioEntrega"; 
     }
 
+    // Método para buscar un servicio de entrega por su id
     @GetMapping("/findById/{id}")
     @ResponseBody
     public ServicioEntrega findById(@PathVariable Integer id) {
-        return servicioEntregaDAO.findById(id).orElse(null);
+        return serviceServicioEntrega.findById(id).orElse(null);
     }
 
+    // Método para registrar un servicio de entrega
     @PostMapping("/registrarServicioEntrega")
     public ResponseEntity<ServicioEntrega> registrarServicioEntrega(@ModelAttribute ServicioEntrega servicioEntrega) {
         System.out.println("ServicioEntrega recibido: " + servicioEntrega.toString());
         if (servicioEntrega.getFechaRecepcion() == 0 || servicioEntrega.getFechaEntrega() == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        ServicioEntrega servicioEntregaRegistrado = servicioEntregaDAO.save(servicioEntrega);
+        ServicioEntrega servicioEntregaRegistrado = serviceServicioEntrega.save(servicioEntrega);
         System.out.println("ServicioEntrega registrado: " + servicioEntregaRegistrado);
         return new ResponseEntity<>(servicioEntregaRegistrado, HttpStatus.CREATED);
     }
@@ -61,10 +61,10 @@ public class GestorServicioEntrega {
         List<ServicioEntrega> serviciosEntrega = serviceServicioEntrega.findAll();
         if (serviciosEntrega != null && !serviciosEntrega.isEmpty()) {
             model.addAttribute("serviciosEntrega", serviciosEntrega);
-            return "/administrador/ListaServiciosEntrega"; // Vista para listar servicios de entrega
+            return "/administrador/ListaServiciosEntrega"; 
         } else {
             model.addAttribute("error", "No se encontraron servicios de entrega");
-            return "error"; // Vista de error si no se encuentran servicios de entrega
+            return "error"; 
         }
     }
 
@@ -75,10 +75,10 @@ public class GestorServicioEntrega {
         if (optionalServicioEntrega.isPresent()) {
             ServicioEntrega servicioEntrega = optionalServicioEntrega.get();
             model.addAttribute("servicioEntrega", servicioEntrega);
-            return "/administrador/VerServicioEntrega"; // Vista para ver detalles de un servicio de entrega
+            return "/administrador/VerServicioEntrega"; 
         } else {
             model.addAttribute("error", "Servicio de entrega no encontrado");
-            return "error"; // Vista de error si no se encuentra el servicio de entrega
+            return "error"; 
         }
     }
 
