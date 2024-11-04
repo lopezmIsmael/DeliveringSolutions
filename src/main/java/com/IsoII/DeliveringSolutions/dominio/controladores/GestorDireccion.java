@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 import java.util.Optional;
 
+// Controlador para gestionar las direcciones
 @Controller
 @RequestMapping("/direccion")
 public class GestorDireccion {
@@ -45,7 +46,7 @@ public class GestorDireccion {
             @RequestParam("codigoPostal") Integer codigoPostalId,
             @RequestParam("idUsuario") String idUsuario,
             RedirectAttributes redirectAttributes) {
-        // Validación
+
         if (direccion.getCalle() == null || direccion.getCalle().trim().isEmpty() ||
                 direccion.getNumero() == null || direccion.getNumero().trim().isEmpty() ||
                 codigoPostalId == null || idUsuario == null) {
@@ -53,21 +54,17 @@ public class GestorDireccion {
             return "redirect:/direccion/formularioRegistro";
         }
 
-        // Recuperar el Código Postal y el Usuario de la base de datos
         CodigoPostal codigoPostal = serviceCodigoPostal.findById(codigoPostalId).orElse(null);
-        Optional<Usuario> usuarioOptional = serviceDireccion.findUsuarioById(idUsuario); // Añade este método en el
-                                                                                         // ServiceDireccion
+        Optional<Usuario> usuarioOptional = serviceDireccion.findUsuarioById(idUsuario);
 
         if (codigoPostal == null || usuarioOptional.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Código Postal o Usuario no válido");
             return "redirect:/direccion/formularioRegistro";
         }
 
-        // Asignar las entidades a la Dirección
         direccion.setCodigoPostal(codigoPostal);
         direccion.setUsuario(usuarioOptional.get());
 
-        // Guardar la dirección en la base de datos
         Direccion direccionRegistrada = serviceDireccion.save(direccion);
 
         redirectAttributes.addFlashAttribute("mensaje", "Dirección registrada con éxito");
@@ -76,22 +73,16 @@ public class GestorDireccion {
 
     // Método para encontrar una dirección por ID y mostrar su información
     @GetMapping("/findById/{id}")
-    public String verDireccion(@PathVariable Long id, Model model) {
-        Optional<Direccion> direccion = serviceDireccion.findById(id);
-        if (direccion.isPresent()) {
-            model.addAttribute("direccion", direccion.get());
-            return "verDireccion";
-        } else {
-            model.addAttribute("error", "Dirección no encontrada");
-            return "error";
-        }
+    @ResponseBody
+    public Direccion findById(@PathVariable Long id) {
+        return serviceDireccion.findById(id).orElse(null);
     }
 
+    // Método para encontrar todas las direcciones y mostrarlas
     @GetMapping("/findAll")
-    public String listarDirecciones(Model model) {
-        List<Direccion> direcciones = serviceDireccion.findAll();
-        model.addAttribute("direcciones", direcciones);
-        return "listaDirecciones"; // Asegúrate de tener un archivo Thymeleaf llamado listaDirecciones.html
+    @ResponseBody
+    public List<Direccion> findAll() {
+        return serviceDireccion.findAll();
     }
 
     // Método para mostrar una dirección por ID y presentar su información
@@ -100,10 +91,10 @@ public class GestorDireccion {
         Optional<Direccion> direccionOpt = serviceDireccion.findById(id);
         if (direccionOpt.isPresent()) {
             model.addAttribute("direccion", direccionOpt.get());
-            return "/administrador/VerDireccion"; // Coincide con el archivo en /templates/administrador/
+            return "/administrador/VerDireccion";
         } else {
             model.addAttribute("error", "Dirección no encontrada");
-            return "error"; // Redirige a una página de error si no se encuentra
+            return "error";
         }
     }
 
@@ -113,11 +104,10 @@ public class GestorDireccion {
         List<Direccion> direcciones = serviceDireccion.findAll();
         if (direcciones != null && !direcciones.isEmpty()) {
             model.addAttribute("direcciones", direcciones);
-            return "/administrador/ListaDirecciones"; // Asegúrate de tener un archivo Thymeleaf llamado
-                                                      // listaDirecciones.html
+            return "/administrador/ListaDirecciones";
         } else {
             model.addAttribute("error", "No se encontraron direcciones");
-            return "error"; // Vista de error si no hay direcciones en la lista
+            return "error";
         }
     }
 
