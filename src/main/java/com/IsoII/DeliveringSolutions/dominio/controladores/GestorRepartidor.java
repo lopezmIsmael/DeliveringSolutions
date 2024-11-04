@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -208,6 +209,33 @@ public class GestorRepartidor {
 
         redirectAttributes.addFlashAttribute("success", "Estado del pedido actualizado correctamente.");
         return "redirect:/repartidores/gestionar/" + id; // Redirige de nuevo a la página de gestión
+    }
+
+    // Método que devuelve una lista de todos los repartidores
+    @GetMapping("/mostrarRepartidores")
+    public String mostrarRepartidores(Model model) {
+        List<Repartidor> repartidores = serviceRepartidor.findAll();
+        if (repartidores != null && !repartidores.isEmpty()) {
+            model.addAttribute("repartidores", repartidores);
+            return "/administrador/ListaRepartidores"; // Vista para listar repartidores
+        } else {
+            model.addAttribute("error", "No se encontraron repartidores");
+            return "error"; // Vista de error si no se encuentran repartidores
+        }
+    }
+
+    // Método que muestra los detalles de un repartidor
+    @GetMapping("/mostrarRepartidor/{id}")
+    public String mostrarRepartidor(@PathVariable String id, Model model) {
+        Optional<Repartidor> optionalRepartidor = serviceRepartidor.findById(id);
+        if (optionalRepartidor.isPresent()) {
+            Repartidor repartidor = optionalRepartidor.get();
+            model.addAttribute("repartidor", repartidor);
+            return "/administrador/VerRepartidor"; // Vista para ver detalles de un repartidor
+        } else {
+            model.addAttribute("error", "Repartidor no encontrado");
+            return "error"; // Vista de error si no se encuentra el repartidor
+        }
     }
 
 }

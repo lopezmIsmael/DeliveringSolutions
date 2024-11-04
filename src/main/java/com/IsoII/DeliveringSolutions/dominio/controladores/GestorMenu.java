@@ -3,6 +3,8 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemMenu;
 import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
@@ -32,6 +34,12 @@ public class GestorMenu {
 
     @Autowired
     private RestauranteDAO restauranteDAO;
+
+    @Autowired
+    private ServiceItemMenu serviceItemMenu;
+
+    @Autowired
+    private ServiceCartaMenu serviceCartaMenu;
 
     // ************************************************** GETMAPPING
     // ********************************************** */
@@ -87,37 +95,37 @@ public class GestorMenu {
         return "Pruebas-RegisterItemMenu"; // Nombre del archivo HTML sin la extensión
     }
 
-
     @GetMapping("/modificar/{id}")
     public String mostrarFormularioModificar(@PathVariable Integer id, Model model) {
         Optional<CartaMenu> optionalCartaMenu = cartaMenuDAO.findById(id);
-    if (optionalCartaMenu.isPresent()) {
-        CartaMenu cartaMenu = optionalCartaMenu.get();
-        model.addAttribute("cartaMenu", cartaMenu);
+        if (optionalCartaMenu.isPresent()) {
+            CartaMenu cartaMenu = optionalCartaMenu.get();
+            model.addAttribute("cartaMenu", cartaMenu);
 
-        // Crear un nuevo ItemMenu y asignarle la cartaMenu
-        ItemMenu itemMenu = new ItemMenu();
-        itemMenu.setCartamenu(cartaMenu); // Inicializar cartamenu
-        model.addAttribute("itemMenu", itemMenu);
+            // Crear un nuevo ItemMenu y asignarle la cartaMenu
+            ItemMenu itemMenu = new ItemMenu();
+            itemMenu.setCartamenu(cartaMenu); // Inicializar cartamenu
+            model.addAttribute("itemMenu", itemMenu);
 
-        // Añadir la lista de items al modelo
-        List<ItemMenu> items = itemMenuDAO.findByCartamenu(cartaMenu);
-        model.addAttribute("items", items);
-        
-        return "gestorItems";
-    } else {
-        model.addAttribute("error", "Carta no encontrada");
-        return "error"; // Asegúrate de tener una plantilla 'error.html'
-    }
+            // Añadir la lista de items al modelo
+            List<ItemMenu> items = itemMenuDAO.findByCartamenu(cartaMenu);
+            model.addAttribute("items", items);
+
+            return "gestorItems";
+        } else {
+            model.addAttribute("error", "Carta no encontrada");
+            return "error"; // Asegúrate de tener una plantilla 'error.html'
+        }
     }
 
     // ************************************************** POSTMAPPING
     // ********************************************** */
     // Método que registra un item del menú
     @PostMapping("/items/registrarItem")
-    public String registrarItem(@ModelAttribute ItemMenu itemMenu, Model model, RedirectAttributes redirectAttributes, BindingResult result) {
+    public String registrarItem(@ModelAttribute ItemMenu itemMenu, Model model, RedirectAttributes redirectAttributes,
+            BindingResult result) {
 
-        if(itemMenu.getCartamenu() == null || itemMenu.getCartamenu().getIdCarta() == 0) {
+        if (itemMenu.getCartamenu() == null || itemMenu.getCartamenu().getIdCarta() == 0) {
             model.addAttribute("error", "Carta no válida");
             return "redirect:/cartas/modificar/" + itemMenu.getCartamenu().getIdCarta();
         }
@@ -148,7 +156,7 @@ public class GestorMenu {
             return "redirect:/cartas/modificar/" + cartaMenuID;
         }
 
-         // Validar el precio
+        // Validar el precio
         if (itemMenu.getPrecio() <= 0) {
             redirectAttributes.addFlashAttribute("error", "El precio debe ser mayor que 0");
             return "redirect:/cartas/modificar/" + cartaMenuID;
@@ -212,7 +220,6 @@ public class GestorMenu {
         return new ResponseEntity<>(cartaMenu, HttpStatus.OK);
     }
 
-
     @DeleteMapping("/eliminarItem/{id}")
     @ResponseBody
     public ResponseEntity<Void> eliminarItem(@PathVariable Integer id) {
@@ -226,6 +233,58 @@ public class GestorMenu {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    // Método que devuelve una lista de todos los items del menú
+    @GetMapping("/mostrarItems")
+    public String mostrarItems(Model model) {
+        List<ItemMenu> items = serviceItemMenu.findAll();
+        if (items != null && !items.isEmpty()) {
+            model.addAttribute("items", items);
+            return "/administrador/ListaItemsMenu";
+        } else {
+            model.addAttribute("error", "No se encontraron items");
+            return "error"; // Vista de error si no se encuentran items
+        }
+    }
+
+    // Método que muestra los detalles de un item del menú
+    @GetMapping("/mostrarItem/{id}")
+    public String mostrarItem(@PathVariable Integer id, Model model) {
+        Optional<ItemMenu> optionalItem = serviceItemMenu.findById(id);
+        if (optionalItem.isPresent()) {
+            ItemMenu itemMenu = optionalItem.get();
+            model.addAttribute("itemMenu", itemMenu);
+            return "/administrador/VerItemMenu"; // Vista para ver detalles de un item
+        } else {
+            model.addAttribute("error", "Item no encontrado");
+            return "error"; // Vista de error si no se encuentra el item
+        }
+    }
+
+    // Método que devuelve la lista de todos los menús
+    @GetMapping("/mostrarMenus")
+    public String mostrarMenus(Model model) {
+        List<CartaMenu> cartas = serviceCartaMenu.findAll();
+        if (cartas != null && !cartas.isEmpty()) {
+            model.addAttribute("cartas", cartas);
+            return "/administrador/ListaMenus"; // Vista para mostrar la lista de menús
+        } else {
+            model.addAttribute("error", "No se encontraron menús");
+            return "error"; // Vista de error si no hay menús
+        }
+    }
+
+    // Método que muestra los detalles de un menú específico por su ID
+    @GetMapping("/mostrarMenu/{id}")
+    public String mostrarMenu(@PathVariable Integer id, Model model) {
+        Optional<CartaMenu> optionalCartaMenu = serviceCartaMenu.findById(id);
+        if (optionalCartaMenu.isPresent()) {
+            model.addAttribute("cartaMenu", optionalCartaMenu.get());
+            return "/administrador/VerMenu"; // Vista para ver detalles de un menú
+        } else {
+            model.addAttribute("error", "Menú no encontrado");
+            return "error"; // Vista de error si no se encuentra el menú
+        }
+    }
+
 }
-
-
