@@ -78,6 +78,10 @@ public class GestorPago {
         Restaurante restaurante = new Restaurante();
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
+        if (usuario == null) {
+            return "redirect:/usuarios/login";
+        }
+
         if (serviceDireccion.findByUsuario(usuario) == null) {
             return "redirect:/direccion/formularioRegistro";
         }
