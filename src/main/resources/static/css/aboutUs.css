@@ -1,0 +1,180 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Contenedor para el scroll horizontal */
+.contenedor {
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  width: 100vw;
+  height: 100vh;
+  scroll-behavior: smooth;
+}
+
+/* Cada pestaña será una sección */
+.seccion {
+  min-width: 100vw;
+  height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  color: white;
+  padding: 20px;
+}
+
+/* Estilos para cada sección */
+.seccion1 {
+  background-color: #3498db;
+}
+
+.seccion2 {
+  background-color: #2ecc71;
+}
+
+.seccion3 {
+  background-color: #e74c3c;
+}
+
+.seccion4 {
+  background-color: #f39c12;
+}
+
+/* Estilos para la barra de navegación */
+nav {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 20px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.2em;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: background-color 0.3s;
+}
+
+nav a:hover,
+nav a.active {
+  background-color: rgba(255, 255, 255, 0.8);
+  /* Color destacado para la pestaña activa */
+  color: black;
+}
+
+/* Botones para avanzar/retroceder */
+.boton {
+  display: none;
+}
+
+/* Botón de retroceder */
+.retroceder {
+  left: 10px;
+}
+
+/* Botón de avanzar */
+.avanzar {
+  right: 10px;
+}
+
+/* Botón para volver al index */
+.boton-index {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.boton-index:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+  transform: scale(1.05);
+}
+
+/* Estilos para los puntos de navegación */
+.puntos-nav {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.punto {
+  width: 15px;
+  height: 15px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.punto.active {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.punto:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Estilos para el contenido dentro de las secciones */
+.contenido {
+  display: flex;
+  width: 90%;
+  height: 70%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.texto {
+  width: 45%;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.imagen {
+  width: 45%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imagen img {
+  width: 450px; /* Ancho fijo */
+  height: 600px; /* Alto fijo */
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Alternar el orden de las columnas en las secciones */
+.seccion:nth-child(odd) .contenido {
+  flex-direction: row;
+  /* Texto a la izquierda en secciones impares */
+}
+
+.seccion:nth-child(even) .contenido {
+  flex-direction: row-reverse;
+  /* Texto a la derecha en secciones pares */
+}

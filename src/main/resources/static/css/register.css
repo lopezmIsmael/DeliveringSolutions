@@ -1,0 +1,111 @@
+
+/* Botón para volver al index */
+.boton-index {
+  position: fixed;
+  top: 20px; /* Lo coloca en la parte superior */
+  left: 20px; /* Lo coloca a la izquierda */
+  padding: 10px 20px;
+  font-size: 1em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  z-index: 1000; /* Asegura que esté por encima del resto del contenido */
+  width: auto; /* Hace el botón de tamaño ajustado a su contenido */
+}
+
+.boton-index:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: black;
+  transform: scale(1.05);
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center; /* Centra el contenido horizontalmente */
+  align-items: center; /* Centra el contenido verticalmente */
+  font-family: 'Playfair Display', serif; /* Aplica la fuente Playfair Display */
+  background-color: #f1c778; /* Color de fondo claro */
+}
+
+.container {
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  width: 100%;
+  max-width: 600px; /* Limita el ancho máximo del formulario */
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Añade sombra para mejor efecto */
+  background-color: #f8f8f8; /* Color de fondo claro */
+  border-radius: 10px; /* Bordes redondeados */
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px;
+  background-color: #333;
+  color: #ffffff;
+  font-family: 'Playfair Display', serif;
+  font-size: large; /* Tamaño de fuente grande */
+  text-align: center;
+  cursor: pointer;
+  border-radius: 10px; /* Bordes redondeados */
+  margin: 0 5px; /* Espacio entre las pestañas */
+}
+
+.tab.active {
+  background-color: #636363;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: large; /* Tamaño de fuente grande */
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: large; /* Tamaño de fuente grande */
+  border: 1px solid #ccc;
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  font-size: large; /* Tamaño de fuente grande */
+  background-color: #333;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px; /* Bordes redondeados */
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Añade sombra para mejor efecto */
+}
+
+button:hover {
+  background-color: #636363;
+}

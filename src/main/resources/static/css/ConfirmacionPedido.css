@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.ticket {
+    max-width: 300px;
+    margin: auto;
+    border: 1px solid #000;
+    padding: 10px;
+}
+
+.header {
+    text-align: center;
+}
+
+.items {
+    margin-top: 10px;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.total {
+    font-weight: bold;
+    margin-top: 10px;
+}
