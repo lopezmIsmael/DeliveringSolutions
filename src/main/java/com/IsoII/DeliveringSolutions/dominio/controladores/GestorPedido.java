@@ -98,7 +98,7 @@ public class GestorPedido {
     public String mostrarPedido(@PathVariable Integer id, Model model) {
         Optional<Pedido> optionalPedido = servicePedido.findById(id);
         List<ItemPedido> itemsPedidos = serviceItemPedido.findAll();
-        List<ItemPedido> itemsPedido = new ArrayList();
+        List<ItemPedido> itemsPedido = new ArrayList<>();
         if (optionalPedido.isPresent()) {
 
             Pedido pedido = optionalPedido.get();

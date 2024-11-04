@@ -81,7 +81,7 @@ public class GestorZona {
     public String mostrarZona(@PathVariable Integer id, Model model) {
         Optional<Zona> optionalZona = serviceZona.findById(id);
         List<ZonaCodigoPostal> zonasCodigosPostales = serviceZonaCodigoPostal.findAll();
-        List<CodigoPostal> codigosPostales = new ArrayList();
+        List<CodigoPostal> codigosPostales = new ArrayList<>();
         if (optionalZona.isPresent()) {
             Zona zona = optionalZona.get();
 

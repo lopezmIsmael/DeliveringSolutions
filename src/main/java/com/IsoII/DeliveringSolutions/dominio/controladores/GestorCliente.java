@@ -3,7 +3,6 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +24,11 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
-import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.persistencia.ClienteDAO;
 import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
 
 import jakarta.servlet.http.HttpSession;
 
-import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
-import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceClient;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
@@ -57,9 +53,6 @@ public class GestorCliente {
 
     @Autowired
     private ServiceClient serviceClient;
-
-    @Autowired
-    private ItemMenuDAO itemMenuDAO;
 
     // ************************************************** GETMAPPING
     // ********************************************** */
@@ -185,7 +178,6 @@ public class GestorCliente {
         }
         model.addAttribute("direccion", direccionOptional);
 
-        Cliente cliente = clienteDAO.findById(usuario.getIdUsuario()).orElse(null);
         model.addAttribute("cliente", usuario);
 
         System.out.println("<<DIRECCION>>: " + direccionOptional);
