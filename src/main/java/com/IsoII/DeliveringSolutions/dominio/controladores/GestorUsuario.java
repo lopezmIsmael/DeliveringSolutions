@@ -19,66 +19,61 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
-import com.IsoII.DeliveringSolutions.persistencia.UsuarioDAO;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceUser;
 
 import jakarta.servlet.http.HttpSession;
 
+// Controlador para gestionar los usuarios
 @Controller
 @RequestMapping("/usuarios")
 public class GestorUsuario {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     @Autowired
-    private UsuarioDAO usuarioDAO;
-
-    // ************************************************** GETMAPPING
-    // ********************************************** */
+    private ServiceUser serviceUsuario;
 
     // Método que devuelve una lista de todos los clientes
     @GetMapping("/findAll")
     @ResponseBody
     public List<Usuario> findAll() {
-        return usuarioDAO.findAll();
+        return serviceUsuario.findAll();
     }
 
     // Método que muestra el formulario de registro de cliente
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
-        return "rol"; // Nombre del archivo HTML sin la extensión
+        return "rol";
     }
 
     // Método que busca un solo cliente por su id
     @GetMapping("/findById/{id}")
     @ResponseBody
     public Usuario findById(@PathVariable String id) {
-        return usuarioDAO.findById(id).orElse(null);
+        return serviceUsuario.findById(id).orElse(null);
     }
 
     // Metodo que muestra formulario de login
     @GetMapping("/login")
     public String mostrarFormularioLogin() {
-        return "index"; // Nombre del archivo HTML sin la extensión
+        return "index"; 
     }
 
+    // Metodo que muestra formulario de aboutUs
     @GetMapping("/aboutUs")
     public String mostrarAboutUs() {
-        return "aboutUs"; // Nombre del archivo HTML sin la extensión
+        return "aboutUs"; 
     }
 
 
-
-    // ************************************************** POSTMAPPING
-    // ********************************************** */
     // Método que registra un cliente
     @PostMapping("/registrarUsuario")
     public String registrarUsuario(@ModelAttribute Usuario usuario) {
-        // Comprobar si 'pass' no es nulo o vacío
         System.out.println("Usuario recibido: " + usuario.toString());
         if (usuario.getPass() == null || usuario.getPass().isEmpty()) {
-            return "redirect:/usuarios/registrarUsuario"; // Devuelve un error si 'pass' está vacío
+            return "redirect:/usuarios/registrarUsuario"; 
         }
 
-        Usuario usuarioRegistrado = usuarioDAO.save(usuario);
+        Usuario usuarioRegistrado = serviceUsuario.save(usuario);
         System.out.println("Usuario registrado: " + usuarioRegistrado);
         return "redirect:/";
     }
@@ -86,14 +81,15 @@ public class GestorUsuario {
     // Método que elimina un cliente por su id
     @DeleteMapping("/deleteById/{id}")
     public ResponseEntity<String> deleteById(@PathVariable String id) {
-        usuarioDAO.deleteById(id);
+        serviceUsuario.deleteById(id);
         return new ResponseEntity<>("Usuario eliminado", HttpStatus.OK);
     }
 
+    // Método para loguear un usuario
     @PostMapping("/loginUsuario")
     public String loginUsuario(@RequestParam String username, @RequestParam String password,
             RedirectAttributes redirectAttributes, HttpSession session) {
-        Usuario usuarioLogueado = usuarioDAO.findById(username).orElse(null);
+        Usuario usuarioLogueado = serviceUsuario.findById(username).orElse(null);
         if (usuarioLogueado != null && usuarioLogueado.getPass().equals(password)) {
             session.setAttribute("usuario", usuarioLogueado);
             redirectAttributes.addFlashAttribute("mensaje", "Inicio de sesión exitoso.");
