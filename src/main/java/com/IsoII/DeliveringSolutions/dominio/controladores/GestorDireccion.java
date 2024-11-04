@@ -94,4 +94,31 @@ public class GestorDireccion {
         return "listaDirecciones"; // Asegúrate de tener un archivo Thymeleaf llamado listaDirecciones.html
     }
 
+    // Método para mostrar una dirección por ID y presentar su información
+    @GetMapping("/mostrarDireccion/{id}")
+    public String mostrarDireccion(@PathVariable Long id, Model model) {
+        Optional<Direccion> direccionOpt = serviceDireccion.findById(id);
+        if (direccionOpt.isPresent()) {
+            model.addAttribute("direccion", direccionOpt.get());
+            return "/administrador/VerDireccion"; // Coincide con el archivo en /templates/administrador/
+        } else {
+            model.addAttribute("error", "Dirección no encontrada");
+            return "error"; // Redirige a una página de error si no se encuentra
+        }
+    }
+
+    // Método para mostrar todas las direcciones con manejo de error si no existen
+    @GetMapping("/mostrarDirecciones")
+    public String mostrarDirecciones(Model model) {
+        List<Direccion> direcciones = serviceDireccion.findAll();
+        if (direcciones != null && !direcciones.isEmpty()) {
+            model.addAttribute("direcciones", direcciones);
+            return "/administrador/ListaDirecciones"; // Asegúrate de tener un archivo Thymeleaf llamado
+                                                      // listaDirecciones.html
+        } else {
+            model.addAttribute("error", "No se encontraron direcciones");
+            return "error"; // Vista de error si no hay direcciones en la lista
+        }
+    }
+
 }
