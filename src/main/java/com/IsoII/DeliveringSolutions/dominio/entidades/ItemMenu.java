@@ -7,18 +7,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.validation.constraints.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 
-/**
- * Representa un usuario genérico en el sistema con un nombre, precio, cartamenu, tipo.
- * 
- * @autor Pablo Verdúguez Gervaso
- * @version 1.0
- */
 
+// Entidad que representa la tabla ItemMenu en la base de datos
 @Entity
 public class ItemMenu {
 
@@ -41,6 +34,7 @@ public class ItemMenu {
     @Column(name = "tipo", nullable = false, length = 50)
     private String tipo;
 
+    // Constructores
     public ItemMenu() {
     }
 
@@ -52,6 +46,7 @@ public class ItemMenu {
         this.tipo = tipo;
     }
 
+    // Getters y Setters
     public int getIdItemMenu() {
         return idItemMenu;
     }
@@ -92,6 +87,7 @@ public class ItemMenu {
         this.tipo = tipo;
     }
 
+    // toString
     @Override
     public String toString() {
         return "ItemMenu [cartamenu=" + cartamenu + ", nombre=" + nombre + ", precio=" + precio + ", tipo=" + tipo + "]";

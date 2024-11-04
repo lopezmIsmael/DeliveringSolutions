@@ -6,13 +6,7 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Column;
 
-/**
- * Representa un usuario genérico en el sistema con un identificador, contraseña y tipoUsuario.
- * 
- * @author Jorge López Gómez
- * @version 1.0
- */
-
+// Entidad que representa la tabla Usuario en la base de datos
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Usuario {
@@ -27,6 +21,7 @@ public class Usuario {
     @Column(name = "tipoUsuario", nullable = false, length = 20)
     protected String tipoUsuario;
     
+    // Constructores
     public Usuario() {}
 
     public Usuario(String idUsuario, String pass, String tipoUsuario) {
@@ -35,6 +30,7 @@ public class Usuario {
         this.tipoUsuario = tipoUsuario;
     }
 
+    // Getters y setters
     public String getIdUsuario() {
         return idUsuario;
     }
@@ -57,5 +53,15 @@ public class Usuario {
 
     public void settipoUsuario(String tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
+    }
+
+    // toString
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "idUsuario='" + idUsuario + '\'' +
+                ", pass='" + pass + '\'' +
+                ", tipoUsuario='" + tipoUsuario + '\'' +
+                '}';
     }
 }

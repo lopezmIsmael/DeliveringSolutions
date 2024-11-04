@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+// Entidad que representa la tabla CartaMenu en la base de datos
 @Entity
 public class CartaMenu {
 
@@ -22,6 +23,7 @@ public class CartaMenu {
     @JsonManagedReference
     private List<ItemMenu> items;
 
+    // Constructores
     public CartaMenu() {
     }
 
@@ -31,6 +33,7 @@ public class CartaMenu {
         this.restaurante = restaurante;
     }
 
+    // Getters y Setters
     public int getIdCarta() {
         return idCarta;
     }
@@ -61,5 +64,12 @@ public class CartaMenu {
 
     public void setItems(List<ItemMenu> items) {
         this.items = items;
+    }
+
+    //toString
+    @Override
+    public String toString() {
+        return "CartaMenu [idCarta=" + idCarta + ", nombre=" + nombre + ", restaurante=" + restaurante + ", items="
+                + items + "]";
     }
 }

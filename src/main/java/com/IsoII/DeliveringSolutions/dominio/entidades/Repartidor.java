@@ -2,16 +2,7 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import jakarta.persistence.*;
 
-/**
- * Representa un cliente en el sistema con un identificador, contraseña, tipoUsuario, nombre, apellido y dni.
- * 
- * @author Jorge López Gómez
- * @author Ismael López Marín
- * @author Pablo Verdúguez Gervaso
- * @author Marco Muñoz García
- * @version 1.0
- */
-
+// Entidad que representa la tabla Repartidor en la base de datos
 @Entity
 @PrimaryKeyJoinColumn(name = "idUsuario")
 public class Repartidor extends Usuario {
@@ -36,19 +27,10 @@ public class Repartidor extends Usuario {
     @JoinColumn(name = "idUsuario", referencedColumnName = "idUsuario", nullable = false)
     private Usuario usuario;
 
+    // Constructores
     public Repartidor() {
     }
 
-    /**
-     * Constructor para crear un cliente con un identificador, contraseña, tipoUsuario, nombre, apellido y email específicos.
-     *
-     * @param idUsuario El identificador único del usuario.
-     * @param pass      La contraseña del usuario.
-     * @param tipoUsuario El tipoUsuario del usuario en el sistema.
-     * @param nombre    El nombre del cliente.
-     * @param apellido  El apellido del cliente.
-     * @param dni     El dni del cliente.
-     */
     public Repartidor(String idUsuario, String pass, String tipoUsuario, String nombre, String apellido, String dni, Zona zona) {
         super(idUsuario, pass, tipoUsuario);
         this.nombre = nombre;
@@ -58,8 +40,7 @@ public class Repartidor extends Usuario {
         this.zona = zona;
     }
 
-    // Getters y setters para los atributos específicos de Cliente
-
+    // Getters y setters
     public String getNombre() {
         return nombre;
     }
@@ -100,4 +81,15 @@ public class Repartidor extends Usuario {
         this.zona = zona;
     }
     
+    // toString
+    @Override
+    public String toString() {
+        return super.toString() + "Repartidor{" +
+                "nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", dni='" + dni + '\'' +
+                ", eficiencia=" + eficiencia +
+                ", zona=" + zona +
+                '}';
+    }
 }

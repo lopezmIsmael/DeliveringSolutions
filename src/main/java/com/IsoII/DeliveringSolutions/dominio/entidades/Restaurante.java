@@ -2,15 +2,7 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import jakarta.persistence.*;
 
-/**
- * Representa un restaurante en el sistema con un identificador, contraseña, tipoUsuario, nombre, dirección y teléfono.
- * 
- * @autor Jorge López Gómez
- * @autor Ismael López Marín
- * @autor Pablo Verdúguez Gervaso
- * @autor Marco Muñoz García
- * @version 1.0
- */
+// Entidad que representa la tabla Restaurante en la base de datos
 @Entity
 @PrimaryKeyJoinColumn(name = "idUsuario") // Indica que la clave primaria es heredada de Usuario
 public class Restaurante extends Usuario {
@@ -22,25 +14,17 @@ public class Restaurante extends Usuario {
     @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
 
+    // Constructores
     public Restaurante() {
     }
 
-    /**
-     * Constructor para crear un restaurante con un identificador, contraseña, tipoUsuario, nombre, dirección y teléfono específicos.
-     *
-     * @param idUsuario El identificador único del usuario.
-     * @param pass      La contraseña del usuario.
-     * @param tipoUsuario El tipoUsuario del usuario en el sistema.
-     * @param cif       El cif del restaurante.
-     * @param nombre    El nombre del restaurante.
-     */
     public Restaurante(String idUsuario, String pass, String tipoUsuario, String cif, String nombre) {
         super(idUsuario, pass, tipoUsuario);
         this.cif = cif;
         this.nombre = nombre;
     }
 
-    // Getters y setters para los atributos específicos de Restaurante
+    // Getters y setters
     public String getCif() {
         return cif;
     }
@@ -58,6 +42,7 @@ public class Restaurante extends Usuario {
         this.nombre = nombre;
     }
 
+    // toString
     @Override
     public String toString() {
         return super.toString() + "Restaurante{" +
