@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 
+// Entidad que representa la tabla CodigoPostal en la base de datos
 @Entity
 public class CodigoPostal {
     @Id
@@ -15,6 +16,7 @@ public class CodigoPostal {
     @Column(name = "codigo", nullable = false, length = 5)
     private String codigo;
 
+    // Constructores
     public CodigoPostal() {
     }
 
@@ -35,6 +37,7 @@ public class CodigoPostal {
         return id;
     }    
 
+    // toString
     @Override
     public String toString() {
         return "CodigoPostal{" +

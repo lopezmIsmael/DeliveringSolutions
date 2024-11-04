@@ -2,16 +2,7 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import jakarta.persistence.*;
 
-
-/**
-* Representa un pedido realizado por un cliente a un restaurante en el sistema. 
- * @author Jorge López Gómez
- * @author Ismael López Marín
- * @author Pablo Verdúguez Gervaso
- * @author Marco Muñoz García
- * @version 1.0
- */
-
+// Entidad que representa la tabla Pedido en la base de datos
 @Entity
 public class Pedido {
     
@@ -33,6 +24,7 @@ public class Pedido {
     @JoinColumn(name = "idRestaurante", nullable = false)
     private Restaurante idRestaurante;
 
+    // Constructores
     public Pedido() {
     }
     
@@ -44,8 +36,7 @@ public class Pedido {
         this.idRestaurante = idRestaurante;
     }
 
-    // Getters y setters para los atributos específicos de Pedido
-
+    // Getters y setters
     public int getIdPedido() {
         return idPedido;
     }
@@ -86,6 +77,7 @@ public class Pedido {
         this.idRestaurante = idRestaurante;
     }
 
+    // toString
     @Override
     public String toString() {
         return "Pedido [estadoPedido=" + estadoPedido + ", fecha=" + fecha + ", idCliente=" + idCliente + ", idPedido="

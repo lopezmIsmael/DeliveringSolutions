@@ -2,16 +2,7 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import jakarta.persistence.*;
 
-/**
- * Representa un pago realizado por un cliente a un restaurante en el sistema.
- * 
- * @author Jorge López Gómez
- * @author Ismael López Marín
- * @author Pablo Verdúguez Gervaso
- * @author Marco Muñoz García
- * @version 1.0
- */
-
+// Entidad que representa la tabla ServicioEntrega en la base de datos
  @Entity
 public class ServicioEntrega {
     
@@ -33,6 +24,7 @@ public class ServicioEntrega {
     @JoinColumn(name = "idRepartidor", nullable = false)
     private Repartidor repartidor;
 
+    // Constructores
     public ServicioEntrega() {
     }
 
@@ -44,8 +36,7 @@ public class ServicioEntrega {
         this.repartidor = repartidor;
     }
 
-    // Getters y setters para los atributos específicos de ServicioEntrega
-
+    // Getters y setters
     public int getIdServicioEntrega() {
         return idServicioEntrega;
     }
@@ -84,6 +75,12 @@ public class ServicioEntrega {
 
     public void setRepartidor(Repartidor repartidor) {
         this.repartidor = repartidor;
+    }
+
+    // toString
+    @Override
+    public String toString() {
+        return "ServicioEntrega [idServicioEntrega=" + idServicioEntrega + ", fechaRecepcion=" + fechaRecepcion + ", fechaEntrega=" + fechaEntrega + ", pedido=" + pedido + ", repartidor=" + repartidor + "]";
     }
 
 }

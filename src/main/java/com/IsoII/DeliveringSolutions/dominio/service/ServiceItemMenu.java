@@ -1,5 +1,6 @@
 package com.IsoII.DeliveringSolutions.dominio.service;
 
+import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+// Clase que implementa los servicios de la entidad ItemMenu
 @Service
 public class ServiceItemMenu {
     @Autowired
@@ -26,5 +28,9 @@ public class ServiceItemMenu {
 
     public void deleteById(Integer id){
         itemMenuDAO.deleteById(id);
+    }
+
+    public List<ItemMenu> findByCartaMenu(CartaMenu cartaMenu){
+        return itemMenuDAO.findByCartamenu(cartaMenu);
     }
 }

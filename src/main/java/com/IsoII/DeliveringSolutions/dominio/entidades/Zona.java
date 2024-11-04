@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 
+// Entidad que representa la tabla Zona en la base de datos
 @Entity 
 public class Zona {
     @Id
@@ -15,6 +16,7 @@ public class Zona {
     @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
 
+    // Constructores
     public Zona() {
     }
 
@@ -23,6 +25,7 @@ public class Zona {
         this.nombre = nombre;
     }
 
+    // Getters y Setters
     public String getNombre() {
         return nombre;
     }
@@ -35,6 +38,7 @@ public class Zona {
         return id;
     }    
 
+    // toString
     @Override
     public String toString() {
         return "Zona{" +

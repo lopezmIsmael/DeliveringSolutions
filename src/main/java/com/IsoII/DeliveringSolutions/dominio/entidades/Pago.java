@@ -2,18 +2,10 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import jakarta.persistence.*;
 
-/**
- * Representa un pago realizado por un cliente a un restaurante en el sistema.
- * @author Jorge López Gómez
- * @author Ismael López Marín
- * @author Pablo Verdúguez Gervaso
- * @author Marco Muñoz García
- * @version 1.0
- */
-
- @Entity
+// Entidad que representa la tabla Pago en la base de datos
+@Entity
 public class Pago {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int idPago;
@@ -25,6 +17,7 @@ public class Pago {
     @JoinColumn(name = "idPedido", nullable = false)
     private Pedido pedido;
 
+    // Constructores
     public Pago() {
     }
 
@@ -34,8 +27,7 @@ public class Pago {
         this.pedido = pedido;
     }
 
-    // Getters y setters para los atributos específicos de Pago
-
+    // Getters y setters
     public int getIdPago() {
         return idPago;
     }
@@ -60,6 +52,7 @@ public class Pago {
         this.pedido = pedido;
     }
 
+    // toString
     @Override
     public String toString() {
         return "Pago [idPago=" + idPago + ", metodoPago=" + metodoPago + ", pedido=" + pedido + "]";

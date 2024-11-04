@@ -13,70 +13,73 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.CodigoPostal;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCodigoPostal;
-import com.IsoII.DeliveringSolutions.persistencia.CodigoPostalDAO;
 
 import org.springframework.ui.Model;
 
+// Controlador para gestionar los códigos postales
 @Controller
 @RequestMapping("/codigoPostal")
 public class GestorCodigoPostal {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     @Autowired
-    private CodigoPostalDAO codigoPostalDAO;
-
-    @Autowired
     private ServiceCodigoPostal serviceCodigoPostal;
 
+    // Método para obtener todos los códigos postales
     @GetMapping("/findAll")
     @ResponseBody
     public List<CodigoPostal> findAll() {
-        return codigoPostalDAO.findAll();
+        return serviceCodigoPostal.findAll();
     }
 
+    // Método para mostrar el formulario de registro de códigos postales
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
-        return "Pruebas-RegisterCodigoPostal"; // Nombre del archivo HTML sin la extensión
+        return "Pruebas-RegisterCodigoPostal";
     }
 
+    // Método para obtener un código postal por su id
     @GetMapping("/findById/{id}")
     @ResponseBody
     public CodigoPostal findById(@PathVariable Integer id) {
-        return codigoPostalDAO.findById(id).orElse(null);
+        return serviceCodigoPostal.findById(id).orElse(null);
     }
 
+    // Método para registrar un código postal
     @PostMapping("/registrarCodigoPostal")
     public ResponseEntity<CodigoPostal> registrarCodigoPostal(@ModelAttribute CodigoPostal codigoPostal) {
         System.out.println("CodigoPostal recibido: " + codigoPostal.toString());
         if (codigoPostal.getCodigo() == null || codigoPostal.getCodigo().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        CodigoPostal codigoPostalRegistrado = codigoPostalDAO.save(codigoPostal);
+        CodigoPostal codigoPostalRegistrado = serviceCodigoPostal.save(codigoPostal);
         System.out.println("CodigoPostal registrado: " + codigoPostalRegistrado);
         return new ResponseEntity<>(codigoPostalRegistrado, HttpStatus.CREATED);
     }
 
+    // Método para mostrar el formulario de actualización de códigos postales
     @GetMapping("/mostrarCodigos")
     public String mostrarCodigosPostales(Model model) {
         List<CodigoPostal> codigosPostales = serviceCodigoPostal.findAll();
         if (codigosPostales != null && !codigosPostales.isEmpty()) {
             model.addAttribute("codigosPostales", codigosPostales);
-            return "/administrador/ListaCodigoPostales"; // Nombre del archivo HTML sin la extensión
+            return "/administrador/ListaCodigoPostales";
         } else {
             model.addAttribute("error", "No se encontraron códigos postales");
-            return "error"; // Vista de error si no se encuentran códigos postales
+            return "error";
         }
     }
 
+    // Método para actualizar un código postal
     @GetMapping("/mostrarCodigo/{id}")
     public String mostrarCodigoPostal(@PathVariable Integer id, Model model) {
         Optional<CodigoPostal> optionalCodigoPostal = serviceCodigoPostal.findById(id);
         if (optionalCodigoPostal.isPresent()) {
             model.addAttribute("codigoPostal", optionalCodigoPostal.get());
-            return "/administrador/VerCodigoPostal"; // Vista para ver detalles de un código postal
+            return "/administrador/VerCodigoPostal";
         } else {
             model.addAttribute("error", "Código postal no encontrado");
-            return "error"; // Vista de error si no se encuentra el código postal
+            return "error";
         }
     }
 }

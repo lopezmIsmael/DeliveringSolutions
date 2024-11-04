@@ -11,7 +11,6 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
 import com.IsoII.DeliveringSolutions.dominio.service.ServicePedido;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceUser;
-import com.IsoII.DeliveringSolutions.persistencia.PagoDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemPedido;
 import com.IsoII.DeliveringSolutions.dominio.service.ServicePago;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
@@ -34,13 +33,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.ui.Model;
 
+// Controlador para gestionar los pagos
 @Controller
 @RequestMapping("/pago")
 public class GestorPago {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
-
-    @Autowired
-    private PagoDAO pagoDAO;
 
     @Autowired
     private ServiceRestaurant serviceRestaurant;
@@ -63,14 +60,14 @@ public class GestorPago {
     @Autowired
     private ServicePago servicePago;
 
+    // Método para listar todos los pagos
     @GetMapping("/findAll")
     @ResponseBody
     public List<Pago> findAll() {
-        return pagoDAO.findAll();
+        return servicePago.findAll();
     }
 
-    // In GestorPago.java, update the mapping annotation
-    // In GestorPago.java
+    // Método para registrar un pago
     @PostMapping("/register")
     public String mostrarFormularioRegistro(@RequestParam("cartData") String cartData,
             @RequestParam("restauranteId") String restauranteId, Model model, HttpSession session) {
@@ -78,7 +75,6 @@ public class GestorPago {
         System.out.println("<<RestauranteId>>: " + restauranteId);
         System.out.println("<<CartData>>: " + cartData);
 
-        // Find direccion by usuario
         Restaurante restaurante = new Restaurante();
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
@@ -86,11 +82,9 @@ public class GestorPago {
             return "redirect:/direccion/formularioRegistro";
         }
 
-        // Find restaurante by id
         restaurante = serviceRestaurant.findById(restauranteId).orElse(null);
 
         System.out.println("<<Restaurante>>: " + restaurante.getNombre());
-        // Create ObjectMapper and configure it
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -121,12 +115,14 @@ public class GestorPago {
         return "RegistrarPedidos";
     }
 
+    // Metodo para buscar un pago por ID
     @GetMapping("/findById/{id}")
     @ResponseBody
     public Pago findById(@PathVariable Integer id) {
-        return pagoDAO.findById(id).orElse(null);
+        return servicePago.findById(id).orElse(null);
     }
 
+    // Metodo para registrar un pedido
     @PostMapping("/registrarPedido")
     public String registrarPedido(
             @RequestParam("metodoPago") String metodoPago,
@@ -136,31 +132,25 @@ public class GestorPago {
             Model model,
             RedirectAttributes redirectAttributes) {
 
-        // Logging
         System.out.println("<<ESTOY EN REGISTRAR PEDIDO: GestorPago>>");
         System.out.println("<<Metodo de pago>>: " + metodoPago);
         System.out.println("<<RestauranteId>>: " + restauranteId);
 
-        // Retrieve cliente and restaurante
         Cliente cliente = (Cliente) session.getAttribute("usuario");
         Restaurante restaurante = serviceRestaurant.findById(restauranteId).orElse(null);
 
-        // Create and save Pedido
         Pedido pedido = new Pedido();
         pedido.setFecha(System.currentTimeMillis());
         pedido.setEstadoPedido("Pendiente");
         pedido.setCliente(cliente);
         pedido.setRestaurante(restaurante);
 
-        // Registrar pedido
         servicePedido.save(pedido);
         System.out.println("<<Pedido registrado>>: " + pedido.toString());
         Double total = 0.0;
-        // Fetch items from database based on IDs
         List<ItemMenu> items = new ArrayList<>();
         for (Integer itemId : itemIds) {
             System.out.println("<<Item ID>>: " + itemId);
-            // Assuming you have a service or repository to fetch items
             Optional<ItemMenu> optionalItem = serviceItemMenu.findById(itemId);
             if (optionalItem.isPresent()) {
                 ItemPedido itemPedido = new ItemPedido();
@@ -174,27 +164,22 @@ public class GestorPago {
             }
         }
 
-        // Registrar pago
         Pago pago = new Pago();
         pago.setMetodoPago(metodoPago);
         pago.setPedido(pedido);
-        pagoDAO.save(pago);
+        servicePago.save(pago);
 
         System.out.println("<<Pago registrado>>: " + pago.toString());
 
-        // Actualizar estado pedido a pagado
         pedido.setEstadoPedido("Pagado");
         servicePedido.save(pedido);
 
-        // Obtener direccion recogida
         Usuario usuarioRestaurante = serviceUsuario.findById(restaurante.getIdUsuario()).orElse(null);
         Direccion direccionRecogida = serviceDireccion.findByUsuario(usuarioRestaurante);
 
-        // Obtener direccion entrega
         Usuario usuarioCliente = serviceUsuario.findById(cliente.getIdUsuario()).orElse(null);
         Direccion direccionEntrega = serviceDireccion.findByUsuario(usuarioCliente);
 
-        // Add attributes to redirectAttributes instead of model
         redirectAttributes.addFlashAttribute("pedido", pedido);
         redirectAttributes.addFlashAttribute("items", items);
         redirectAttributes.addFlashAttribute("pago", pago);
@@ -210,6 +195,7 @@ public class GestorPago {
         return "redirect:/pago/confirmacion";
     }
 
+    // Método para mostrar el formulario de registro de un pago
     @GetMapping("/confirmacion")
     public String mostrarConfirmacion(Model model) {
         return "ConfirmacionPedido";

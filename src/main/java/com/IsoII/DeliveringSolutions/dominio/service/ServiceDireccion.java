@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+// Clase que implementa los servicios de la entidad Direccion
 @Service
 public class ServiceDireccion {
     @Autowired
@@ -24,7 +25,7 @@ public class ServiceDireccion {
     private EntityManager entityManager;
 
     @Autowired
-    private UsuarioDAO usuarioDAO; // Añadido para manejar la entidad Usuario
+    private UsuarioDAO usuarioDAO;
 
     public List<Direccion> findAll() {
         return direccionDAO.findAll();
@@ -42,7 +43,6 @@ public class ServiceDireccion {
         direccionDAO.deleteById(id);
     }
 
-    // Método para encontrar un usuario por su ID
     public Optional<Usuario> findUsuarioById(String id) {
         return usuarioDAO.findById(id);
     }

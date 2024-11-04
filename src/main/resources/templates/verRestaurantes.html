@@ -9,7 +9,6 @@
 
 <body>
     <div class="container" th:with="vistaFavoritos=${vistaFavoritos != null ? vistaFavoritos : false}" th:attr="data-vista-favoritos=${vistaFavoritos}">
-        <!-- Saludo y botones en la esquina superior izquierda -->
         <div class="header-left" th:if="${usuario != null}">
             <p>¡Hola, <span th:text="${usuario.idUsuario}"></span>!</p>
             <div class="user-actions">
@@ -20,14 +19,12 @@
 
         <h2 th:text="${vistaFavoritos} ? 'Mis Restaurantes Favoritos' : 'Buscar y Ver Restaurantes'"></h2>
 
-        <!-- Formulario de búsqueda con "Ver Favoritos" a la derecha -->
         <form th:action="@{/clientes/filtrar}" method="get" th:if="${!vistaFavoritos}">
             <input type="text" id="nombre" name="nombre" placeholder="Filtrar restaurante por nombre">
             <button type="submit">Filtrar</button>
             <a th:href="@{/clientes/verRestaurantes(favoritos=true)}" class="toggle-favorites">Ver Favoritos</a>
         </form>
 
-        <!-- Botón "Ver Todos" solo si estamos en vista de favoritos -->
         <div th:if="${vistaFavoritos}" style="text-align: center;">
             <a th:href="@{/clientes/verRestaurantes}" class="toggle-favorites">Ver Todos</a>
         </div>
@@ -37,7 +34,6 @@
                 <div class="restaurant-name" th:text="${restaurante.nombre}"></div>
                 <a th:href="@{/clientes/verMenusRestaurante/{id}(id=${restaurante.idUsuario})}">Ver Menús</a>
 
-                <!-- Estrella de favorito -->
                 <button type="button" class="favorite-star"
                     th:classappend="${cliente != null && cliente.favoritos.contains(restaurante) ? 'favorited' : ''}"
                     title="Marcar/Desmarcar como Favorito" th:data-id="${restaurante.idUsuario}"

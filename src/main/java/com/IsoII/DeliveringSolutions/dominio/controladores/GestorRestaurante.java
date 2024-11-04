@@ -22,15 +22,12 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
-import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
 
+// Controlador para gestionar los restaurantes
 @Controller
 @RequestMapping("/restaurantes")
 public class GestorRestaurante {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
-
-    @Autowired
-    private RestauranteDAO restauranteDAO;
 
     @Autowired
     private ServiceCartaMenu serviceCartaMenu;
@@ -41,38 +38,43 @@ public class GestorRestaurante {
     @Autowired
     private ServiceRestaurant serviceRestaurant;
 
+    // Método para mostrar todos los restaurantes
     @GetMapping("/findAll")
     @ResponseBody
     public List<Restaurante> findAll() {
-        return restauranteDAO.findAll();
+        return serviceRestaurant.findAll();
     }
 
+    // Método para mostrar el formulario de registro de restaurante
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
         return "Pruebas-RegisterRestaurante"; // Nombre del archivo HTML sin la extensión
     }
 
+    // Método para buscar un restaurante por su id
     @GetMapping("/findById/{id}")
     @ResponseBody
     public Restaurante findById(@PathVariable String id) {
-        return restauranteDAO.findById(id).orElse(null);
+        return serviceRestaurant.findById(id).orElse(null);
     }
 
+    // Método para buscar un restaurante por su nombre
     @GetMapping("/buscar")
     public String buscarRestaurante(@RequestParam String nombre, Model model) {
-        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(nombre);
+        Optional<Restaurante> optionalRestaurante = serviceRestaurant.findById(nombre);
         if (optionalRestaurante.isPresent()) {
             Restaurante restaurante = optionalRestaurante.get();
             return "redirect:/restaurantes/findById/" + restaurante.getNombre();
         } else {
             model.addAttribute("error", "Restaurante no encontrado");
-            return "verRestaurantes"; // Nombre del archivo HTML sin la extensión
+            return "verRestaurantes";
         }
     }
 
+    // Método para gestionar un restaurante
     @GetMapping("/gestion/{id}")
     public String gestionRestaurante(@PathVariable String id, Model model) {
-        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(id);
+        Optional<Restaurante> optionalRestaurante = serviceRestaurant.findById(id);
         if (optionalRestaurante.isPresent()) {
             Restaurante restaurante = optionalRestaurante.get();
             List<CartaMenu> menus = serviceCartaMenu.findByRestaurante(restaurante);
@@ -86,35 +88,36 @@ public class GestorRestaurante {
             } else {
                 model.addAttribute("direccion", new Direccion());
             }
-            return "interfazGestionRestaurante"; // Nombre del archivo HTML sin la extensión
+            return "interfazGestionRestaurante";
         } else {
             model.addAttribute("error", "Restaurante no encontrado");
-            return "error"; // Nombre del archivo HTML de la página de error
+            return "error"; 
         }
     }
 
+    // Método para registrar un restaurante
     @PostMapping("/registrarRestaurante")
     public String registrarRestaurante(@ModelAttribute Restaurante restaurante, Model model) {
         System.out.println("Restaurante recibido: " + restaurante.toString());
         if (restaurante.getPass() == null || restaurante.getPass().isEmpty()) {
             model.addAttribute("error", "Contraseña no puede estar vacía");
-            return "error"; // Nombre del archivo HTML de la página de error
+            return "error";
         }
-        Restaurante restauranteRegistrado = restauranteDAO.save(restaurante);
+        Restaurante restauranteRegistrado = serviceRestaurant.save(restaurante);
         System.out.println("Restaurante registrado: " + restauranteRegistrado);
         return "redirect:/restaurantes/gestion/" + restauranteRegistrado.getIdUsuario();
     }
 
-    // Método que devuelve una lista de todos los restaurantes
+    // Método para mostrar todos los restaurantes
     @GetMapping("/mostrarRestaurantes")
     public String mostrarRestaurantes(Model model) {
         List<Restaurante> restaurantes = serviceRestaurant.findAll();
         if (restaurantes != null && !restaurantes.isEmpty()) {
             model.addAttribute("restaurantes", restaurantes);
-            return "/administrador/ListaRestaurantes"; // Vista para listar restaurantes
+            return "/administrador/ListaRestaurantes";
         } else {
             model.addAttribute("error", "No se encontraron restaurantes");
-            return "error"; // Vista de error si no se encuentran restaurantes
+            return "error"; 
         }
     }
 
@@ -125,10 +128,10 @@ public class GestorRestaurante {
         if (optionalRestaurante.isPresent()) {
             Restaurante restaurante = optionalRestaurante.get();
             model.addAttribute("restaurante", restaurante);
-            return "/administrador/VerRestaurante"; // Vista para ver detalles de un restaurante
+            return "/administrador/VerRestaurante"; 
         } else {
             model.addAttribute("error", "Restaurante no encontrado");
-            return "error"; // Vista de error si no se encuentra el restaurante
+            return "error";
         }
     }
 

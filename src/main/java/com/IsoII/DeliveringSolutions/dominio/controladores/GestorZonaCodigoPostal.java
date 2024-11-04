@@ -13,56 +13,57 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import com.IsoII.DeliveringSolutions.dominio.entidades.CodigoPostal;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Zona;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ZonaCodigoPostal;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceCodigoPostal;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceZona;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceZonaCodigoPostal;
-import com.IsoII.DeliveringSolutions.persistencia.ZonaCodigoPostalDAO;
-import com.IsoII.DeliveringSolutions.persistencia.ZonaDAO;
-import com.IsoII.DeliveringSolutions.persistencia.CodigoPostalDAO;
 
+// Controlador para gestionar las zonas con códigos postales
 @Controller
 @RequestMapping("/zonaCodigoPostal")
 public class GestorZonaCodigoPostal {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     @Autowired
-    private ZonaCodigoPostalDAO zonaCodigoPostalDAO;
-
-    @Autowired
-    private ZonaDAO zonaDAO;
-
-    @Autowired
-    private CodigoPostalDAO codigoPostalDAO;
-
-    @Autowired
     private ServiceZonaCodigoPostal serviceZonaCodigoPostal;
 
+    @Autowired
+    private ServiceZona serviceZona;
+
+    @Autowired
+    private ServiceCodigoPostal serviceCodigoPostal;
+
+    // Método para listar todas las zonas con códigos postales
     @GetMapping("/findAll")
     @ResponseBody
     public List<ZonaCodigoPostal> findAll() {
-        return zonaCodigoPostalDAO.findAll();
+        return serviceZonaCodigoPostal.findAll();
     }
 
+    // Método para mostrar el formulario de registro de zona con código postal
     @GetMapping("/register")
     public String mostrarFormularioRegistro(Model model) {
-        List<Zona> zonas = zonaDAO.findAll();
-        List<CodigoPostal> codigosPostales = codigoPostalDAO.findAll();
+        List<Zona> zonas = serviceZona.findAll();
+        List<CodigoPostal> codigosPostales = serviceCodigoPostal.findAll();
         model.addAttribute("zonas", zonas);
         model.addAttribute("codigosPostales", codigosPostales);
-        model.addAttribute("zonaCodigoPostal", new ZonaCodigoPostal()); // Agregar un objeto vacío al modelo
-        return "Pruebas-RegisterZonaCodigoPostal"; // Nombre del archivo HTML sin la extensión
+        model.addAttribute("zonaCodigoPostal", new ZonaCodigoPostal()); 
+        return "Pruebas-RegisterZonaCodigoPostal"; 
     }
 
+    // Método para buscar una zona con código postal por su id
     @GetMapping("/findById/{id}")
     @ResponseBody
     public ZonaCodigoPostal findById(@PathVariable Long id) {
-        return zonaCodigoPostalDAO.findById(id).orElse(null);
+        return serviceZonaCodigoPostal.findById(id).orElse(null);
     }
 
+    // Método para registrar una zona con código postal
     @PostMapping("/registrarZonaCodigoPostal")
     public String registrarZonaCodigoPostal(@RequestParam("codigoPostal") List<Integer> codigoPostalIds,
             @RequestParam("zona") int zonaId,
             RedirectAttributes redirectAttributes) {
 
-        Zona zona = zonaDAO.findById(zonaId).orElse(null);
+        Zona zona = serviceZona.findById(zonaId).orElse(null);
 
         if (zona == null) {
             redirectAttributes.addFlashAttribute("error", "Debe seleccionar una zona y un código postal válidos.");
@@ -70,7 +71,7 @@ public class GestorZonaCodigoPostal {
         }
 
         for (int codigoPostalId : codigoPostalIds) {
-            CodigoPostal codigoPostal = codigoPostalDAO.findById(codigoPostalId).orElse(null);
+            CodigoPostal codigoPostal = serviceCodigoPostal.findById(codigoPostalId).orElse(null);
             if (codigoPostal == null) {
                 redirectAttributes.addFlashAttribute("error", "Debe seleccionar una zona y un código postal válidos.");
                 return "redirect:/zonaCodigoPostal/register";
@@ -79,7 +80,7 @@ public class GestorZonaCodigoPostal {
             zonaCodigoPostal.setCodigoPostal(codigoPostal);
             zonaCodigoPostal.setZona(zona);
 
-            zonaCodigoPostalDAO.save(zonaCodigoPostal);
+            serviceZonaCodigoPostal.save(zonaCodigoPostal);
         }
 
         redirectAttributes.addFlashAttribute("success", "ZonaCodigoPostal registrada exitosamente.");
@@ -92,10 +93,10 @@ public class GestorZonaCodigoPostal {
         List<ZonaCodigoPostal> zonasCodigosPostales = serviceZonaCodigoPostal.findAll();
         if (zonasCodigosPostales != null && !zonasCodigosPostales.isEmpty()) {
             model.addAttribute("zonasCodigosPostales", zonasCodigosPostales);
-            return "/administrador/ListaZonasCodigoPostal"; // Vista para mostrar la lista de zonas con códigos postales
+            return "/administrador/ListaZonasCodigoPostal";
         } else {
             model.addAttribute("error", "No se encontraron zonas con códigos postales.");
-            return "error"; // Vista de error si no se encuentran zonas con códigos postales
+            return "error"; 
         }
     }
 
@@ -105,10 +106,10 @@ public class GestorZonaCodigoPostal {
         Optional<ZonaCodigoPostal> optionalZonaCodigoPostal = serviceZonaCodigoPostal.findById(id);
         if (optionalZonaCodigoPostal.isPresent()) {
             model.addAttribute("zonaCodigoPostal", optionalZonaCodigoPostal.get());
-            return "/administrador/VerZonaCodigoPostal"; // Vista para mostrar los detalles de la zona específica
+            return "/administrador/VerZonaCodigoPostal"; 
         } else {
             model.addAttribute("error", "Zona con código postal no encontrada.");
-            return "error"; // Vista de error si no se encuentra la zona específica
+            return "error";
         }
     }
 

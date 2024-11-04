@@ -5,7 +5,6 @@ import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemPedido;
 import com.IsoII.DeliveringSolutions.dominio.service.ServicePedido;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemPedido;
-import com.IsoII.DeliveringSolutions.persistencia.PedidoDAO;
 
 import org.springframework.ui.Model;
 
@@ -21,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+// Controlador para gestionar los pedidos
 @Controller
 @RequestMapping("/pedido")
 public class GestorPedido {
@@ -29,42 +29,44 @@ public class GestorPedido {
     private List<ItemMenu> carrito = new ArrayList<>();
 
     @Autowired
-    private PedidoDAO pedidoDAO;
-
-    @Autowired
     private ServicePedido servicePedido;
 
     @Autowired
     private ServiceItemPedido serviceItemPedido;
 
+    // Método para mostrar todos los pedidos
     @GetMapping("/findAll")
     @ResponseBody
     public List<Pedido> findAll() {
-        return pedidoDAO.findAll();
+        return servicePedido.findAll();
     }
 
+    // Método para mostrar el formulario de registro de pedido
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
-        return "Pruebas-RegisterPedido"; // Nombre del archivo HTML sin la extensión
+        return "Pruebas-RegisterPedido";
     }
 
+    // Método para buscar un pedido por su id
     @GetMapping("/findById/{id}")
     @ResponseBody
     public Pedido findById(@PathVariable Integer id) {
-        return pedidoDAO.findById(id).orElse(null);
+        return servicePedido.findById(id).orElse(null);
     }
 
+    // Método para registrar un pedido
     @PostMapping("/registrarPedido")
     public ResponseEntity<Pedido> registrarPedido(@ModelAttribute Pedido pedido) {
         System.out.println("Pedido recibido: " + pedido.toString());
         if (pedido.getFecha() == 0 || pedido.getEstadoPedido() == null || pedido.getEstadoPedido().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        Pedido pedidoRegistrado = pedidoDAO.save(pedido);
+        Pedido pedidoRegistrado = servicePedido.save(pedido);
         System.out.println("Pedido registrado: " + pedidoRegistrado);
         return new ResponseEntity<>(pedidoRegistrado, HttpStatus.CREATED);
     }
 
+    // Método para añaadir un item al carrito
     @PostMapping("/addToCart")
     public ResponseEntity<String> addToCart(@ModelAttribute ItemMenu item) {
         carrito.add(item);
@@ -73,11 +75,11 @@ public class GestorPedido {
         return new ResponseEntity<>("Item añadido al carrito", HttpStatus.OK);
     }
 
+    // Método para mostrar el carrito
     @RequestMapping("/carrito")
     public String mostrarCarrito(Model model) {
         model.addAttribute("carrito", carrito);
-        // Aquí puedes agregar la lógica para mostrar el carrito
-        return "verMenusRestaurante"; // Nombre del archivo HTML sin la extensión
+        return "verMenusRestaurante"; 
     }
 
     // Método para listar todos los pedidos
@@ -139,10 +141,10 @@ public class GestorPedido {
         Optional<ItemPedido> optionalItemPedido = serviceItemPedido.findById(id);
         if (optionalItemPedido.isPresent()) {
             model.addAttribute("itemPedido", optionalItemPedido.get());
-            return "/administrador/VerItemPedido"; // Vista para ver detalles de un item en pedido
+            return "/administrador/VerItemPedido";
         } else {
             model.addAttribute("error", "Item de pedido no encontrado");
-            return "error"; // Vista de error si no se encuentra el item
+            return "error"; 
         }
     }
 
