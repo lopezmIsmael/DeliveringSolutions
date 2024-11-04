@@ -1,0 +1,27 @@
+.container {
+    width: 60%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.section {
+    margin-bottom: 20px;
+}
+
+.section h2 {
+    color: #333;
+}
+
+.info {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
