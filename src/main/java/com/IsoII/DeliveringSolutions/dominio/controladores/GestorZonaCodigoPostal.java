@@ -46,8 +46,8 @@ public class GestorZonaCodigoPostal {
         List<CodigoPostal> codigosPostales = serviceCodigoPostal.findAll();
         model.addAttribute("zonas", zonas);
         model.addAttribute("codigosPostales", codigosPostales);
-        model.addAttribute("zonaCodigoPostal", new ZonaCodigoPostal()); // Agregar un objeto vacío al modelo
-        return "Pruebas-RegisterZonaCodigoPostal"; // Nombre del archivo HTML sin la extensión
+        model.addAttribute("zonaCodigoPostal", new ZonaCodigoPostal()); 
+        return "Pruebas-RegisterZonaCodigoPostal"; 
     }
 
     // Método para buscar una zona con código postal por su id
@@ -93,10 +93,10 @@ public class GestorZonaCodigoPostal {
         List<ZonaCodigoPostal> zonasCodigosPostales = serviceZonaCodigoPostal.findAll();
         if (zonasCodigosPostales != null && !zonasCodigosPostales.isEmpty()) {
             model.addAttribute("zonasCodigosPostales", zonasCodigosPostales);
-            return "/administrador/ListaZonasCodigoPostal"; // Vista para mostrar la lista de zonas con códigos postales
+            return "/administrador/ListaZonasCodigoPostal";
         } else {
             model.addAttribute("error", "No se encontraron zonas con códigos postales.");
-            return "error"; // Vista de error si no se encuentran zonas con códigos postales
+            return "error"; 
         }
     }
 
@@ -106,10 +106,10 @@ public class GestorZonaCodigoPostal {
         Optional<ZonaCodigoPostal> optionalZonaCodigoPostal = serviceZonaCodigoPostal.findById(id);
         if (optionalZonaCodigoPostal.isPresent()) {
             model.addAttribute("zonaCodigoPostal", optionalZonaCodigoPostal.get());
-            return "/administrador/VerZonaCodigoPostal"; // Vista para mostrar los detalles de la zona específica
+            return "/administrador/VerZonaCodigoPostal"; 
         } else {
             model.addAttribute("error", "Zona con código postal no encontrada.");
-            return "error"; // Vista de error si no se encuentra la zona específica
+            return "error";
         }
     }
 
