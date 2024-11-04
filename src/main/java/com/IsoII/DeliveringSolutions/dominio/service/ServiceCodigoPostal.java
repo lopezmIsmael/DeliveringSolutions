@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.IsoII.DeliveringSolutions.dominio.entidades.CodigoPostal;
 import com.IsoII.DeliveringSolutions.persistencia.CodigoPostalDAO;
 
+// Clase que implementa los servicios de la entidad CodigoPostal
 @Service
 public class ServiceCodigoPostal {
     @Autowired
