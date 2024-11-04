@@ -65,11 +65,4 @@ public class CartaMenu {
     public void setItems(List<ItemMenu> items) {
         this.items = items;
     }
-
-    //toString
-    @Override
-    public String toString() {
-        return "CartaMenu [idCarta=" + idCarta + ", nombre=" + nombre + ", restaurante=" + restaurante + ", items="
-                + items + "]";
-    }
 }
