@@ -11,7 +11,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.WebProperties.Resources.Chain.Strategy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
