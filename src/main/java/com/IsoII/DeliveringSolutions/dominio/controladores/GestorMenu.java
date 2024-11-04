@@ -3,6 +3,7 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemMenu;
 import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
 import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
@@ -36,6 +37,9 @@ public class GestorMenu {
 
     @Autowired
     private ServiceItemMenu serviceItemMenu;
+
+    @Autowired
+    private ServiceCartaMenu serviceCartaMenu;
 
     // ************************************************** GETMAPPING
     // ********************************************** */
@@ -254,6 +258,32 @@ public class GestorMenu {
         } else {
             model.addAttribute("error", "Item no encontrado");
             return "error"; // Vista de error si no se encuentra el item
+        }
+    }
+
+    // Método que devuelve la lista de todos los menús
+    @GetMapping("/mostrarMenus")
+    public String mostrarMenus(Model model) {
+        List<CartaMenu> cartas = serviceCartaMenu.findAll();
+        if (cartas != null && !cartas.isEmpty()) {
+            model.addAttribute("cartas", cartas);
+            return "/administrador/ListaMenus"; // Vista para mostrar la lista de menús
+        } else {
+            model.addAttribute("error", "No se encontraron menús");
+            return "error"; // Vista de error si no hay menús
+        }
+    }
+
+    // Método que muestra los detalles de un menú específico por su ID
+    @GetMapping("/mostrarMenu/{id}")
+    public String mostrarMenu(@PathVariable Integer id, Model model) {
+        Optional<CartaMenu> optionalCartaMenu = serviceCartaMenu.findById(id);
+        if (optionalCartaMenu.isPresent()) {
+            model.addAttribute("cartaMenu", optionalCartaMenu.get());
+            return "/administrador/VerMenu"; // Vista para ver detalles de un menú
+        } else {
+            model.addAttribute("error", "Menú no encontrado");
+            return "error"; // Vista de error si no se encuentra el menú
         }
     }
 

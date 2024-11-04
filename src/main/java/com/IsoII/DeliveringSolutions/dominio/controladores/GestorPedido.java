@@ -120,4 +120,30 @@ public class GestorPedido {
         }
     }
 
+    // Método que devuelve una lista de todos los items en pedidos
+    @GetMapping("/mostrarItemsPedido")
+    public String mostrarItemsPedido(Model model) {
+        List<ItemPedido> itemsPedidos = serviceItemPedido.findAll();
+        if (itemsPedidos != null && !itemsPedidos.isEmpty()) {
+            model.addAttribute("itemsPedidos", itemsPedidos);
+            return "/administrador/ListaItemsPedido";
+        } else {
+            model.addAttribute("error", "Items de pedido no encontrados");
+            return "error";
+        }
+    }
+
+    // Método que muestra los detalles de un item en pedido específico
+    @GetMapping("/mostrarItemPedido/{id}")
+    public String mostrarItemPedido(@PathVariable int id, Model model) {
+        Optional<ItemPedido> optionalItemPedido = serviceItemPedido.findById(id);
+        if (optionalItemPedido.isPresent()) {
+            model.addAttribute("itemPedido", optionalItemPedido.get());
+            return "/administrador/VerItemPedido"; // Vista para ver detalles de un item en pedido
+        } else {
+            model.addAttribute("error", "Item de pedido no encontrado");
+            return "error"; // Vista de error si no se encuentra el item
+        }
+    }
+
 }
