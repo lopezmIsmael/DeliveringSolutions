@@ -12,7 +12,6 @@
                 <h1>Finalizar Compra</h1>
             </div>
                 <form action="registrarPedido" method="post">
-                    <!-- Tabla de productos en el carrito -->
                     <table id="tabla" class="table">
                         <thead>
                             <tr>
@@ -23,7 +22,6 @@
                         <tbody>
                             <tr th:each="item, iterStat : ${carrito}">
                                 <td>
-                                    <!-- Use multiple inputs with the same name "itemIds" -->
                                     <input type="hidden" name="itemIds" th:value="${item.idItemMenu}" />
                                     <span th:text="${item.idItemMenu}">Id del Producto</span>
                                     <span th:text="${item.nombre}">Nombre del Producto</span>

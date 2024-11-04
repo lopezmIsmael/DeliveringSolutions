@@ -39,7 +39,7 @@
                 <span><strong>Entrega</strong></span>
                 <span><strong>Estado</strong></span>
                 <span><strong>Fecha</strong></span>
-                <span class="acciones"><strong>Acciones</strong></span> <!-- Nueva columna para el botón -->
+                <span class="acciones"><strong>Acciones</strong></span> 
             </div>
             <div th:if="${pedidosPendientes != null and !pedidosPendientes.isEmpty()}">
                 <div th:each="entry : ${pedidosPendientes.entrySet()}">
@@ -48,7 +48,6 @@
                         <span th:text="|${entry.value.calle}, ${entry.value.numero}|"></span>
                         <span th:text="${entry.key.estadoPedido}"></span>
                         <span th:text="${#dates.format(new java.util.Date(entry.key.fecha), 'dd/MM/yyyy HH:mm')}"></span>
-                        <!-- Botón para ver detalles del pedido -->
                         <span class="acciones">
                             <a th:href="@{/repartidores/gestionar/{id}(id=${entry.key.idPedido})}">Seleccionar pedido</a>
                         </span>

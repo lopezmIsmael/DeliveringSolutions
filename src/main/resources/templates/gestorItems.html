@@ -10,10 +10,8 @@
 </head>
 <body>
     <div class="container mt-5">
-        <!-- Título con el nombre de la carta -->
         <h1 class="mb-4" th:text="'Gestor de ' + ${cartaMenu.nombre}">Gestor de Items</h1>
 
-        <!-- Subtítulo con el nombre de la carta -->
         <h2 class="mb-4" th:text="${cartaMenu.nombre}">Items</h2>
 
         <ul class="list-group mb-4" id="item-list">
@@ -27,11 +25,9 @@
             </li>
         </ul>
 
-        <!-- Mensajes de éxito o error -->
         <div th:if="${mensaje}" class="mensaje mensaje-exito" th:text="${mensaje}"></div>
         <div th:if="${error}" class="mensaje mensaje-error" th:text="${error}"></div>
 
-        <!-- Formulario para añadir un nuevo item -->
         <form th:action="@{/cartas/items/registrarItem}" method="post" th:object="${itemMenu}">
             <div class="form-row">
                 <div class="form-group col-md-4">

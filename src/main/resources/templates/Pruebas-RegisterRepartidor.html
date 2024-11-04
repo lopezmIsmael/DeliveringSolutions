@@ -38,7 +38,6 @@
             <td>
                 <select id="zona" name="zona" required>
                     <option value="" disabled selected>Seleccione una zona</option>
-                    <!-- Asegúrate de que el valor sea el ID de la zona -->
                     <option th:each="zona : ${zonas}" th:value="${zona.id}" th:text="${zona.nombre}"></option>
                 </select>
             </td>

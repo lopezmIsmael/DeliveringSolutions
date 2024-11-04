@@ -42,11 +42,9 @@
 <div class="container">
     <h2>Gestión del Pedido</h2>
 
-    <!-- Mensaje de confirmación o error -->
     <div th:if="${success}" style="color: green;" th:text="${success}"></div>
     <div th:if="${error}" style="color: red;" th:text="${error}"></div>
 
-    <!-- Información del pedido -->
     <div>
         <p><strong>Restaurante:</strong> <span th:text="${pedido.restaurante.nombre}"></span></p>
         <p><strong>Dirección de entrega:</strong> <span th:text="|${direccion.calle}, ${direccion.numero}|"></span></p>
@@ -54,7 +52,6 @@
         <p><strong>Estado actual:</strong> <span th:text="${pedido.estadoPedido}"></span></p>
     </div>
 
-    <!-- Formulario para actualizar el estado del pedido -->
     <form th:action="@{/repartidores/actualizarEstado/{id}(id=${pedido.idPedido})}" method="post">
         <div class="form-group">
             <label for="estado">Cambiar estado del pedido:</label>

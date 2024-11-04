@@ -12,36 +12,30 @@
         </div>
     
         <div class="content mt-4">
-            <!-- Sección para mostrar el nombre del restaurante -->
             <div class="mb-4">
                 <h2>Nombre del Restaurante: <span th:text="${restaurante.nombre}"></span></h2>                
             </div>
 
             <div th:if="${direccion != null}">
-                <!-- Sección para mostrar la dirección del restaurante -->
                 <div class="mb-4">
                     <h3>Dirección:</h3>
                     <p th:text="${direccion.calle + ', ' + direccion.numero + ', ' + direccion.complemento + ', ' + direccion.municipio + ', ' + direccion.codigoPostal }"></p>
                 </div>
             </div>
 
-            <!-- Boton modificar direccion -->
             <div class="mb-4">
                 <button type="button" onclick="location.href='/direccion/formularioRegistro'">Registrar Nueva Dirección</button>
             </div>
     
-            <!-- Sección para mostrar las cartas/menús asignados al restaurante -->
             <div>
                 <h3>Cartas/Menús:</h3>
                 <ul class="menu-list">
-                    <!-- <li th:each="menu : ${menus}" th:text="${menu.nombre}"></li> -->
                     <li th:each="menu : ${menus}">
                         <a th:href="@{'/cartas/modificar/' + ${menu.idCarta}}" th:text="${menu.nombre}"></a>
                     </li>
                 </ul>
             </div>
 
-            <!-- Botón para poder crear menús nuevos -->
             <div class="mt-4">
                 <a th:href="@{'/cartas/register/' + ${restaurante.idUsuario}}" class="btn btn-primary">Crear Menú</a>
             </div> 
