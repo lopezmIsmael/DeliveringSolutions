@@ -22,7 +22,7 @@ Las tareas realizadas en este sprint son:
 
 ## 4.1 Creación del CSS
 
-Queda implementada la creación y mejora del diseño visual de la plataforma, completando asi el desarrollo CSS, se ha establecido el estilo general de la aplicación.
+Queda implementada la creación y mejora del diseño visual de la plataforma, completando así el desarrollo CSS, se ha establecido el estilo general de la aplicación.
 
 <div style="text-align: center;">
     <img src="/doc/imagenesSprint/Imagen27.png" alt="Ilustración 27: Tarea de Creación del CSS" width="100%">
