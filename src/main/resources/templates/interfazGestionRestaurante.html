@@ -16,12 +16,10 @@
                 <h2>Nombre del Restaurante: <span th:text="${restaurante.nombre}"></span></h2>                
             </div>
 
-            <div th:if="${direccion != null}">
-                <div class="mb-4">
-                    <h3>Dirección:</h3>
-                    <p th:text="${direccion.calle + ', ' + direccion.numero + ', ' + direccion.complemento + ', ' + direccion.municipio + ', ' + direccion.codigoPostal }"></p>
-                </div>
+            <div th:each="direccion : ${direcciones}">
+                <p th:text="${direccion.calle} + ', ' + ${direccion.numero} + ',  ' + ${direccion.municipio} ">Dirección completa</p>
             </div>
+            
 
             <div class="mb-4">
                 <button type="button" onclick="location.href='/direccion/formularioRegistro'">Registrar Nueva Dirección</button>

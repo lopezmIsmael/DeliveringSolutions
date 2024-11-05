@@ -179,10 +179,12 @@ public class GestorPago {
         servicePedido.save(pedido);
 
         Usuario usuarioRestaurante = serviceUsuario.findById(restaurante.getIdUsuario()).orElse(null);
-        Direccion direccionRecogida = serviceDireccion.findByUsuario(usuarioRestaurante);
-
+        List<Direccion> direccionesRecogida = serviceDireccion.findByUsuario(usuarioRestaurante);
+        Direccion direccionRecogida = !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
+        
         Usuario usuarioCliente = serviceUsuario.findById(cliente.getIdUsuario()).orElse(null);
-        Direccion direccionEntrega = serviceDireccion.findByUsuario(usuarioCliente);
+        List<Direccion> direccionesEntrega = serviceDireccion.findByUsuario(usuarioCliente);
+        Direccion direccionEntrega = !direccionesEntrega.isEmpty() ? direccionesEntrega.get(0) : null;
 
         redirectAttributes.addFlashAttribute("pedido", pedido);
         redirectAttributes.addFlashAttribute("items", items);
@@ -193,9 +195,10 @@ public class GestorPago {
         redirectAttributes.addFlashAttribute("direccionRecogida", direccionRecogida);
         redirectAttributes.addFlashAttribute("direccionEntrega", direccionEntrega);
 
-        System.out.println("<<MODELO:>>" + pedido.toString() + items.toString() + pago.toString()
+       System.out.println("<<MODELO:>>" + pedido.toString() + items.toString() + pago.toString()
                 + restaurante.toString() + cliente.toString() + total + direccionRecogida.toString()
                 + direccionEntrega.toString());
+
         return "redirect:/pago/confirmacion";
     }
 
