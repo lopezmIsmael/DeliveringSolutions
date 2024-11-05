@@ -5,8 +5,8 @@
 En el Sprint 4 logramos consolidar mejoras significativas en el diseño visual y la funcionalidad del sistema. Se completaron tareas clave de estilización y documentación, además de implementar funcionalidades esenciales para la **asignación de direcciones**, **actualización de estados** y **notificaciones a repartidores**. También se añadieron opciones de interacción para los usuarios, como **marcar restaurantes favoritos** y permitir la visualización de restaurantes a **usuarios anónimos**. Finalmente, se estructuraron las entidades de **pedidos**, **pagos y entregas**, y se implementó el **registro de pedidos**, lo que fortalece el flujo de trabajo de la aplicación y mejora la experiencia del usuario.
 
 <div style="text-align: center;">
-    <img src="/doc/imagenesSprint/Imagen26.jpg" alt="Ilustración 26: Captura completa del Sprint 4 Final" width="100%">
-    <p><em>Ilustración 26. Captura completa del Sprint 4 Final.</em></p>
+    <img src="/doc/imagenesSprint/Imagen26.jpg" alt="Ilustración 26: Captura completa del Sprint 4" width="100%">
+    <p><em>Ilustración 26. Captura completa del Sprint 4.</em></p>
 </div>
 
 Las tareas realizadas en este sprint son:
