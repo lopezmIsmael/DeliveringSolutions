@@ -8,6 +8,7 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.ServicioEntrega;
 import java.util.List;
 import java.util.Optional;
 
+// Clase que implementa los servicios de la entidad ServicioEntrega
 @Service
 public class ServiceServicioEntrega {
     

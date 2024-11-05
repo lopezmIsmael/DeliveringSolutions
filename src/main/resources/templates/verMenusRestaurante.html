@@ -8,15 +8,12 @@
 
 <body>
     <div class="container">
-        <!-- Mostrar el nombre del restaurante -->
         <h2>Menús del Restaurante: <span th:text="${restaurante.nombre}" th:attr="data-restaurante-id=${restaurante.idUsuario}"></span>
         </h2>
-        <!-- Si no hay menús, mostrar un mensaje -->
         <div th:if="${#lists.isEmpty(menus)}">
             <p>No hay menús disponibles en este momento.</p>
         </div>
 
-        <!-- Si hay menús, mostrarlos en una tabla -->
         <div th:if="${not #lists.isEmpty(menus)}">
             <div th:each="menu : ${menus}">
                 <h3 th:text="${menu.nombre}"></h3>
@@ -52,7 +49,6 @@
         </div>
     </div>
 
-    <!-- Contenedor del carrito de compras -->
     <div id="cart" onclick="toggleCart()">
         <h3>Carrito</h3>
         <ul id="cart-items"></ul>

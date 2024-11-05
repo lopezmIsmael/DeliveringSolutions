@@ -5,17 +5,7 @@ import java.util.Set;
 
 import jakarta.persistence.*;
 
-/**
- * Representa un cliente en el sistema con un identificador, contraseña,
- * tipoUsuario, nombre, apellido y dni.
- * 
- * @author Jorge López Gómez
- * @author Ismael López Marín
- * @author Pablo Verdúguez Gervaso
- * @author Marco Muñoz García
- * @version 1.0
- */
-
+// Entidad que representa la tabla Cliente en la base de datos
 @Entity
 @PrimaryKeyJoinColumn(name = "idUsuario")
 public class Cliente extends Usuario {
@@ -33,20 +23,10 @@ public class Cliente extends Usuario {
     @JoinTable(name = "cliente_restaurante_favoritos", joinColumns = @JoinColumn(name = "idCliente"), inverseJoinColumns = @JoinColumn(name = "idRestaurante"))
     private Set<Restaurante> favoritos = new HashSet<>();
 
+    // Constructores
     public Cliente() {
     }
 
-    /**
-     * Constructor para crear un cliente con un identificador, contraseña,
-     * tipoUsuario, nombre, apellido y email específicos.
-     *
-     * @param idUsuario   El identificador único del usuario.
-     * @param pass        La contraseña del usuario.
-     * @param tipoUsuario El tipoUsuario del usuario en el sistema.
-     * @param nombre      El nombre del cliente.
-     * @param apellido    El apellido del cliente.
-     * @param dni         El dni del cliente.
-     */
     public Cliente(String idUsuario, String pass, String tipoUsuario, String nombre, String apellido, String dni) {
         super(idUsuario, pass, tipoUsuario);
         this.nombre = nombre;
@@ -54,8 +34,7 @@ public class Cliente extends Usuario {
         this.dni = dni;
     }
 
-    // Getters y setters para los atributos específicos de Cliente
-
+    // Getters y Setters
     public String getNombre() {
         return nombre;
     }
@@ -96,6 +75,7 @@ public class Cliente extends Usuario {
         this.favoritos.remove(restaurante);
     }
 
+    // toString
     @Override
     public String toString() {
         return "Cliente [idUsuario=" + idUsuario + ", pass=" + pass + ", tipoUsuario=" + tipoUsuario + ", nombre="

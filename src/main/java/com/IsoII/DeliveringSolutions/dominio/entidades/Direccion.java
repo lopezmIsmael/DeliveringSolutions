@@ -2,6 +2,7 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import jakarta.persistence.*;
 
+// Entidad que representa la tabla Direccion en la base de datos
 @Entity
 public class Direccion {
 
@@ -29,6 +30,7 @@ public class Direccion {
     @JoinColumn(name = "idUsuario", nullable = false)
     private Usuario usuario;
 
+    // Constructores
     public Direccion() {
     }
 
@@ -41,6 +43,7 @@ public class Direccion {
         this.usuario = usuario;
     }
 
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -97,6 +100,7 @@ public class Direccion {
         this.usuario = usuario;
     }
 
+    // toString
     @Override
     public String toString() {
         return "Direccion{" +

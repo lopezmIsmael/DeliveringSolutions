@@ -3,50 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Gestión del Pedido</title>
-    <style>
-        .container {
-            width: 50%;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group select,
-        .form-group input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .btn {
-            padding: 10px 15px;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="/css/GestionPedido.css">
 </head>
 <body>
 <div class="container">
     <h2>Gestión del Pedido</h2>
 
-    <!-- Mensaje de confirmación o error -->
     <div th:if="${success}" style="color: green;" th:text="${success}"></div>
     <div th:if="${error}" style="color: red;" th:text="${error}"></div>
 
-    <!-- Información del pedido -->
     <div>
         <p><strong>Restaurante:</strong> <span th:text="${pedido.restaurante.nombre}"></span></p>
         <p><strong>Dirección de entrega:</strong> <span th:text="|${direccion.calle}, ${direccion.numero}|"></span></p>
@@ -54,7 +19,6 @@
         <p><strong>Estado actual:</strong> <span th:text="${pedido.estadoPedido}"></span></p>
     </div>
 
-    <!-- Formulario para actualizar el estado del pedido -->
     <form th:action="@{/repartidores/actualizarEstado/{id}(id=${pedido.idPedido})}" method="post">
         <div class="form-group">
             <label for="estado">Cambiar estado del pedido:</label>

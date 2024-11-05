@@ -3,7 +3,6 @@ package com.IsoII.DeliveringSolutions.dominio.controladores;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,29 +24,20 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
-import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
-import com.IsoII.DeliveringSolutions.persistencia.ClienteDAO;
-import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
 
 import jakarta.servlet.http.HttpSession;
 
-import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
-import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceClient;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
 
+// Controlador de la entidad Cliente
 @Controller
 @RequestMapping("/clientes")
 public class GestorCliente {
 
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
-
-    @Autowired
-    private ClienteDAO clienteDAO;
-
-    @Autowired
-    private RestauranteDAO restauranteDAO;
 
     @Autowired
     private ServiceCartaMenu serviceCartaMenu;
@@ -59,30 +49,29 @@ public class GestorCliente {
     private ServiceClient serviceClient;
 
     @Autowired
-    private ItemMenuDAO itemMenuDAO;
+    private ServiceRestaurant serviceRestaurant;
 
-    // ************************************************** GETMAPPING
-    // ********************************************** */
-    // Método que devuelve una lista de todos los clientes
+    // Método que muestra la página principal de la aplicación
     @GetMapping("/findAll")
     @ResponseBody
     public List<Cliente> findAll() {
-        return clienteDAO.findAll();
+        return serviceClient.findAll();
     }
 
     // Método que muestra el formulario de registro de cliente
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
-        return "Pruebas-RegisterClient"; // Nombre del archivo HTML sin la extensión
+        return "Pruebas-RegisterClient";
     }
 
     // Método que busca un solo cliente por su id
     @GetMapping("/findById/{id}")
     @ResponseBody
     public Cliente findById(@PathVariable String id) {
-        return clienteDAO.findById(id).orElse(null);
+        return serviceClient.findById(id).orElse(null);
     }
 
+    // Método que busca un solo cliente por su nombre
     @GetMapping("/verRestaurantes")
     public String verRestaurantes(@RequestParam(value = "favoritos", required = false) String favoritosParam,
             Model model, HttpSession session) {
@@ -96,44 +85,40 @@ public class GestorCliente {
 
         if (vistaFavoritos) {
             if (usuario != null) {
-                Cliente cliente = clienteDAO.findById(usuario.getIdUsuario()).orElse(null);
+                Cliente cliente = serviceClient.findById(usuario.getIdUsuario()).orElse(null);
                 if (cliente != null) {
                     restaurantes = new ArrayList<>(cliente.getFavoritos());
-                    model.addAttribute("cliente", cliente); // Agregamos el cliente al modelo
+                    model.addAttribute("cliente", cliente);
                 } else {
                     restaurantes = new ArrayList<>();
                 }
             } else {
-                return "redirect:/"; // Redirige si el usuario no está autenticado
+                return "redirect:/";
             }
         } else {
-            restaurantes = restauranteDAO.findAll();
+            restaurantes = serviceRestaurant.findAll();
         }
 
         model.addAttribute("restaurantes", restaurantes);
         return "verRestaurantes";
     }
 
+    // Método que lista todos los restaurantes
     @GetMapping("/listar")
     public String listarRestaurantes(Model model) {
-        // Obtener todos los restaurantes de la base de datos
-        List<Restaurante> restaurantes = restauranteDAO.findAll();
-
-        // Agregar la lista de restaurantes al modelo para que Thymeleaf pueda acceder a
-        // ella
+        List<Restaurante> restaurantes = serviceRestaurant.findAll();
         model.addAttribute("restaurantes", restaurantes);
-
-        // Retornar la vista "verRestaurantes"
-        return "verRestaurantes"; // Nombre del archivo Thymeleaf
+        return "verRestaurantes";
     }
 
+    // Método que filtra los restaurantes por nombre
     @GetMapping("/filtrar")
     public String filtrarRestaurantes(@RequestParam(required = false) String nombre, Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
         model.addAttribute("usuario", usuario);
-        model.addAttribute("vistaFavoritos", false); // Filtrar en "todos" por defecto
+        model.addAttribute("vistaFavoritos", false);
 
-        List<Restaurante> restaurantes = restauranteDAO.findAll();
+        List<Restaurante> restaurantes = serviceRestaurant.findAll();
         if (nombre != null && !nombre.trim().isEmpty()) {
             restaurantes = restaurantes.stream()
                     .filter(r -> r.getNombre() != null && r.getNombre().toLowerCase().contains(nombre.toLowerCase()))
@@ -144,12 +129,11 @@ public class GestorCliente {
         return "verRestaurantes";
     }
 
+    // Método que muestra los detalles de un restaurante
     @GetMapping("/verMenusRestaurante/{id}")
     public String verMenusRestaurante(@PathVariable String id, Model model) {
-        // Buscar el restaurante por su idUsuario
-        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(id);
+        Optional<Restaurante> optionalRestaurante = serviceRestaurant.findById(id);
 
-        // Si el restaurante existe, pasarlo al modelo
         if (optionalRestaurante.isPresent()) {
             Restaurante restaurante = optionalRestaurante.get();
             List<CartaMenu> menus = serviceCartaMenu.findByRestaurante(restaurante);
@@ -162,13 +146,14 @@ public class GestorCliente {
             model.addAttribute("restaurante", restaurante);
             model.addAttribute("menus", menus);
 
-            return "verMenusRestaurante"; // Nombre de la vista
+            return "verMenusRestaurante";
         } else {
             model.addAttribute("error", "Restaurante no encontrado");
-            return "error"; // Vista de error si no se encuentra el restaurante
+            return "error";
         }
     }
 
+    // Método que edita los datos de un cliente
     @GetMapping("/editarDatos")
     public String editarDatos(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
@@ -185,44 +170,43 @@ public class GestorCliente {
         }
         model.addAttribute("direccion", direccionOptional);
 
-        Cliente cliente = clienteDAO.findById(usuario.getIdUsuario()).orElse(null);
         model.addAttribute("cliente", usuario);
 
         System.out.println("<<DIRECCION>>: " + direccionOptional);
 
-        return "editarDatosCliente"; // Vista para editar los datos del cliente
+        return "editarDatosCliente";
     }
 
+    // Método que cierra la sesión de un cliente
     @GetMapping("/logout")
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
-        session.invalidate(); // Invalida la sesión actual
+        session.invalidate();
         redirectAttributes.addFlashAttribute("mensaje", "Has cerrado sesión.");
         return "redirect:/";
     }
 
-    // ************************************************** POSTMAPPING
-    // ********************************************** */
     // Método que registra un cliente
     @PostMapping("/registrarCliente")
     public String registrarCliente(@ModelAttribute Cliente cliente) {
-        // Comprobar si 'pass' no es nulo o vacío
+
         System.out.println("Cliente recibido: " + cliente.toString());
         if (cliente.getPass() == null || cliente.getPass().isEmpty()) {
-            return "redirect:/clientes/register"; // Devuelve un error si 'pass' está vacío
+            return "redirect:/clientes/register";
         }
 
-        Cliente clienteRegistrado = clienteDAO.save(cliente);
+        Cliente clienteRegistrado = serviceClient.save(cliente);
         System.out.println("Cliente registrado: " + clienteRegistrado);
-        return "redirect:/"; // Redirige al index si el cliente se registra correctamente
+        return "redirect:/";
     }
 
     // Método que elimina un cliente por su id
     @DeleteMapping("/deleteById/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable String id) {
-        clienteDAO.deleteById(id);
+        serviceClient.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // Método que implementa la funcionalidad de añadir un restaurante a favoritos
     @PostMapping("/toggleFavorito/{id}")
     public String toggleFavorito(@PathVariable String id, HttpSession session,
             @RequestParam(value = "favoritos", required = false) String favoritosParam) {
@@ -231,22 +215,22 @@ public class GestorCliente {
         System.out.println("<<USUARIO>> toogleFavorito Postmapping: " + usuario);
 
         if (usuario == null) {
-            return "redirect:/"; // Redirige si el usuario no está autenticado
+            return "redirect:/";
         }
 
-        Cliente cliente = clienteDAO.findById(usuario.getIdUsuario()).orElse(null);
+        Cliente cliente = serviceClient.findById(usuario.getIdUsuario()).orElse(null);
         if (cliente == null) {
-            return "redirect:/"; // Redirige si el cliente no existe
+            return "redirect:/";
         }
 
-        Restaurante restaurante = restauranteDAO.findById(id).orElse(null);
+        Restaurante restaurante = serviceRestaurant.findById(id).orElse(null);
         if (restaurante != null) {
             if (cliente.getFavoritos().contains(restaurante)) {
                 cliente.removeFavorito(restaurante);
             } else {
                 cliente.addFavorito(restaurante);
             }
-            clienteDAO.save(cliente);
+            serviceClient.save(cliente);
         }
 
         boolean vistaFavoritos = "true".equalsIgnoreCase(favoritosParam);
@@ -254,28 +238,30 @@ public class GestorCliente {
         return "redirect:" + redirectUrl;
     }
 
+    // Método que muestra los clientes registrados
     @GetMapping("/mostrarClientes")
     public String mostrarClientes(Model model) {
         List<Cliente> clientes = serviceClient.findAll();
         if (clientes != null && !clientes.isEmpty()) {
             model.addAttribute("clientes", clientes);
-            return "/administrador/ListaClientes"; // Nombre del archivo HTML sin la extensión
+            return "/administrador/ListaClientes";
         } else {
             model.addAttribute("error", "Clientes no encontrados");
-            return "error"; // Vista de error si no se encuentran clientes
+            return "error";
         }
     }
 
+    // Método que muestra los detalles de un cliente
     @GetMapping("/mostrarCliente/{id}")
     public String mostrarCliente(@PathVariable String id, Model model) {
         Optional<Cliente> optionalCliente = serviceClient.findById(id);
         if (optionalCliente.isPresent()) {
             Cliente cliente = optionalCliente.get();
             model.addAttribute("cliente", cliente);
-            return "/administrador/VerCliente"; // Nombre del archivo HTML sin la extensión
+            return "/administrador/VerCliente";
         } else {
             model.addAttribute("error", "Cliente no encontrado");
-            return "error"; // Vista de error si no se encuentra el cliente
+            return "error";
         }
     }
 }

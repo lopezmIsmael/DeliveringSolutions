@@ -1,6 +1,5 @@
 package com.IsoII.DeliveringSolutions.dominio.controladores;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,24 +17,17 @@ import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
 import com.IsoII.DeliveringSolutions.dominio.service.ServicePedido;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceRepartidor;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceServicioEntrega;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceZona;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Pedido;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Repartidor;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ServicioEntrega;
-import com.IsoII.DeliveringSolutions.persistencia.RepartidorDAO;
-import com.IsoII.DeliveringSolutions.persistencia.ZonaDAO;
-
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/repartidores")
 public class GestorRepartidor {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
-
-    @Autowired
-    private RepartidorDAO repartidorDAO;
-    @Autowired
-    private ZonaDAO zonaDAO;
 
     @Autowired
     private ServicePedido servicePedido;
@@ -49,35 +41,35 @@ public class GestorRepartidor {
     @Autowired
     private ServiceServicioEntrega serviceServicioEntrega;
 
-    // ************************************************** GETMAPPING
-    // ********************************************** */
+    @Autowired
+    private ServiceZona serviceZona;
 
     // Método que devuelve una lista de todos los repartidores
     @GetMapping("/findAll")
     @ResponseBody
     public List<Repartidor> findAll() {
-        return repartidorDAO.findAll();
+        return serviceRepartidor.findAll();
     }
 
     // Método que muestra el formulario de registro de repartidor
     @GetMapping("/register")
     public String mostrarFormularioRegistro(Model model) {
-        List<Zona> zonas = zonaDAO.findAll();
+        List<Zona> zonas = serviceZona.findAll();
         model.addAttribute("zonas", zonas);
-        return "Pruebas-RegisterRepartidor"; // Nombre del archivo HTML sin la extensión
+        return "Pruebas-RegisterRepartidor"; 
     }
 
     // Método que busca un solo repartidor por su id
     @GetMapping("/findById/{id}")
     @ResponseBody
     public Repartidor findById(@PathVariable String id) {
-        return repartidorDAO.findById(id).orElse(null);
+        return serviceRepartidor.findById(id).orElse(null);
     }
 
     @GetMapping("/login")
     public String mostrarFormularioLogin(Model model) {
         List<Pedido> pedidos = servicePedido.findAll();
-        Map<Pedido, Direccion> pedidosPendientes = new LinkedHashMap<>(); // Preserve order
+        Map<Pedido, Direccion> pedidosPendientes = new LinkedHashMap<>(); 
 
         for (Pedido pedido : pedidos) {
             if ("Pagado".equals(pedido.getEstadoPedido())) {
@@ -87,7 +79,7 @@ public class GestorRepartidor {
         }
 
         model.addAttribute("pedidosPendientes", pedidosPendientes);
-        return "GestorRepartidor"; // Ensure this matches your template name
+        return "GestorRepartidor"; 
     }
 
     @GetMapping("/gestionar/{id}")
@@ -96,7 +88,7 @@ public class GestorRepartidor {
         Direccion direccion = serviceDireccion.findByUsuario(pedido.getCliente());
         model.addAttribute("pedido", pedido);
         model.addAttribute("direccion", direccion);
-        return "GestionPedido"; // Ensure this matches your template name
+        return "GestionPedido"; 
     }
 
     @GetMapping("/calcularTiempos/{id}")
@@ -120,21 +112,12 @@ public class GestorRepartidor {
         long tiempoRecepcion = servicioEntrega.getFechaRecepcion();
         long tiempoEntrega = servicioEntrega.getFechaEntrega();
         long tiempoTotal = tiempoEntrega - tiempoRecepcion;
-
-        // Calcular eficiencia repartidor
-        // Si tiempoTotal < 30 minutos, eficiencia = 5 estrellas
-        // Si tiempoTotal < 1 hora, eficiencia = 4 estrellas
-        // Si tiempoTotal < 1:15 horas, eficiencia = 3 estrellas
-        // Si tiempoTotal < 1:30 horas, eficiencia = 2 estrellas
-        // Si tiempoTotal > 1:30 horas, eficiencia = 1 estrella
         int eficiencia = 0;
 
-        // Convierte tiempoTotal de milisegundos a horas, minutos y segundos
         long segundos = (tiempoTotal / 1000) % 60;
         long minutos = (tiempoTotal / (1000 * 60)) % 60;
         long horas = (tiempoTotal / (1000 * 60 * 60)) % 24;
 
-        // Crea una cadena formateada
         String tiempoTotalFormatted = String.format("%02d:%02d:%02d", horas, minutos, segundos);
         if (tiempoTotal < 30 * 60 * 1000) {
             eficiencia = 5;
@@ -156,27 +139,24 @@ public class GestorRepartidor {
         model.addAttribute("pedido", pedido);
         model.addAttribute("repartidor", repartidor);
         model.addAttribute("servicioEntrega", servicioEntrega);
-        return "CalcularTiempos"; // Ensure this matches your template name
+        return "CalcularTiempos";
     }
 
-    // ************************************************** POSTMAPPING
-    // ********************************************** */
     // Método que registra un repartidor
     @PostMapping("/registrarRepartidor")
     public String registrarRepartidor(@ModelAttribute Repartidor repartidor, RedirectAttributes redirectAttributes) {
-        // Comprobar si 'pass' no es nulo o vacío
         System.out.println("Repartidor recibido: " + repartidor.toString());
         if (repartidor.getPass() == null || repartidor.getPass().isEmpty() || repartidor.getDni().length() != 9
                 || repartidor.getPass().length() < 6) {
             redirectAttributes.addFlashAttribute("error",
                     "La contraseña no puede estar vacía, el DNI debe tener 9 caracteres y la contraseña debe tener al menos 6 caracteres.");
-            return "redirect:/repartidores/register"; // Devuelve un error si 'pass' está vacío
+            return "redirect:/repartidores/register";
         }
 
-        Repartidor repartidorRegistrado = repartidorDAO.save(repartidor);
+        Repartidor repartidorRegistrado = serviceRepartidor.save(repartidor);
         System.out.println("Repartidor registrado: " + repartidorRegistrado);
         redirectAttributes.addFlashAttribute("success", "Repartidor registrado correctamente");
-        return "redirect:/"; // Redirige al index si el repartidor se registra correctamente
+        return "redirect:/"; 
     }
 
     // Método para actualizar el estado de un pedido
@@ -189,7 +169,6 @@ public class GestorRepartidor {
             return "redirect:/repartidores/gestionar/" + id;
         }
 
-        // Actualizar el estado del pedido
         pedido.setEstadoPedido(nuevoEstado);
         servicePedido.save(pedido);
         ServicioEntrega servicioEntrega = new ServicioEntrega();
@@ -200,15 +179,13 @@ public class GestorRepartidor {
             servicioEntrega.setPedido(pedido);
             servicioEntrega.setRepartidor((Repartidor) session.getAttribute("usuario"));
 
-            // Guardar el servicio de entrega
             serviceServicioEntrega.save(servicioEntrega);
 
-            // Redirige a una nueva pagina que calcula los tiempos
             return "redirect:/repartidores/calcularTiempos/" + id;
         }
 
         redirectAttributes.addFlashAttribute("success", "Estado del pedido actualizado correctamente.");
-        return "redirect:/repartidores/gestionar/" + id; // Redirige de nuevo a la página de gestión
+        return "redirect:/repartidores/gestionar/" + id; 
     }
 
     // Método que devuelve una lista de todos los repartidores
@@ -217,10 +194,10 @@ public class GestorRepartidor {
         List<Repartidor> repartidores = serviceRepartidor.findAll();
         if (repartidores != null && !repartidores.isEmpty()) {
             model.addAttribute("repartidores", repartidores);
-            return "/administrador/ListaRepartidores"; // Vista para listar repartidores
+            return "/administrador/ListaRepartidores"; 
         } else {
             model.addAttribute("error", "No se encontraron repartidores");
-            return "error"; // Vista de error si no se encuentran repartidores
+            return "error"; 
         }
     }
 
@@ -231,10 +208,10 @@ public class GestorRepartidor {
         if (optionalRepartidor.isPresent()) {
             Repartidor repartidor = optionalRepartidor.get();
             model.addAttribute("repartidor", repartidor);
-            return "/administrador/VerRepartidor"; // Vista para ver detalles de un repartidor
+            return "/administrador/VerRepartidor"; 
         } else {
             model.addAttribute("error", "Repartidor no encontrado");
-            return "error"; // Vista de error si no se encuentra el repartidor
+            return "error";
         }
     }
 

@@ -7,6 +7,7 @@ import com.IsoII.DeliveringSolutions.persistencia.PedidoDAO;
 import java.util.List;
 import java.util.Optional;
 
+// Clase que implementa los servicios de la entidad Pedido
 @Service
 public class ServicePedido {
     @Autowired

@@ -5,9 +5,7 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemMenu;
-import com.IsoII.DeliveringSolutions.persistencia.CartaMenuDAO;
-import com.IsoII.DeliveringSolutions.persistencia.ItemMenuDAO;
-import com.IsoII.DeliveringSolutions.persistencia.RestauranteDAO;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import java.util.List;
 import java.util.Optional;
 
+// Controlador para gestionar las cartas de menú
 @Controller
 @RequestMapping("/cartas")
 public class GestorMenu {
@@ -27,42 +26,32 @@ public class GestorMenu {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     @Autowired
-    private CartaMenuDAO cartaMenuDAO;
-
-    @Autowired
-    private ItemMenuDAO itemMenuDAO;
-
-    @Autowired
-    private RestauranteDAO restauranteDAO;
-
-    @Autowired
     private ServiceItemMenu serviceItemMenu;
 
     @Autowired
     private ServiceCartaMenu serviceCartaMenu;
 
-    // ************************************************** GETMAPPING
-    // ********************************************** */
+    @Autowired
+    private ServiceRestaurant serviceRestaurant;
 
     // Método que devuelve una lista de todas las cartas
     @GetMapping("/findAll")
     @ResponseBody
     public List<CartaMenu> findAll() {
-        return cartaMenuDAO.findAll();
+        return serviceCartaMenu.findAll();
     }
 
+    // Método que muestra el formulario de registro de carta
     @GetMapping("/register/{id}")
     public String mostrarFormularioRegistro(@PathVariable String id, Model model) {
-        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(id);
+        Optional<Restaurante> optionalRestaurante = serviceRestaurant.findById(id);
         if (optionalRestaurante.isPresent()) {
             Restaurante restaurante = optionalRestaurante.get();
 
-            // Asegurarse de que restaurante tiene idUsuario
             System.out.println("Restaurante encontrado: " + restaurante.getIdUsuario());
 
             model.addAttribute("restaurante", restaurante);
 
-            // Crear una nueva instancia de CartaMenu y establecer el restaurante
             CartaMenu cartaMenu = new CartaMenu();
             cartaMenu.setRestaurante(restaurante);
             model.addAttribute("cartaMenu", cartaMenu);
@@ -78,49 +67,46 @@ public class GestorMenu {
     @GetMapping("/findById/{id}")
     @ResponseBody
     public CartaMenu findById(@PathVariable Integer id) {
-        return cartaMenuDAO.findById(id).orElse(null);
+        return serviceCartaMenu.findById(id).orElse(null);
     }
 
     // Método que devuelve una lista de todos los items del menú
     @GetMapping("/items/findAll")
     @ResponseBody
     public List<ItemMenu> findAllItems() {
-        return itemMenuDAO.findAll();
+        return serviceItemMenu.findAll();
     }
 
     // Método que muestra el formulario de registro de item del menú
     @GetMapping("/items/register")
     public String mostrarFormularioRegistroItem(Model model) {
         model.addAttribute("itemMenu", new ItemMenu());
-        return "Pruebas-RegisterItemMenu"; // Nombre del archivo HTML sin la extensión
+        return "Pruebas-RegisterItemMenu";
     }
 
+    // Método que muestra el formulario de modificación de una carta
     @GetMapping("/modificar/{id}")
     public String mostrarFormularioModificar(@PathVariable Integer id, Model model) {
-        Optional<CartaMenu> optionalCartaMenu = cartaMenuDAO.findById(id);
+        Optional<CartaMenu> optionalCartaMenu = serviceCartaMenu.findById(id);
         if (optionalCartaMenu.isPresent()) {
             CartaMenu cartaMenu = optionalCartaMenu.get();
             model.addAttribute("cartaMenu", cartaMenu);
 
-            // Crear un nuevo ItemMenu y asignarle la cartaMenu
             ItemMenu itemMenu = new ItemMenu();
-            itemMenu.setCartamenu(cartaMenu); // Inicializar cartamenu
+            itemMenu.setCartamenu(cartaMenu);
             model.addAttribute("itemMenu", itemMenu);
 
-            // Añadir la lista de items al modelo
-            List<ItemMenu> items = itemMenuDAO.findByCartamenu(cartaMenu);
+            List<ItemMenu> items = serviceItemMenu.findByCartaMenu(cartaMenu);
             model.addAttribute("items", items);
 
             return "gestorItems";
         } else {
             model.addAttribute("error", "Carta no encontrada");
-            return "error"; // Asegúrate de tener una plantilla 'error.html'
+            return "error";
         }
     }
 
-    // ************************************************** POSTMAPPING
-    // ********************************************** */
-    // Método que registra un item del menú
+    // Método que visualiza el formulario de registro de un item
     @PostMapping("/items/registrarItem")
     public String registrarItem(@ModelAttribute ItemMenu itemMenu, Model model, RedirectAttributes redirectAttributes,
             BindingResult result) {
@@ -134,7 +120,7 @@ public class GestorMenu {
         System.out.println("\nITEM RECIBIDO: " + itemMenu.getPrecio() + "\n");
 
         Integer cartaMenuID = itemMenu.getCartamenu().getIdCarta();
-        Optional<CartaMenu> optionalCarta = cartaMenuDAO.findById(cartaMenuID);
+        Optional<CartaMenu> optionalCarta = serviceCartaMenu.findById(cartaMenuID);
 
         System.out.println("\nCARTA RECIBIDA: " + cartaMenuID + "\n");
 
@@ -156,17 +142,15 @@ public class GestorMenu {
             return "redirect:/cartas/modificar/" + cartaMenuID;
         }
 
-        // Validar el precio
         if (itemMenu.getPrecio() <= 0) {
             redirectAttributes.addFlashAttribute("error", "El precio debe ser mayor que 0");
             return "redirect:/cartas/modificar/" + cartaMenuID;
         }
 
-        // Lógica para registrar el item
-        itemMenuDAO.save(itemMenu);
+        serviceItemMenu.save(itemMenu);
         System.out.println("\nITEM REGISTRADO: " + itemMenu.toString());
         model.addAttribute("success", "Item registrado exitosamente.");
-        model.addAttribute("itemMenu", itemMenu); // Para resetear el formulario
+        model.addAttribute("itemMenu", itemMenu);
         return "redirect:/cartas/modificar/" + itemMenu.getCartamenu().getIdCarta();
     }
 
@@ -185,9 +169,8 @@ public class GestorMenu {
             return "redirect:/cartas/register";
         }
 
-        // Buscar el Restaurante en la base de datos
         String restauranteCif = cartaMenu.getRestaurante().getIdUsuario();
-        Optional<Restaurante> optionalRestaurante = restauranteDAO.findById(restauranteCif);
+        Optional<Restaurante> optionalRestaurante = serviceRestaurant.findById(restauranteCif);
         if (!optionalRestaurante.isPresent()) {
             System.out.println("Restaurante no encontrado" + restauranteCif);
             redirectAttributes.addFlashAttribute("error", "Restaurante no encontrado");
@@ -195,39 +178,36 @@ public class GestorMenu {
         }
 
         Restaurante restaurante = optionalRestaurante.get();
-        cartaMenu.setRestaurante(restaurante); // Asignar el Restaurante persistente a cartaMenu
+        cartaMenu.setRestaurante(restaurante);
 
-        // Guardar cartaMenu
         System.out.println("Carta recibida: " + cartaMenu);
-        cartaMenuDAO.save(cartaMenu);
+        serviceCartaMenu.save(cartaMenu);
         System.out.println("Carta registrada: " + cartaMenu);
         redirectAttributes.addFlashAttribute("success", "Carta registrada exitosamente.");
         return "redirect:/restaurantes/gestion/" + restauranteCif;
     }
 
-    // ************************************************** DELETEMAPPING
-    // ********************************************** */
     // Método que elimina una carta
     @DeleteMapping("/eliminarCarta/{id}")
     public ResponseEntity<CartaMenu> eliminarCarta(@PathVariable Integer id) {
-        // Comprobar si la carta existe
-        CartaMenu cartaMenu = cartaMenuDAO.findById(id).orElse(null);
+        CartaMenu cartaMenu = serviceCartaMenu.findById(id).orElse(null);
         if (cartaMenu == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Devuelve un error si la carta no existe
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        cartaMenuDAO.deleteById(id);
+        serviceCartaMenu.deleteById(id);
         return new ResponseEntity<>(cartaMenu, HttpStatus.OK);
     }
 
+    // Método que elimina un item
     @DeleteMapping("/eliminarItem/{id}")
     @ResponseBody
     public ResponseEntity<Void> eliminarItem(@PathVariable Integer id) {
         System.out.println("\nBuscando item: " + id + "\n");
-        Optional<ItemMenu> optionalItemMenu = itemMenuDAO.findById(id);
+        Optional<ItemMenu> optionalItemMenu = serviceItemMenu.findById(id);
         System.out.println("\nItem encontrado: " + optionalItemMenu + "\n");
         if (optionalItemMenu.isPresent()) {
-            itemMenuDAO.delete(optionalItemMenu.get());
+            serviceItemMenu.deleteById(optionalItemMenu.get().getIdItemMenu());
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -243,7 +223,7 @@ public class GestorMenu {
             return "/administrador/ListaItemsMenu";
         } else {
             model.addAttribute("error", "No se encontraron items");
-            return "error"; // Vista de error si no se encuentran items
+            return "error";
         }
     }
 
@@ -254,10 +234,10 @@ public class GestorMenu {
         if (optionalItem.isPresent()) {
             ItemMenu itemMenu = optionalItem.get();
             model.addAttribute("itemMenu", itemMenu);
-            return "/administrador/VerItemMenu"; // Vista para ver detalles de un item
+            return "/administrador/VerItemMenu";
         } else {
             model.addAttribute("error", "Item no encontrado");
-            return "error"; // Vista de error si no se encuentra el item
+            return "error";
         }
     }
 
@@ -267,10 +247,10 @@ public class GestorMenu {
         List<CartaMenu> cartas = serviceCartaMenu.findAll();
         if (cartas != null && !cartas.isEmpty()) {
             model.addAttribute("cartas", cartas);
-            return "/administrador/ListaMenus"; // Vista para mostrar la lista de menús
+            return "/administrador/ListaMenus";
         } else {
             model.addAttribute("error", "No se encontraron menús");
-            return "error"; // Vista de error si no hay menús
+            return "error";
         }
     }
 
@@ -280,10 +260,10 @@ public class GestorMenu {
         Optional<CartaMenu> optionalCartaMenu = serviceCartaMenu.findById(id);
         if (optionalCartaMenu.isPresent()) {
             model.addAttribute("cartaMenu", optionalCartaMenu.get());
-            return "/administrador/VerMenu"; // Vista para ver detalles de un menú
+            return "/administrador/VerMenu";
         } else {
             model.addAttribute("error", "Menú no encontrado");
-            return "error"; // Vista de error si no se encuentra el menú
+            return "error";
         }
     }
 

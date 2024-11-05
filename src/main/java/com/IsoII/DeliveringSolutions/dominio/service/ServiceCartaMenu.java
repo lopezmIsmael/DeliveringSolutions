@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+// Clase que implementa los servicios de la entidad CartaMenu
 @Service
 public class ServiceCartaMenu {
     @Autowired

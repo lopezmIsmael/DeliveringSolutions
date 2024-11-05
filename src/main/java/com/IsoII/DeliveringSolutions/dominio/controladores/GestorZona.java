@@ -15,17 +15,13 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.Zona;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ZonaCodigoPostal;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceZona;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceZonaCodigoPostal;
-import com.IsoII.DeliveringSolutions.persistencia.ZonaDAO;
-
 import org.springframework.ui.Model;
 
+// Controlador para gestionar las zonas
 @Controller
 @RequestMapping("/zona")
 public class GestorZona {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
-
-    @Autowired
-    private ZonaDAO zonaDAO;
 
     @Autowired
     private ServiceZona serviceZona;
@@ -33,32 +29,35 @@ public class GestorZona {
     @Autowired
     private ServiceZonaCodigoPostal serviceZonaCodigoPostal;
 
+    // Método para mostrar todas las zonas
     @GetMapping("/findAll")
     @ResponseBody
     public List<Zona> findAll() {
-        return zonaDAO.findAll();
+        return serviceZona.findAll();
     }
 
+    // Método para mostrar el formulario de registro de zona
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
-        return "Pruebas-RegisterZona"; // Nombre del archivo HTML sin la extensión
+        return "Pruebas-RegisterZona"; 
     }
 
+    // Método para buscar una zona por su id
     @GetMapping("/findById/{id}")
     @ResponseBody
     public Zona findById(@PathVariable Integer id) {
-        return zonaDAO.findById(id).orElse(null);
+        return serviceZona.findById(id).orElse(null);
     }
 
+    // Método para registrar una zona
     @PostMapping("/registrarZona")
     public String registrarZona(@ModelAttribute Zona zona) {
         System.out.println("Zona recibida: " + zona.toString());
         if (zona.getNombre() == null || zona.getNombre().isEmpty()) {
             return "Error";
         }
-        Zona zonaRegistrada = zonaDAO.save(zona);
+        Zona zonaRegistrada = serviceZona.save(zona);
         System.out.println("Zona registrada: " + zonaRegistrada);
-        // redirige a web ZonaCodigoPostal/register
         return "redirect:/zonaCodigoPostal/register";
 
     }
@@ -69,10 +68,10 @@ public class GestorZona {
         List<Zona> zonas = serviceZona.findAll();
         if (zonas != null && !zonas.isEmpty()) {
             model.addAttribute("zonas", zonas);
-            return "/administrador/ListaZonas"; // Vista para listar zonas
+            return "/administrador/ListaZonas"; 
         } else {
             model.addAttribute("error", "No se encontraron zonas");
-            return "error"; // Vista de error si no hay zonas
+            return "error"; 
         }
     }
 
@@ -81,7 +80,7 @@ public class GestorZona {
     public String mostrarZona(@PathVariable Integer id, Model model) {
         Optional<Zona> optionalZona = serviceZona.findById(id);
         List<ZonaCodigoPostal> zonasCodigosPostales = serviceZonaCodigoPostal.findAll();
-        List<CodigoPostal> codigosPostales = new ArrayList();
+        List<CodigoPostal> codigosPostales = new ArrayList<>();
         if (optionalZona.isPresent()) {
             Zona zona = optionalZona.get();
 
@@ -93,10 +92,10 @@ public class GestorZona {
 
             model.addAttribute("codigosPostales", codigosPostales);
             model.addAttribute("zona", zona);
-            return "/administrador/VerZona"; // Vista para detalles de zona
+            return "/administrador/VerZona"; 
         } else {
             model.addAttribute("error", "Zona no encontrada");
-            return "error"; // Vista de error si la zona no existe
+            return "error";
         }
     }
 

@@ -4,43 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Calcular Tiempos de Entrega</title>
-    <style>
-        .container {
-            width: 60%;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-
-        .section {
-            margin-bottom: 20px;
-        }
-
-        .section h2 {
-            color: #333;
-        }
-
-        .info {
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/CalcularTiempos.css">
 </head>
 
 <body>
     <div class="container">
-        <!-- Mensaje de error -->
         <div th:if="${error}" class="error" th:text="${error}"></div>
 
-        <!-- Información del pedido -->
         <div class="section">
             <h2>Información del Pedido</h2>
             <div class="info">
@@ -49,7 +19,6 @@
             </div>
         </div>
 
-        <!-- Información del repartidor -->
         <div class="section">
             <h2>Información del Repartidor</h2>
             <div class="info">
@@ -58,7 +27,6 @@
             </div>
         </div>
 
-        <!-- Información del servicio de entrega -->
         <div class="section">
             <h2>Detalles del Servicio de Entrega</h2>
             <div class="info">
@@ -71,7 +39,6 @@
             </div>
         </div>
 
-        <!-- Tiempo total -->
         <div class="section">
             <h2>Tiempo Total de Entrega</h2>
             <div class="info">
@@ -80,13 +47,10 @@
         </div>
 
 
-        <!-- Eficiencia -->
         <div class="section">
             <h2>Eficiencia del Repartidor</h2>
             <div class="info">
                 <p><strong>Eficiencia:</strong>
-                    <!-- Mostrar estrellas llenas hasta el valor de eficiencia -->
-                    <!-- Mostrar estrellas según la eficiencia -->
                     <span th:each="i : ${#numbers.sequence(1, 5)}">
                         <span th:text="${i <= repartidor.eficiencia ? '★' : '☆'}"></span>
                     </span>

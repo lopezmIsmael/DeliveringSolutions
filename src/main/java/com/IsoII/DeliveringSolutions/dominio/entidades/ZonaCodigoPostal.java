@@ -2,6 +2,7 @@ package com.IsoII.DeliveringSolutions.dominio.entidades;
 
 import jakarta.persistence.*;
 
+// Entidad que representa la tabla ZonaCodigoPostal en la base de datos
 @Entity
 public class ZonaCodigoPostal {
     @Id
@@ -16,7 +17,7 @@ public class ZonaCodigoPostal {
     @JoinColumn(name = "zona", nullable = false)
     private Zona zona;
 
-
+    // Constructores
     public ZonaCodigoPostal() {
     }
 
@@ -26,6 +27,7 @@ public class ZonaCodigoPostal {
         this.zona = zona;
     }
 
+    // Getters y Setters
     public int getId() {
         return id;
     }
@@ -46,6 +48,7 @@ public class ZonaCodigoPostal {
         this.zona = zona;
     }
 
+    // toString
     @Override
     public String toString() {
         return "ZonaCodigoPostal{" +
