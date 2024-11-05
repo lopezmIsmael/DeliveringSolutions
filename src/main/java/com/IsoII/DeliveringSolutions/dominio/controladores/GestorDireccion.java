@@ -65,10 +65,10 @@ public class GestorDireccion {
         direccion.setCodigoPostal(codigoPostal);
         direccion.setUsuario(usuarioOptional.get());
 
-        Direccion direccionRegistrada = serviceDireccion.save(direccion);
+        serviceDireccion.save(direccion);
 
         redirectAttributes.addFlashAttribute("mensaje", "Dirección registrada con éxito");
-        return "redirect:/direccion/findById/" + direccionRegistrada.getId();
+        return "redirect:/clientes/verRestaurantes";
     }
 
     // Método para encontrar una dirección por ID y mostrar su información
