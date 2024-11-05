@@ -6,9 +6,7 @@ import com.IsoII.DeliveringSolutions.persistencia.DireccionDAO;
 import com.IsoII.DeliveringSolutions.persistencia.UsuarioDAO;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

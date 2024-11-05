@@ -195,10 +195,6 @@ public class GestorPago {
         redirectAttributes.addFlashAttribute("direccionRecogida", direccionRecogida);
         redirectAttributes.addFlashAttribute("direccionEntrega", direccionEntrega);
 
-       System.out.println("<<MODELO:>>" + pedido.toString() + items.toString() + pago.toString()
-                + restaurante.toString() + cliente.toString() + total + direccionRecogida.toString()
-                + direccionEntrega.toString());
-
         return "redirect:/pago/confirmacion";
     }
 
