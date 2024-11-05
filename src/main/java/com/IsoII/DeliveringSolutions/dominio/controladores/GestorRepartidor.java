@@ -56,7 +56,7 @@ public class GestorRepartidor {
     public String mostrarFormularioRegistro(Model model) {
         List<Zona> zonas = serviceZona.findAll();
         model.addAttribute("zonas", zonas);
-        return "Pruebas-RegisterRepartidor"; 
+        return "Pruebas-RegisterRepartidor";
     }
 
     // Método que busca un solo repartidor por su id
@@ -69,26 +69,37 @@ public class GestorRepartidor {
     @GetMapping("/login")
     public String mostrarFormularioLogin(Model model) {
         List<Pedido> pedidos = servicePedido.findAll();
-        Map<Pedido, Direccion> pedidosPendientes = new LinkedHashMap<>(); 
+        Map<Pedido, Direccion> pedidosPendientes = new LinkedHashMap<>();
 
         for (Pedido pedido : pedidos) {
             if ("Pagado".equals(pedido.getEstadoPedido())) {
-                Direccion direccion = serviceDireccion.findByUsuario(pedido.getCliente());
+                List<Direccion> direcciones = serviceDireccion.findByUsuario(pedido.getCliente());
+                Direccion direccion = direcciones.isEmpty() ? null : direcciones.get(0);
                 pedidosPendientes.put(pedido, direccion);
             }
         }
 
         model.addAttribute("pedidosPendientes", pedidosPendientes);
-        return "GestorRepartidor"; 
+        return "GestorRepartidor";
     }
 
     @GetMapping("/gestionar/{id}")
     public String gestionarPedido(@PathVariable Integer id, Model model) {
         Pedido pedido = servicePedido.findById(id).orElse(null);
-        Direccion direccion = serviceDireccion.findByUsuario(pedido.getCliente());
+
+        if (pedido == null) {
+            model.addAttribute("error", "Pedido no encontrado.");
+            return "error";
+        }
+
+        List<Direccion> direcciones = serviceDireccion.findByUsuario(pedido.getCliente());
+
+        Direccion direccion = direcciones.isEmpty() ? null : direcciones.get(0); // Seleccionar la primera dirección si
+                                                                                 // existe
+
         model.addAttribute("pedido", pedido);
         model.addAttribute("direccion", direccion);
-        return "GestionPedido"; 
+        return "GestionPedido";
     }
 
     @GetMapping("/calcularTiempos/{id}")
@@ -156,7 +167,7 @@ public class GestorRepartidor {
         Repartidor repartidorRegistrado = serviceRepartidor.save(repartidor);
         System.out.println("Repartidor registrado: " + repartidorRegistrado);
         redirectAttributes.addFlashAttribute("success", "Repartidor registrado correctamente");
-        return "redirect:/"; 
+        return "redirect:/";
     }
 
     // Método para actualizar el estado de un pedido
@@ -185,7 +196,7 @@ public class GestorRepartidor {
         }
 
         redirectAttributes.addFlashAttribute("success", "Estado del pedido actualizado correctamente.");
-        return "redirect:/repartidores/gestionar/" + id; 
+        return "redirect:/repartidores/gestionar/" + id;
     }
 
     // Método que devuelve una lista de todos los repartidores
@@ -194,10 +205,10 @@ public class GestorRepartidor {
         List<Repartidor> repartidores = serviceRepartidor.findAll();
         if (repartidores != null && !repartidores.isEmpty()) {
             model.addAttribute("repartidores", repartidores);
-            return "/administrador/ListaRepartidores"; 
+            return "/administrador/ListaRepartidores";
         } else {
             model.addAttribute("error", "No se encontraron repartidores");
-            return "error"; 
+            return "error";
         }
     }
 
@@ -208,7 +219,7 @@ public class GestorRepartidor {
         if (optionalRepartidor.isPresent()) {
             Repartidor repartidor = optionalRepartidor.get();
             model.addAttribute("repartidor", repartidor);
-            return "/administrador/VerRepartidor"; 
+            return "/administrador/VerRepartidor";
         } else {
             model.addAttribute("error", "Repartidor no encontrado");
             return "error";

@@ -22,20 +22,16 @@
                 <td><input type="text" id="pass" name="pass" th:value="${cliente.pass}" readonly></td>
             </tr>
             <tr>
-                <td><label for="nombre">Nombre:</label></td>
-                <td><input type="text" id="nombre" name="nombre" th:value="${cliente.nombre}" readonly></td>
-            </tr>
-            <tr>
-                <td><label for="apellido">Apellido:</label></td>
-                <td><input type="text" id="apellido" name="apellido" th:value="${cliente.apellido}" readonly></td>
-            </tr>
-            <tr>
                 <td><label for="dni">DNI:</label></td>
                 <td><input type="text" id="dni" name="dni" th:value="${cliente.dni}" readonly></td>
             </tr>
             <tr>
                 <td><label for="direccion">Dirección:</label></td>
-                <td><input type="text" id="direccion" name="direccion" th:value="${direccion != null ? direccion.id : 'null'}" readonly></td>
+                <td>
+                    <select id="direccion" name="direccion">
+                        <option th:each="direccion : ${direcciones}" th:value="${direccion.id}" th:text="${direccion.calle + ', ' + direccion.numero + ', ' + direccion.municipio}"></option>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: center;">

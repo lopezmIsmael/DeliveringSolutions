@@ -6,9 +6,7 @@ import com.IsoII.DeliveringSolutions.persistencia.DireccionDAO;
 import com.IsoII.DeliveringSolutions.persistencia.UsuarioDAO;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,16 +45,7 @@ public class ServiceDireccion {
         return usuarioDAO.findById(id);
     }
 
-    public Direccion findByUsuario(Usuario usuario) {
-        System.out.println("<<USUARIO>>: " + usuario);
-        String idUsuario = usuario.getIdUsuario();
-        TypedQuery<Direccion> query = entityManager.createQuery(
-                "SELECT d FROM Direccion d WHERE d.usuario.idUsuario = :idUsuario", Direccion.class);
-        query.setParameter("idUsuario", idUsuario);
-        try {
-            return query.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
+    public List<Direccion> findByUsuario(Usuario usuario) {
+        return direccionDAO.findByUsuario(usuario);
     }
 }

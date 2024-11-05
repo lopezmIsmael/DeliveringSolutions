@@ -153,7 +153,8 @@ public class GestorCliente {
         }
     }
 
-    // Método que edita los datos de un cliente
+    // Método que edita los datos de un cliente pudiendo registrar un cliente dos
+    // direcciones
     @GetMapping("/editarDatos")
     public String editarDatos(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
@@ -162,17 +163,15 @@ public class GestorCliente {
 
         model.addAttribute("usuario", usuario);
 
-        Direccion direccionOptional = serviceDireccion.findByUsuario(usuario);
+        List<Direccion> direcciones = serviceDireccion.findByUsuario(usuario);
 
-        System.out.println("<<DIRECCION>>: " + direccionOptional);
-        if (direccionOptional == null) {
-            direccionOptional = new Direccion();
+        System.out.println("<<DIRECCIONES>>: " + direcciones);
+        if (direcciones == null || direcciones.isEmpty()) {
+            direcciones = List.of(new Direccion());
         }
-        model.addAttribute("direccion", direccionOptional);
+        model.addAttribute("direcciones", direcciones);
 
         model.addAttribute("cliente", usuario);
-
-        System.out.println("<<DIRECCION>>: " + direccionOptional);
 
         return "editarDatosCliente";
     }
