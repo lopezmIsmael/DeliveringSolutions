@@ -81,10 +81,11 @@ public class GestorRestaurante {
             model.addAttribute("restaurante", restaurante);
             model.addAttribute("menus", menus);
 
-            Direccion direccion = serviceDireccion.findByUsuario(restaurante);
-
-            if (direccion != null) {
-                model.addAttribute("direccion", direccion);
+            List<Direccion> direcciones = serviceDireccion.findByUsuario(restaurante);
+            model.addAttribute("direcciones", direcciones);
+            
+            if (direcciones != null) {
+                model.addAttribute("direccion", direcciones);
             } else {
                 model.addAttribute("direccion", new Direccion());
             }
