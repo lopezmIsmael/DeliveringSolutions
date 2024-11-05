@@ -1,7 +1,9 @@
 package com.IsoII.DeliveringSolutions.dominio.controladores;
 
+import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
 import com.IsoII.DeliveringSolutions.dominio.entidades.CodigoPostal;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCodigoPostal;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
@@ -9,6 +11,7 @@ import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +48,8 @@ public class GestorDireccion {
     public String registrarDireccion(@ModelAttribute Direccion direccion,
             @RequestParam("codigoPostal") Integer codigoPostalId,
             @RequestParam("idUsuario") String idUsuario,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            HttpSession session) {
 
         if (direccion.getCalle() == null || direccion.getCalle().trim().isEmpty() ||
                 direccion.getNumero() == null || direccion.getNumero().trim().isEmpty() ||
@@ -68,7 +72,18 @@ public class GestorDireccion {
         serviceDireccion.save(direccion);
 
         redirectAttributes.addFlashAttribute("mensaje", "Dirección registrada con éxito");
-        return "redirect:/clientes/verRestaurantes";
+
+        Object usuario = session.getAttribute("usuario");
+
+        if (usuario instanceof Cliente) {
+            return "redirect:/clientes/verRestaurantes";
+        }
+        if (usuario instanceof Restaurante) {
+            Restaurante restaurante = (Restaurante) usuario;
+            return "redirect:/restaurantes/gestion/" + restaurante.getIdUsuario();
+        }
+
+        return "redirect:/";
     }
 
     // Método para encontrar una dirección por ID y mostrar su información
