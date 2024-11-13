@@ -25,4 +25,14 @@ body {
 .total {
     font-weight: bold;
     margin-top: 10px;
+    justify-content: space-between;
+    text-align: right;
+    margin: 20px 0;
+}
+
+.pago {
+    margin-top: 10px;
+    justify-content: space-between;
+    text-align: center;
+    margin: 20px 0;
 }

@@ -11,40 +11,39 @@
             <div class="header">
                 <h1>Finalizar Compra</h1>
             </div>
-                <form action="registrarPedido" method="post">
-                    <table id="tabla" class="table">
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Precio</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="item, iterStat : ${carrito}">
-                                <td>
-                                    <input type="hidden" name="itemIds" th:value="${item.idItemMenu}" />
-                                    <span th:text="${item.idItemMenu}">Id del Producto</span>
-                                    <span th:text="${item.nombre}">Nombre del Producto</span>
-                                </td>
-                                <td>
-                                    <span th:text="${item.precio}">$0.00</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h3>Total: <span th:text="${total}">$0.00</span></h3>
+            <form action="registrarPedido" method="post">
+                <table id="tabla" class="table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item, iterStat : ${carrito}">
+                            <td>
+                                <input type="hidden" name="itemIds" th:value="${item.idItemMenu}" />
+                                <span th:text="${item.nombre}">Nombre del Producto</span>
+                            </td>
+                            <td>
+                                <span th:text="${#numbers.formatDecimal(item.precio, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00€</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="info-container">
                     <h3>Restaurante: <span th:text="${restaurante.idUsuario}">$Id del restaurante</span></h3>
-                    <h2>Método de Pago</h2>
-                    <label for="metodoPago">Seleccione el método de pago:</label>
-                    <select id="metodoPago" name="metodoPago">
-                        <option value="tarjeta">Tarjeta de Crédito/Débito</option>
-                        <option value="paypal">PayPal</option>
-                    </select>
-                    <input type="hidden" name="restauranteId" th:value="${restaurante.idUsuario}"/>
-                    <button type="submit">Finalizar Compra</button>
-                </form>
-                
-            </div>
+                    <h3>Total: <span th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00€</span></h3>
+                </div>
+                <h2>Método de Pago</h2>
+                <label for="metodoPago">Seleccione el método de pago:</label>
+                <select id="metodoPago" name="metodoPago">
+                    <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                    <option value="paypal">PayPal</option>
+                </select>
+                <input type="hidden" name="restauranteId" th:value="${restaurante.idUsuario}"/>
+                <button type="submit">Finalizar Compra</button>
+            </form>
         </div>
     </body>
 </html>
