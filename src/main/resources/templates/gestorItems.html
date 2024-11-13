@@ -18,7 +18,7 @@
             <li th:each="item : ${items}" class="list-group-item d-flex justify-content-between align-items-center">
                 <span>
                     <span th:text="${item.nombre}">Nombre del Item</span> - 
-                    <span th:text="${item.precio}">Precio del Item</span> - 
+                    <span th:text="${#numbers.formatDecimal(item.precio, 1, 'POINT', 2, 'COMMA')} + ' €'">Precio del Item</span> - 
                     <span th:text="${item.tipo}">Tipo del Item</span>
                 </span>
                 <button class="btn btn-danger btn-sm" th:attr="data-id=${item.idItemMenu}" onclick="eliminarItem(this)">Eliminar</button>
