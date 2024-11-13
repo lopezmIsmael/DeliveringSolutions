@@ -58,6 +58,12 @@ Este cambio implica modificaciones en la presentación de datos y ajustes en la 
 - **Prioridad:** Baja
 - **CCB determina:** Válido
 
+### Implementacion
+Se han corregido todas las interfaces para mostrar los precios en formato europeo.
+Se ha refactorizado el proyecto para mover el pom.xml de vuelta a la raiz.
+Se han movido los precios a la derecha en todos los tickets, mejorando la visualización de los mismos.
+
+
 ## 5.2 Visualizar estado pedido
 ### Evaluación del cambio
 <div style="text-align: center;">
