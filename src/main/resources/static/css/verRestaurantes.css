@@ -19,10 +19,10 @@ html {
 }
 
 .header-left {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .header-left p {

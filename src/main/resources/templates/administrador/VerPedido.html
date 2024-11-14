@@ -18,7 +18,7 @@
                 </tr>
                 <tr>
                     <td>Fecha:</td>
-                    <td th:text="${pedido.fecha}">Fecha</td>
+                    <td th:text="${#dates.format(new java.util.Date(pedido.fecha), 'dd/MM/yyyy HH:mm')}">Fecha</td>
                 </tr>
                 <tr>
                     <td>Estado del Pedido:</td>
@@ -52,7 +52,7 @@
                 </tbody>
             </table>
 
-            <a th:href="@{/pedido/mostrarPedidos}" class="back-link">Volver a la lista de pedidos</a>
+            <a th:href="@{/clientes/verPedidos}" class="back-link">Volver a la lista de pedidos</a>
         </div>
     </div>
 </body>
