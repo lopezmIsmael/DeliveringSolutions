@@ -63,6 +63,42 @@ Se han corregido todas las interfaces para mostrar los precios en formato europe
 Se ha refactorizado el proyecto para mover el pom.xml de vuelta a la raiz.
 Se han movido los precios a la derecha en todos los tickets, mejorando la visualización de los mismos.
 
+### Revisión y cierre
+
+#### **1. Validación de los requisitos implementados**
+Se realizaron pruebas para garantizar que los precios se muestran correctamente en todas las interfaces según el formato europeo (puntos en los millares, comas en los decimales). Estas pruebas incluyeron:
+- Visualización de precios en tickets.
+- Pruebas con valores atípicos (precios muy altos, muy bajos, o con decimales).
+
+**Resultado:**  
+Los precios se muestran correctamente en todos los casos probados.
+
+---
+
+#### **2. Validación de la integridad de los datos**
+Se revisó que la modificación de los formatos no afecte la manipulación o almacenamiento de los datos. Las pruebas se realizaron en:
+- **Base de datos:** Los datos se almacenaron correctamente en la base de datos de acuerdo al formato europeo.
+- **Operaciones internas:** Los cálculos y sumas internas no arrojan valores extraños.
+
+**Resultado:**  
+Los datos en la base de datos y las operaciones internas no presentan inconsistencias.
+
+---
+
+#### **3. Revisión de código**
+Se realizó una auditoría del código para:
+- Validar que el cambio esté aislado y no afecte otras funcionalidades.
+- Confirmar que se sigan las mejores prácticas de desarrollo.
+
+**Resultado:**  
+Código revisado, aprobado y puesto en marcha al pase a producción.
+
+---
+
+#### **5. Aprobación final del Equipo de Calidad (QA)**
+El Equipo de Calidad confirma que los cambios han sido probados exhaustivamente y cumplen con los requisitos establecidos.
+
+- **Estado del Cambio:** Cerrado.
 
 ## 5.2 Visualizar estado pedido
 ### Evaluación del cambio
@@ -84,6 +120,49 @@ Implementar esta funcionalidad requerirá ajustes en la presentación de datos y
 - **Impacto:** Alto
 - **Prioridad:** Media
 - **CCB determina:** Válido
+
+### Implementacion
+Se ha creado un boton en el menu inicial del cliente que permite ver los pedidos realizados
+Se pueden ver detalles del pedido, así como actualizaciones del mismo
+
+### Revisión y cierre
+
+#### **1. Validación de los requisitos implementados**
+Se realizaron pruebas para garantizar que el estado de los pedidos se visualiza correctamente en la interfaz del cliente. Estas pruebas incluyeron:
+- Acceso al botón en el menú inicial del cliente para visualizar pedidos.
+- Verificación de los detalles del pedido, incluyendo actualizaciones en tiempo real o en intervalos definidos.
+- Validación de la claridad y comprensión de los estados mostrados.
+
+**Resultado:**  
+El estado de los pedidos se visualiza correctamente, con actualizaciones consistentes y una interfaz amigable.
+
+---
+
+#### **2. Validación de la integridad de los datos**
+Se revisó que la información mostrada en la interfaz sea consistente con la almacenada en la base de datos. Las pruebas incluyeron:
+- Actualización de los estados en la base de datos y verificación de su reflejo en la interfaz.
+- Pruebas de casos extremos, como pedidos cancelados, pendientes o completados.
+
+**Resultado:**  
+Los datos mostrados en la interfaz son precisos y consistentes con la base de datos.
+
+---
+
+#### **3. Revisión de código**
+Se realizó una auditoría del código para:
+- Validar que las actualizaciones del estado no introduzcan errores en otras funcionalidades.
+- Confirmar que se sigan las mejores prácticas de desarrollo y que el código sea escalable para futuros cambios.
+
+**Resultado:**  
+Código revisado y aprobado.
+
+---
+
+#### **5. Aprobación final del Equipo de Calidad (QA)**
+El Equipo de Calidad confirma que los cambios han sido probados exhaustivamente y cumplen con los requisitos establecidos.
+
+- **Estado del Cambio:** Cerrado.
+
 
 ## 5.3 Selección de dirección en pedido
 ### Evaluación del cambio
