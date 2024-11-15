@@ -100,9 +100,6 @@ public class GestorRepartidor {
                         pedidosPendientes.put(pedido, direccion);
                     }
                 }
-                //List<Direccion> direcciones = serviceDireccion.findByUsuario(pedido.getCliente());
-                // Direccion direccion = direcciones.isEmpty() ? null : direcciones.get(0);
-                //pedidosPendientes.put(pedido, direccion);
             }
         }
 
