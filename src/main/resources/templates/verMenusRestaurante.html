@@ -29,7 +29,7 @@
                     <tbody>
                         <tr th:each="item : ${menu.items}">
                             <td th:text="${item.nombre}"></td>
-                            <td th:text="${item.precio}"></td>
+                            <td th:text="${#numbers.formatDecimal(item.precio, 1, 'POINT', 2, 'COMMA')} + ' €'"></td>
                             <td th:text="${item.tipo}"></td>
                             <td>
                                 <form onsubmit="addToCart(event, this)">

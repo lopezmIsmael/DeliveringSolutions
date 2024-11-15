@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class ServicioEntrega {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idServicioEntrega;
 
     @Column(name = "fechaRecepcion", nullable = false, length = 10)

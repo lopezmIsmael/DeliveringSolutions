@@ -23,16 +23,29 @@ function updateCart() {
     let total = 0;
     cartItems.forEach((item, index) => {
         const li = document.createElement('li');
-        li.textContent = `${item.nombre} - $${item.precio.toFixed(2)}`;
+        li.classList.add('cart-item');
+        
+        const itemName = document.createElement('span');
+        itemName.classList.add('item-name');
+        itemName.textContent = item.nombre;
+        
+        const itemPrice = document.createElement('span');
+        itemPrice.classList.add('item-price');
+        itemPrice.textContent = ` - ${item.precio.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€`;
+        
         const removeBtn = document.createElement('button');
         removeBtn.textContent = 'Eliminar';
         removeBtn.classList.add('remove-btn');
         removeBtn.onclick = () => removeFromCart(index);
+        
+        li.appendChild(itemName);
+        li.appendChild(itemPrice);
         li.appendChild(removeBtn);
         cartItemsContainer.appendChild(li);
+        
         total += item.precio;
     });
-    cartTotalContainer.textContent = `Total: $${total.toFixed(2)}`;
+    cartTotalContainer.textContent = `Total: ${total.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€`;
 }
 
 function openCart() {

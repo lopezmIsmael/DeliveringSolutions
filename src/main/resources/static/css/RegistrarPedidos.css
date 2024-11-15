@@ -71,3 +71,13 @@ button {
 button:hover {
     background-color: #218838;
 }
+
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+}
+.info-container h3 {
+    margin: 0;
+}
