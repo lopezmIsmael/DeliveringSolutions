@@ -1,49 +1,82 @@
 <!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Registrar Pedidos</title>
-        <link rel="stylesheet" href="/css/RegistrarPedidos.css">
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <h1>Finalizar Compra</h1>
-            </div>
-            <form action="registrarPedido" method="post">
-                <table id="tabla" class="table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="item, iterStat : ${carrito}">
-                            <td>
-                                <input type="hidden" name="itemIds" th:value="${item.idItemMenu}" />
-                                <span th:text="${item.nombre}">Nombre del Producto</span>
-                            </td>
-                            <td>
-                                <span th:text="${#numbers.formatDecimal(item.precio, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00€</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="info-container">
-                    <h3>Restaurante: <span th:text="${restaurante.idUsuario}">$Id del restaurante</span></h3>
-                    <h3>Total: <span th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00€</span></h3>
-                </div>
-                <h2>Método de Pago</h2>
-                <label for="metodoPago">Seleccione el método de pago:</label>
-                <select id="metodoPago" name="metodoPago">
-                    <option value="tarjeta">Tarjeta de Crédito/Débito</option>
-                    <option value="paypal">PayPal</option>
-                </select>
-                <input type="hidden" name="restauranteId" th:value="${restaurante.idUsuario}"/>
-                <button type="submit">Finalizar Compra</button>
-            </form>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Pedidos</title>
+    <link rel="stylesheet" href="/css/RegistrarPedidos.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Finalizar Compra</h1>
         </div>
-    </body>
+        <form action="/pago/registrarPedido" method="post">
+            <table id="tabla" class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${carrito}">
+                        <td>
+                            <input type="hidden" name="itemIds" th:value="${item.idItemMenu}" />
+                            <span th:text="${item.nombre}">Nombre del Producto</span>
+                        </td>
+                        <td>
+                            <span th:text="${item.precio}">$0.00</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Total: <span th:text="${total}">$0.00</span></h3>
+            <h3>Restaurante: <span th:text="${restaurante.nombre}">Nombre del Restaurante</span></h3>
+
+            <!-- Selección de Dirección -->
+            <h2>Dirección de Envío</h2>
+            <div id="direccionEnvio">
+                <label for="direccion">Seleccione una dirección:</label>
+                <select id="direccion" name="direccion" th:if="${#lists.size(direcciones) > 0}">
+                    <option th:each="direccion : ${direcciones}" th:value="${direccion.id}"
+                        th:text="${direccion.calle + ', ' + direccion.numero + ', ' + direccion.municipio}">
+                    </option>
+                </select>
+                <p th:if="${#lists.isEmpty(direcciones)}">No hay direcciones disponibles. <a href="/direccion/formularioRegistro">Registre una nueva dirección</a>.</p>
+                <div class="accionesDireccion">
+                    <button type="button" onclick="location.href='/direccion/formularioRegistro'">
+                        Registrar Nueva Dirección
+                    </button>
+                </div>
+            </div>
+
+            <!-- Método de Pago -->
+            <h2>Método de Pago</h2>
+            <label for="metodoPago">Seleccione el método de pago:</label>
+            <select id="metodoPago" name="metodoPago">
+                <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                <option value="paypal">PayPal</option>
+            </select>
+
+            <input type="hidden" name="restauranteId" th:value="${restaurante.idUsuario}" />
+            <button type="submit">Finalizar Compra</button>
+        </form>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const direccion = document.getElementById('direccion').value;
+            const metodoPago = document.getElementById('metodoPago').value;
+
+            if (!direccion || !metodoPago) {
+                e.preventDefault();
+                alert('Por favor, seleccione una dirección y un método de pago.');
+            }
+        });
+    </script>
+</body>
+
 </html>

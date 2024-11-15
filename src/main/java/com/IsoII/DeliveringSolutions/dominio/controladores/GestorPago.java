@@ -69,49 +69,67 @@ public class GestorPago {
 
     // Método para registrar un pago
     @PostMapping("/register")
-    public String mostrarFormularioRegistro(@RequestParam("cartData") String cartData,
-            @RequestParam("restauranteId") String restauranteId, Model model, HttpSession session) {
+    public String mostrarFormularioRegistro(
+            @RequestParam("cartData") String cartData,
+            @RequestParam("restauranteId") String restauranteId,
+            Model model,
+            HttpSession session) {
+
         System.out.println("<<ESTOY EN REGISTER: GestorPago>>");
         System.out.println("<<RestauranteId>>: " + restauranteId);
         System.out.println("<<CartData>>: " + cartData);
 
-        Restaurante restaurante = new Restaurante();
+        // Validar usuario en sesión
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-
         if (usuario == null) {
+            System.out.println("Usuario no autenticado. Redirigiendo al login.");
             return "redirect:/usuarios/login";
         }
 
-        if (serviceDireccion.findByUsuario(usuario) == null) {
+        // Obtener las direcciones del cliente
+        List<Direccion> direccionesCliente = serviceDireccion.findByUsuario(usuario);
+        if (direccionesCliente == null || direccionesCliente.isEmpty()) {
+            System.out.println("No se encontraron direcciones para el cliente. Redirigiendo a formulario de registro.");
             return "redirect:/direccion/formularioRegistro";
         }
+        System.out.println("Direcciones del cliente obtenidas: " + direccionesCliente);
 
-        restaurante = serviceRestaurant.findById(restauranteId).orElse(null);
+        // Añadir direcciones al modelo
+        model.addAttribute("direcciones", direccionesCliente);
 
+        // Obtener restaurante
+        Restaurante restaurante = serviceRestaurant.findById(restauranteId).orElse(null);
+        if (restaurante == null) {
+            System.out.println("Restaurante no encontrado. ID: " + restauranteId);
+            model.addAttribute("error", "El restaurante no existe.");
+            return "error";
+        }
         System.out.println("<<Restaurante>>: " + restaurante.getNombre());
+
+        // Procesar carrito de compras
+        List<ItemMenu> carrito = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        List<ItemMenu> carrito = new ArrayList<>();
 
         try {
             carrito = objectMapper.readValue(cartData, new TypeReference<List<ItemMenu>>() {
             });
         } catch (Exception e) {
+            System.out.println("Error al parsear el carrito: " + e.getMessage());
             e.printStackTrace();
+            model.addAttribute("error", "Hubo un problema al procesar el carrito.");
+            return "error";
         }
 
         System.out.println("<<Carrito size>>: " + carrito.size());
-        for (ItemMenu item : carrito) {
-            System.out.println("<<Item>>: " + item.getNombre() + ", Precio: " + item.getPrecio());
-        }
-
         double totalPrice = 0;
         for (ItemMenu item : carrito) {
+            System.out.println("<<Item>>: " + item.getNombre() + ", Precio: " + item.getPrecio());
             totalPrice += item.getPrecio();
         }
         System.out.println("<<Total Price>>: " + totalPrice);
 
+        // Agregar datos al modelo
         model.addAttribute("restaurante", restaurante);
         model.addAttribute("carrito", carrito);
         model.addAttribute("total", totalPrice);
@@ -131,17 +149,31 @@ public class GestorPago {
     public String registrarPedido(
             @RequestParam("metodoPago") String metodoPago,
             @RequestParam("restauranteId") String restauranteId,
+            @RequestParam("direccion") Long direccionId,
             HttpSession session,
             @RequestParam("itemIds") List<Integer> itemIds,
-            Model model,
             RedirectAttributes redirectAttributes) {
 
         System.out.println("<<ESTOY EN REGISTRAR PEDIDO: GestorPago>>");
         System.out.println("<<Metodo de pago>>: " + metodoPago);
         System.out.println("<<RestauranteId>>: " + restauranteId);
+        System.out.println("<<Direccion seleccionada>>: " + direccionId);
 
         Cliente cliente = (Cliente) session.getAttribute("usuario");
+        if (cliente == null) {
+            System.out.println("Error: Cliente no autenticado");
+            return "redirect:/usuarios/login";
+        }
+
         Restaurante restaurante = serviceRestaurant.findById(restauranteId).orElse(null);
+        if (restaurante == null) {
+            System.out.println("Error: Restaurante no encontrado");
+            return "redirect:/error";
+        }
+
+        Direccion direccionSeleccionada = serviceDireccion.findById(direccionId)
+                .orElseThrow(() -> new IllegalArgumentException("Dirección no válida seleccionada: " + direccionId));
+        System.out.println("<<Dirección seleccionada encontrada>>: " + direccionSeleccionada);
 
         Pedido pedido = new Pedido();
         pedido.setFecha(System.currentTimeMillis());
@@ -150,7 +182,8 @@ public class GestorPago {
         pedido.setRestaurante(restaurante);
 
         servicePedido.save(pedido);
-        System.out.println("<<Pedido registrado>>: " + pedido.toString());
+        System.out.println("<<Pedido registrado>>: " + pedido);
+
         Double total = 0.0;
         List<ItemMenu> items = new ArrayList<>();
         for (Integer itemId : itemIds) {
@@ -160,11 +193,9 @@ public class GestorPago {
                 ItemPedido itemPedido = new ItemPedido();
                 items.add(optionalItem.get());
                 total += optionalItem.get().getPrecio();
-                System.out.println("<<Item encontrado>>: " + optionalItem.toString());
                 itemPedido.setItemMenu(optionalItem.get());
                 itemPedido.setPedido(pedido);
                 serviceItemPedido.save(itemPedido);
-                System.out.println("<<ItemPedido registrado>>: " + itemPedido.toString());
             }
         }
 
@@ -173,18 +204,22 @@ public class GestorPago {
         pago.setPedido(pedido);
         servicePago.save(pago);
 
-        System.out.println("<<Pago registrado>>: " + pago.toString());
+        System.out.println("<<Pago registrado>>: " + pago);
 
         pedido.setEstadoPedido("Pagado");
         servicePedido.save(pedido);
 
+        // Si no hay dirección de recogida, usa un valor predeterminado o null-check
         Usuario usuarioRestaurante = serviceUsuario.findById(restaurante.getIdUsuario()).orElse(null);
-        List<Direccion> direccionesRecogida = serviceDireccion.findByUsuario(usuarioRestaurante);
-        Direccion direccionRecogida = !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
-        
-        Usuario usuarioCliente = serviceUsuario.findById(cliente.getIdUsuario()).orElse(null);
-        List<Direccion> direccionesEntrega = serviceDireccion.findByUsuario(usuarioCliente);
-        Direccion direccionEntrega = !direccionesEntrega.isEmpty() ? direccionesEntrega.get(0) : null;
+        Direccion direccionRecogida = usuarioRestaurante != null
+                ? serviceDireccion.findByUsuario(usuarioRestaurante).stream().findFirst().orElse(null)
+                : null;
+
+        // Asegurar que no sea null
+        if (direccionRecogida == null) {
+            direccionRecogida = new Direccion();
+            direccionRecogida.setCalle("Dirección no definida");
+        }
 
         redirectAttributes.addFlashAttribute("pedido", pedido);
         redirectAttributes.addFlashAttribute("items", items);
@@ -193,7 +228,7 @@ public class GestorPago {
         redirectAttributes.addFlashAttribute("cliente", cliente);
         redirectAttributes.addFlashAttribute("total", total);
         redirectAttributes.addFlashAttribute("direccionRecogida", direccionRecogida);
-        redirectAttributes.addFlashAttribute("direccionEntrega", direccionEntrega);
+        redirectAttributes.addFlashAttribute("direccionEntrega", direccionSeleccionada);
 
         return "redirect:/pago/confirmacion";
     }
