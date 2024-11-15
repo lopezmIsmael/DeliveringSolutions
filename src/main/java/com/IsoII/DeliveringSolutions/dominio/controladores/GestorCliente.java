@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import com.IsoII.DeliveringSolutions.dominio.entidades.CartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
+import com.IsoII.DeliveringSolutions.dominio.entidades.Pedido;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
 
@@ -30,6 +31,7 @@ import jakarta.servlet.http.HttpSession;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceCartaMenu;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceClient;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
+import com.IsoII.DeliveringSolutions.dominio.service.ServicePedido;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
 
 // Controlador de la entidad Cliente
@@ -50,6 +52,9 @@ public class GestorCliente {
 
     @Autowired
     private ServiceRestaurant serviceRestaurant;
+
+    @Autowired
+    private ServicePedido servicePedido;
 
     // Método que muestra la página principal de la aplicación
     @GetMapping("/findAll")
@@ -182,6 +187,28 @@ public class GestorCliente {
         session.invalidate();
         redirectAttributes.addFlashAttribute("mensaje", "Has cerrado sesión.");
         return "redirect:/";
+    }
+
+    // Metodo que muestra los pedidos de ese cliente
+    @GetMapping("/verPedidos")
+    public String verPedidos(Model model, HttpSession session) {
+        List<Pedido> pedidos = servicePedido.findAll();
+        List<Pedido> pedidosCliente = new ArrayList<>();
+        for (Pedido pedido : pedidos) {
+            // Si el pedido pertenece al cliente, mostrar
+            if (pedido.getCliente().getIdUsuario().equals(((Usuario) session.getAttribute("usuario")).getIdUsuario())) {
+                pedidosCliente.add(pedido);
+            }
+        }
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        Cliente cliente = serviceClient.findById(usuario.getIdUsuario()).orElse(null);
+        if (cliente == null) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("cliente", cliente);
+        model.addAttribute("pedidos", pedidosCliente);
+        return "verPedidosCliente";
     }
 
     // Método que registra un cliente

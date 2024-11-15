@@ -8,12 +8,14 @@
 </head>
 
 <body>
-    <div class="container" th:with="vistaFavoritos=${vistaFavoritos != null ? vistaFavoritos : false}" th:attr="data-vista-favoritos=${vistaFavoritos}">
+    <div class="container" th:with="vistaFavoritos=${vistaFavoritos != null ? vistaFavoritos : false}"
+        th:attr="data-vista-favoritos=${vistaFavoritos}">
         <div class="header-left" th:if="${usuario != null}">
-            <p>¡Hola, <span th:text="${usuario.idUsuario}"></span>!</p>
+            <h3>¡Hola, <span th:text="${usuario.idUsuario}"></span>!</h3>
             <div class="user-actions">
                 <button onclick="location.href='/clientes/editarDatos'" class="user-action-button">Editar datos</button>
                 <button onclick="location.href='/clientes/logout'" class="user-action-button">Cerrar sesión</button>
+                <button onclick="location.href='/clientes/verPedidos'" class="user-action-button">Ver mis pedidos</button>
             </div>
         </div>
 
