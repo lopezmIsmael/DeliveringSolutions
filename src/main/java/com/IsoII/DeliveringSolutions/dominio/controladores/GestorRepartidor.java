@@ -13,11 +13,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.Zona;
+import com.IsoII.DeliveringSolutions.dominio.entidades.ZonaCodigoPostal;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
 import com.IsoII.DeliveringSolutions.dominio.service.ServicePedido;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceRepartidor;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceServicioEntrega;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceZona;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceZonaCodigoPostal;
+import com.IsoII.DeliveringSolutions.dominio.entidades.CodigoPostal;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Pedido;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Repartidor;
@@ -44,6 +47,9 @@ public class GestorRepartidor {
     @Autowired
     private ServiceZona serviceZona;
 
+    @Autowired
+    private ServiceZonaCodigoPostal serviceZonaCodigoPostal;
+
     // Método que devuelve una lista de todos los repartidores
     @GetMapping("/findAll")
     @ResponseBody
@@ -67,15 +73,33 @@ public class GestorRepartidor {
     }
 
     @GetMapping("/login")
-    public String mostrarFormularioLogin(Model model) {
+    public String mostrarFormularioLogin(Model model, HttpSession session) {
+        Repartidor repartidor = (Repartidor) session.getAttribute("usuario");
+        if (repartidor == null) {
+            model.addAttribute("error", "Debe iniciar sesión primero.");
+            return "error";
+        }
+
+        List<ZonaCodigoPostal> zonaCodigosPostales = serviceZonaCodigoPostal.findAll();
+        List<CodigoPostal> codigosPostales = new java.util.ArrayList<>();
+
+        for (ZonaCodigoPostal zcp : zonaCodigosPostales) {
+            if (repartidor.getZona().getId() == zcp.getZona().getId()) {
+                codigosPostales.add(zcp.getCodigoPostal());
+            }
+        }
+
         List<Pedido> pedidos = servicePedido.findAll();
         Map<Pedido, Direccion> pedidosPendientes = new LinkedHashMap<>();
 
         for (Pedido pedido : pedidos) {
             if ("Pagado".equals(pedido.getEstadoPedido())) {
-                List<Direccion> direcciones = serviceDireccion.findByUsuario(pedido.getCliente());
-                Direccion direccion = direcciones.isEmpty() ? null : direcciones.get(0);
-                pedidosPendientes.put(pedido, direccion);
+                for (CodigoPostal cp : codigosPostales) {
+                    Direccion direccion = serviceDireccion.findByUsuario(pedido.getCliente()).get(0);
+                    if (direccion.getCodigoPostal().equals(cp)) {
+                        pedidosPendientes.put(pedido, direccion);
+                    }
+                }
             }
         }
 
