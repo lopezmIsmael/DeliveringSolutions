@@ -1,6 +1,7 @@
 package com.IsoII.DeliveringSolutions.dominio.controladores;
 
 import com.IsoII.DeliveringSolutions.dominio.entidades.Cliente;
+import com.IsoII.DeliveringSolutions.dominio.entidades.CodigoPostal;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Direccion;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemMenu;
 import com.IsoII.DeliveringSolutions.dominio.entidades.ItemPedido;
@@ -13,6 +14,7 @@ import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceUser;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemPedido;
 import com.IsoII.DeliveringSolutions.dominio.service.ServicePago;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceCodigoPostal;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
 import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemMenu;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -59,6 +61,9 @@ public class GestorPago {
 
     @Autowired
     private ServicePago servicePago;
+
+    @Autowired
+    private ServiceCodigoPostal serviceCodigoPostal;
 
     // Método para listar todos los pagos
     @GetMapping("/findAll")
@@ -112,9 +117,15 @@ public class GestorPago {
         }
         System.out.println("<<Total Price>>: " + totalPrice);
 
+        List<Direccion> direcciones = serviceDireccion.findByUsuario(usuario);
+        List<CodigoPostal> codigosPostales = serviceCodigoPostal.findAll();
+
+        model.addAttribute("direcciones", direcciones);
         model.addAttribute("restaurante", restaurante);
         model.addAttribute("carrito", carrito);
         model.addAttribute("total", totalPrice);
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("codigosPostales", codigosPostales);
 
         return "RegistrarPedidos";
     }
@@ -131,6 +142,7 @@ public class GestorPago {
     public String registrarPedido(
             @RequestParam("metodoPago") String metodoPago,
             @RequestParam("restauranteId") String restauranteId,
+            @RequestParam("direccion") Long direccion,
             HttpSession session,
             @RequestParam("itemIds") List<Integer> itemIds,
             Model model,
@@ -139,6 +151,7 @@ public class GestorPago {
         System.out.println("<<ESTOY EN REGISTRAR PEDIDO: GestorPago>>");
         System.out.println("<<Metodo de pago>>: " + metodoPago);
         System.out.println("<<RestauranteId>>: " + restauranteId);
+        System.out.println("<<DireccionId>>: " + direccion);
 
         Cliente cliente = (Cliente) session.getAttribute("usuario");
         Restaurante restaurante = serviceRestaurant.findById(restauranteId).orElse(null);
@@ -181,10 +194,9 @@ public class GestorPago {
         Usuario usuarioRestaurante = serviceUsuario.findById(restaurante.getIdUsuario()).orElse(null);
         List<Direccion> direccionesRecogida = serviceDireccion.findByUsuario(usuarioRestaurante);
         Direccion direccionRecogida = !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
-        
-        Usuario usuarioCliente = serviceUsuario.findById(cliente.getIdUsuario()).orElse(null);
-        List<Direccion> direccionesEntrega = serviceDireccion.findByUsuario(usuarioCliente);
-        Direccion direccionEntrega = !direccionesEntrega.isEmpty() ? direccionesEntrega.get(0) : null;
+        System.out.println("<<Direccion de recogida>>: " + direccionRecogida.toString());
+
+        Direccion direccionEntrega = serviceDireccion.findById(direccion).orElse(null);
 
         redirectAttributes.addFlashAttribute("pedido", pedido);
         redirectAttributes.addFlashAttribute("items", items);

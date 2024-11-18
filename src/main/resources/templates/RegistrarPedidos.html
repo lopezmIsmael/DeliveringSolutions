@@ -1,49 +1,92 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Registrar Pedidos</title>
-        <link rel="stylesheet" href="/css/RegistrarPedidos.css">
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <h1>Finalizar Compra</h1>
-            </div>
-            <form action="registrarPedido" method="post">
-                <table id="tabla" class="table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th>Precio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="item, iterStat : ${carrito}">
-                            <td>
-                                <input type="hidden" name="itemIds" th:value="${item.idItemMenu}" />
-                                <span th:text="${item.nombre}">Nombre del Producto</span>
-                            </td>
-                            <td>
-                                <span th:text="${#numbers.formatDecimal(item.precio, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00€</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="info-container">
-                    <h3>Restaurante: <span th:text="${restaurante.idUsuario}">$Id del restaurante</span></h3>
-                    <h3>Total: <span th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00€</span></h3>
-                </div>
-                <h2>Método de Pago</h2>
-                <label for="metodoPago">Seleccione el método de pago:</label>
-                <select id="metodoPago" name="metodoPago">
-                    <option value="tarjeta">Tarjeta de Crédito/Débito</option>
-                    <option value="paypal">PayPal</option>
-                </select>
-                <input type="hidden" name="restauranteId" th:value="${restaurante.idUsuario}"/>
-                <button type="submit">Finalizar Compra</button>
-            </form>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Pedidos</title>
+    <link rel="stylesheet" href="/css/RegistrarPedidos.css">
+    <script src="/js/RegistrarPedidos.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Finalizar Compra</h1>
         </div>
-    </body>
+        <form action="registrarPedido" method="post">
+            <table id="tabla" class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item, iterStat : ${carrito}">
+                        <td>
+                            <input type="hidden" name="itemIds" th:value="${item.idItemMenu}" />
+                            <span th:text="${item.nombre}">Nombre del Producto</span>
+                        </td>
+                        <td>
+                            <span
+                                th:text="${#numbers.formatDecimal(item.precio, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00€</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="info-container">
+                <h3>Restaurante: <span th:text="${restaurante.idUsuario}">$Id del restaurante</span></h3>
+                <h3>Total: <span th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00€</span>
+                </h3>
+            </div>
+            <h2>Dirección de Envío</h2>
+            <div id="direccionEnvio">
+                <label for="direccion">Seleccione una dirección:</label>
+                <select id="direccion" name="direccion" th:if="${#lists.size(direcciones) > 0}">
+                    <option th:each="direccion : ${direcciones}" th:value="${direccion.id}"
+                        th:text="${direccion.calle + ', ' + direccion.numero + ', ' + direccion.municipio}">
+                    </option>
+                </select>
+                <p id="noDirecciones" th:if="${#lists.isEmpty(direcciones)}">No hay direcciones disponibles.</p>
+                <div class="accionesDireccion">
+                    <button type="button" onclick="abrirFormulario()">Registrar Nueva Dirección</button>
+                </div>
+            </div>
+            <h2>Método de Pago</h2>
+            <label for="metodoPago">Seleccione el método de pago:</label>
+            <select id="metodoPago" name="metodoPago">
+                <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                <option value="paypal">PayPal</option>
+            </select>
+            <input type="hidden" name="restauranteId" th:value="${restaurante.idUsuario}" />
+            <button type="submit" class="btn-finalizar">Finalizar Compra</button>
+        </form>
+    </div>
+
+    <div id="formularioDireccion" class="formulario-flotante">
+        <form id="formRegistrarDireccion" onsubmit="registrarDireccion(event)">
+            <h2>Registrar Nueva Dirección</h2>
+            <label for="calle">Calle:</label>
+            <input type="text" id="calle" name="calle" required maxlength="50">
+            <label for="numero">Número:</label>
+            <input type="text" id="numero" name="numero" required maxlength="10">
+            <label for="complemento">Complemento:</label>
+            <input type="text" id="complemento" name="complemento" maxlength="50">
+            <label for="municipio">Municipio:</label>
+            <input type="text" id="municipio" name="municipio" required maxlength="50">
+            <label for="codigoPostal">Código Postal:</label>
+            <select id="codigoPostal" name="codigoPostal" required>
+                <option value="" disabled selected>Seleccione un código postal</option>
+                <option th:each="cp : ${codigosPostales}" th:value="${cp.id}" th:text="${cp.codigo}"></option>
+            </select>
+            <input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}">
+            <button type="submit">Registrar Dirección</button>
+            <button type="button" onclick="cerrarFormulario()">Cancelar</button>
+            <p id="error" class="error"></p>
+        </form>
+    </div>
+    <div id="overlay" class="overlay"></div>
+</body>
+
 </html>
