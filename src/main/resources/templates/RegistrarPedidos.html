@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Pedidos</title>
     <link rel="stylesheet" href="/css/RegistrarPedidos.css">
+    <script src="/js/RegistrarPedidos.js" defer></script>
 </head>
 
 <body>
@@ -39,7 +40,6 @@
                 <h3>Total: <span th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')} + ' €'">0,00€</span>
                 </h3>
             </div>
-            <!-- Selección de Dirección -->
             <h2>Dirección de Envío</h2>
             <div id="direccionEnvio">
                 <label for="direccion">Seleccione una dirección:</label>
@@ -48,12 +48,9 @@
                         th:text="${direccion.calle + ', ' + direccion.numero + ', ' + direccion.municipio}">
                     </option>
                 </select>
-                <p th:if="${#lists.isEmpty(direcciones)}">No hay direcciones disponibles. <a
-                        href="/direccion/formularioRegistro">Registre una nueva dirección</a>.</p>
+                <p id="noDirecciones" th:if="${#lists.isEmpty(direcciones)}">No hay direcciones disponibles.</p>
                 <div class="accionesDireccion">
-                    <button type="button" onclick="location.href='/direccion/formularioRegistro'">
-                        Registrar Nueva Dirección
-                    </button>
+                    <button type="button" onclick="abrirFormulario()">Registrar Nueva Dirección</button>
                 </div>
             </div>
             <h2>Método de Pago</h2>
@@ -63,9 +60,33 @@
                 <option value="paypal">PayPal</option>
             </select>
             <input type="hidden" name="restauranteId" th:value="${restaurante.idUsuario}" />
-            <button type="submit">Finalizar Compra</button>
+            <button type="submit" class="btn-finalizar">Finalizar Compra</button>
         </form>
     </div>
+
+    <div id="formularioDireccion" class="formulario-flotante">
+        <form id="formRegistrarDireccion" onsubmit="registrarDireccion(event)">
+            <h2>Registrar Nueva Dirección</h2>
+            <label for="calle">Calle:</label>
+            <input type="text" id="calle" name="calle" required maxlength="50">
+            <label for="numero">Número:</label>
+            <input type="text" id="numero" name="numero" required maxlength="10">
+            <label for="complemento">Complemento:</label>
+            <input type="text" id="complemento" name="complemento" maxlength="50">
+            <label for="municipio">Municipio:</label>
+            <input type="text" id="municipio" name="municipio" required maxlength="50">
+            <label for="codigoPostal">Código Postal:</label>
+            <select id="codigoPostal" name="codigoPostal" required>
+                <option value="" disabled selected>Seleccione un código postal</option>
+                <option th:each="cp : ${codigosPostales}" th:value="${cp.id}" th:text="${cp.codigo}"></option>
+            </select>
+            <input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}">
+            <button type="submit">Registrar Dirección</button>
+            <button type="button" onclick="cerrarFormulario()">Cancelar</button>
+            <p id="error" class="error"></p>
+        </form>
+    </div>
+    <div id="overlay" class="overlay"></div>
 </body>
 
 </html>
