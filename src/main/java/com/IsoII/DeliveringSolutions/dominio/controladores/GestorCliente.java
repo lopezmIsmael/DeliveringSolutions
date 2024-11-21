@@ -136,7 +136,13 @@ public class GestorCliente {
 
     // Método que muestra los detalles de un restaurante
     @GetMapping("/verMenusRestaurante/{id}")
-    public String verMenusRestaurante(@PathVariable String id, Model model) {
+    public String verMenusRestaurante(@PathVariable String id, Model model, HttpSession session) {
+
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/"; 
+        }
+
         Optional<Restaurante> optionalRestaurante = serviceRestaurant.findById(id);
 
         if (optionalRestaurante.isPresent()) {
