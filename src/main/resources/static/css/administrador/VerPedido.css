@@ -1,10 +1,6 @@
 body, html {
     margin: 0;
     padding: 0;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #f0f2f5;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -16,7 +12,7 @@ body, html {
     overflow: hidden;
     max-width: 600px;
     width: 100%;
-    margin: 20px;
+    margin: 20px auto;
     text-align: center;
 }
 
@@ -40,6 +36,12 @@ h3 {
     border-bottom: 2px solid #4CAF50;
     padding-bottom: 5px;
     display: inline-block;
+}
+
+.table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
 }
 
 table {

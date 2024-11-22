@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -29,7 +30,8 @@ table {
     margin-bottom: 20px;
 }
 
-th, td {
+th,
+td {
     padding: 10px;
     border: 1px solid #ddd;
     text-align: left;
@@ -50,25 +52,27 @@ th {
 }
 
 .add-to-cart-btn img {
-    width: 30px; /* Ajusta el tamaño de la imagen aquí */
-    height: 30px; /* Ajusta el tamaño de la imagen aquí */
+    width: 30px;
+    height: 30px;
 }
 
 .add-to-cart-btn img:hover {
-    transform: scale(1.1); /* Efecto hover para agrandar la imagen */
+    transform: scale(1.1);
 }
 
 #cart {
     position: fixed;
     top: -100%;
     right: 0;
-    width: 300px;
+    width: 280px;
     height: 100%;
     background-color: white;
-    box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
     transition: top 0.3s ease;
     padding: 20px;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
 }
 
 #cart.open {
@@ -77,6 +81,17 @@ th {
 
 #cart h3 {
     margin-top: 0;
+    text-align: center;
+    font-size: 20px;
+    color: #333;
+}
+
+#cart-items {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    list-style: none;
+    padding: 0;
 }
 
 #cart button {
@@ -86,7 +101,9 @@ th {
     padding: 10px;
     cursor: pointer;
     width: 100%;
-    margin-top: 20px;
+    margin-bottom: 40px;
+    border-radius: 5px;
+    text-align: center;
 }
 
 #cart button:hover {
@@ -95,15 +112,48 @@ th {
 
 #cart-total {
     font-weight: bold;
-    margin-top: 20px;
+    margin: 10px 0;
+    text-align: center;
+    font-size: 16px;
+    color: #333;
 }
 
 .remove-btn {
-    background: none;
+    background: green;
     border: none;
-    color: red;
+    color: white;
     cursor: pointer;
-    margin-left: 10px;
-    font-size: 12px; /* Ajusta el tamaño del texto aquí */
-    padding: 2px 5px; /* Ajusta el tamaño del botón aquí */
+    font-size: 16px; 
+    padding: 10px; 
+    border-radius: 5px; 
+    width: 100%; 
+    text-align: center;
+    display: block; 
+    box-sizing: border-box; 
+}
+
+.remove-btn:hover {
+    background: darkgreen;
+}
+
+.back-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px;
+    background-color: #45a049;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.back-button:hover {
+    background-color: #1f4b02;
 }

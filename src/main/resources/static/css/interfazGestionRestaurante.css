@@ -4,7 +4,8 @@
     box-sizing: border-box;
 }
 
-body, html {
+body,
+html {
     height: 100%;
     font-family: 'Arial', sans-serif;
     background-color: #f3f6f9;
@@ -121,12 +122,40 @@ a.btn:active {
     transform: translateY(0);
 }
 
+.back-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    margin: 0;
+    background-color: #45a049;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #1f4b02;
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 20px;
     }
 
-    .header h1, h2 {
+    .header h1,
+    h2 {
         font-size: 24px;
     }
 
