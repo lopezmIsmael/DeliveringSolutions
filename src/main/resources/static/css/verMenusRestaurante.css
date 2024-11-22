@@ -119,13 +119,22 @@ th {
 }
 
 .remove-btn {
-    background: none;
+    background: red;
     border: none;
-    color: red;
+    color: white;
     cursor: pointer;
-    margin-left: 10px;
-    font-size: 12px;
-    padding: 2px 5px;
+    font-size: 16px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: auto;
+    text-align: center;
+    display: inline-block;
+}
+
+.remove-btn:hover {
+    background: darkred;
+    transform: scale(1.05);
 }
 
 .back-button {
