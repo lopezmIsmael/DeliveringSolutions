@@ -41,22 +41,20 @@ public class GestorCliente {
 
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
-    private final ServiceCartaMenu serviceCartaMenu;
-    private final ServiceDireccion serviceDireccion;
-    private final ServiceClient serviceClient;
-    private final ServiceRestaurant serviceRestaurant;
-    private final ServicePedido servicePedido;
+    @Autowired
+    private ServiceCartaMenu serviceCartaMenu;
 
     @Autowired
-    public GestorCliente(ServiceCartaMenu serviceCartaMenu, ServiceDireccion serviceDireccion, 
-                         ServiceClient serviceClient, ServiceRestaurant serviceRestaurant, 
-                         ServicePedido servicePedido) {
-        this.serviceCartaMenu = serviceCartaMenu;
-        this.serviceDireccion = serviceDireccion;
-        this.serviceClient = serviceClient;
-        this.serviceRestaurant = serviceRestaurant;
-        this.servicePedido = servicePedido;
-    }
+    private ServiceDireccion serviceDireccion;
+
+    @Autowired
+    private ServiceClient serviceClient;
+
+    @Autowired
+    private ServiceRestaurant serviceRestaurant;
+
+    @Autowired
+    private ServicePedido servicePedido;
 
     // Método que muestra la página principal de la aplicación
     @GetMapping("/findAll")

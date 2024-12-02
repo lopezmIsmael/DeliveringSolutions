@@ -29,12 +29,8 @@ import jakarta.servlet.http.HttpSession;
 public class GestorUsuario {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
-    private final ServiceUser serviceUsuario;
-
     @Autowired
-    public GestorUsuario(ServiceUser serviceUsuario) {
-        this.serviceUsuario = serviceUsuario;
-    }
+    private ServiceUser serviceUsuario;
 
     // Método que devuelve una lista de todos los clientes
     @GetMapping("/findAll")

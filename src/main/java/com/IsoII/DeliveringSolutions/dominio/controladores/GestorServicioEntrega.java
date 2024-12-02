@@ -20,12 +20,8 @@ import java.util.Optional;
 public class GestorServicioEntrega {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
-    private final ServiceServicioEntrega serviceServicioEntrega;
-
     @Autowired
-    public GestorServicioEntrega(ServiceServicioEntrega serviceServicioEntrega) {
-        this.serviceServicioEntrega = serviceServicioEntrega;
-    }
+    private ServiceServicioEntrega serviceServicioEntrega;
 
     // Método para mostrar todos los servicios de entrega
     @GetMapping("/findAll")
