@@ -29,14 +29,16 @@ import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
 public class GestorRestaurante {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
-    @Autowired
-    private ServiceCartaMenu serviceCartaMenu;
+    private final ServiceCartaMenu serviceCartaMenu;
+    private final ServiceDireccion serviceDireccion;
+    private final ServiceRestaurant serviceRestaurant;
 
     @Autowired
-    private ServiceDireccion serviceDireccion;
-
-    @Autowired
-    private ServiceRestaurant serviceRestaurant;
+    public GestorRestaurante(ServiceCartaMenu serviceCartaMenu, ServiceDireccion serviceDireccion, ServiceRestaurant serviceRestaurant) {
+        this.serviceCartaMenu = serviceCartaMenu;
+        this.serviceDireccion = serviceDireccion;
+        this.serviceRestaurant = serviceRestaurant;
+    }
 
     // Método para mostrar todos los restaurantes
     @GetMapping("/findAll")

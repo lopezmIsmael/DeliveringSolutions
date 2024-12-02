@@ -23,11 +23,14 @@ import org.springframework.ui.Model;
 public class GestorZona {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
-    @Autowired
-    private ServiceZona serviceZona;
+    private final ServiceZona serviceZona;
+    private final ServiceZonaCodigoPostal serviceZonaCodigoPostal;
 
     @Autowired
-    private ServiceZonaCodigoPostal serviceZonaCodigoPostal;
+    public GestorZona(ServiceZona serviceZona, ServiceZonaCodigoPostal serviceZonaCodigoPostal) {
+        this.serviceZona = serviceZona;
+        this.serviceZonaCodigoPostal = serviceZonaCodigoPostal;
+    }
 
     // Método para mostrar todas las zonas
     @GetMapping("/findAll")
