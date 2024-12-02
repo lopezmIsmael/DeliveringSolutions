@@ -24,11 +24,14 @@ import java.util.Optional;
 @RequestMapping("/direccion")
 public class GestorDireccion {
 
-    @Autowired
-    private ServiceDireccion serviceDireccion;
+    private final ServiceDireccion serviceDireccion;
+    private final ServiceCodigoPostal serviceCodigoPostal;
 
     @Autowired
-    private ServiceCodigoPostal serviceCodigoPostal;
+    public GestorDireccion(ServiceDireccion serviceDireccion, ServiceCodigoPostal serviceCodigoPostal) {
+        this.serviceDireccion = serviceDireccion;
+        this.serviceCodigoPostal = serviceCodigoPostal;
+    }
 
     // Método para mostrar el formulario de registro de dirección
     @GetMapping("/formularioRegistro")

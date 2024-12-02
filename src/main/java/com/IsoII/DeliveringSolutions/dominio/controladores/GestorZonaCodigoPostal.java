@@ -23,14 +23,16 @@ import com.IsoII.DeliveringSolutions.dominio.service.ServiceZonaCodigoPostal;
 public class GestorZonaCodigoPostal {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
-    @Autowired
-    private ServiceZonaCodigoPostal serviceZonaCodigoPostal;
+    private final ServiceZonaCodigoPostal serviceZonaCodigoPostal;
+    private final ServiceZona serviceZona;
+    private final ServiceCodigoPostal serviceCodigoPostal;
 
     @Autowired
-    private ServiceZona serviceZona;
-
-    @Autowired
-    private ServiceCodigoPostal serviceCodigoPostal;
+    public GestorZonaCodigoPostal(ServiceZonaCodigoPostal serviceZonaCodigoPostal, ServiceZona serviceZona, ServiceCodigoPostal serviceCodigoPostal) {
+        this.serviceZonaCodigoPostal = serviceZonaCodigoPostal;
+        this.serviceZona = serviceZona;
+        this.serviceCodigoPostal = serviceCodigoPostal;
+    }
 
     // Método para listar todas las zonas con códigos postales
     @GetMapping("/findAll")
