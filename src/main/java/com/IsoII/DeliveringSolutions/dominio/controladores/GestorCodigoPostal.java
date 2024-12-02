@@ -22,12 +22,8 @@ import org.springframework.ui.Model;
 public class GestorCodigoPostal {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
-    private final ServiceCodigoPostal serviceCodigoPostal;
-
     @Autowired
-    public GestorCodigoPostal(ServiceCodigoPostal serviceCodigoPostal) {
-        this.serviceCodigoPostal = serviceCodigoPostal;
-    }
+    private ServiceCodigoPostal serviceCodigoPostal;
 
     // Método para obtener todos los códigos postales
     @GetMapping("/findAll")

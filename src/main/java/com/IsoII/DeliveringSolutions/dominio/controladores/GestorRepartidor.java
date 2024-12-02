@@ -32,24 +32,23 @@ import jakarta.servlet.http.HttpSession;
 public class GestorRepartidor {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
-    private final ServicePedido servicePedido;
-    private final ServiceDireccion serviceDireccion;
-    private final ServiceRepartidor serviceRepartidor;
-    private final ServiceServicioEntrega serviceServicioEntrega;
-    private final ServiceZona serviceZona;
-    private final ServiceZonaCodigoPostal serviceZonaCodigoPostal;
+    @Autowired
+    private ServicePedido servicePedido;
 
     @Autowired
-    public GestorRepartidor(ServicePedido servicePedido, ServiceDireccion serviceDireccion, 
-                            ServiceRepartidor serviceRepartidor, ServiceServicioEntrega serviceServicioEntrega, 
-                            ServiceZona serviceZona, ServiceZonaCodigoPostal serviceZonaCodigoPostal) {
-        this.servicePedido = servicePedido;
-        this.serviceDireccion = serviceDireccion;
-        this.serviceRepartidor = serviceRepartidor;
-        this.serviceServicioEntrega = serviceServicioEntrega;
-        this.serviceZona = serviceZona;
-        this.serviceZonaCodigoPostal = serviceZonaCodigoPostal;
-    }
+    private ServiceDireccion serviceDireccion;
+
+    @Autowired
+    private ServiceRepartidor serviceRepartidor;
+
+    @Autowired
+    private ServiceServicioEntrega serviceServicioEntrega;
+
+    @Autowired
+    private ServiceZona serviceZona;
+
+    @Autowired
+    private ServiceZonaCodigoPostal serviceZonaCodigoPostal;
 
     // Método que devuelve una lista de todos los repartidores
     @GetMapping("/findAll")
