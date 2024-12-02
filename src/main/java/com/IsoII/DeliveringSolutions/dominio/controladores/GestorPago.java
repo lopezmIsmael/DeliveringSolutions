@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,28 +39,31 @@ import org.springframework.ui.Model;
 @Controller
 @RequestMapping("/pago")
 public class GestorPago {
-    private final ServiceRestaurant serviceRestaurant;
-    private final ServicePedido servicePedido;
-    private final ServiceItemMenu serviceItemMenu;
-    private final ServiceItemPedido serviceItemPedido;
-    private final ServiceDireccion serviceDireccion;
-    private final ServiceUser serviceUsuario;
-    private final ServicePago servicePago;
-    private final ServiceCodigoPostal serviceCodigoPostal;
+    RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     @Autowired
-    public GestorPago(ServiceRestaurant serviceRestaurant, ServicePedido servicePedido, ServiceItemMenu serviceItemMenu,
-                      ServiceItemPedido serviceItemPedido, ServiceDireccion serviceDireccion, ServiceUser serviceUsuario,
-                      ServicePago servicePago, ServiceCodigoPostal serviceCodigoPostal) {
-        this.serviceRestaurant = serviceRestaurant;
-        this.servicePedido = servicePedido;
-        this.serviceItemMenu = serviceItemMenu;
-        this.serviceItemPedido = serviceItemPedido;
-        this.serviceDireccion = serviceDireccion;
-        this.serviceUsuario = serviceUsuario;
-        this.servicePago = servicePago;
-        this.serviceCodigoPostal = serviceCodigoPostal;
-    }
+    private ServiceRestaurant serviceRestaurant;
+
+    @Autowired
+    private ServicePedido servicePedido;
+
+    @Autowired
+    private ServiceItemMenu serviceItemMenu;
+
+    @Autowired
+    private ServiceItemPedido serviceItemPedido;
+
+    @Autowired
+    private ServiceDireccion serviceDireccion;
+
+    @Autowired
+    private ServiceUser serviceUsuario;
+
+    @Autowired
+    private ServicePago servicePago;
+
+    @Autowired
+    private ServiceCodigoPostal serviceCodigoPostal;
 
     // Método para listar todos los pagos
     @GetMapping("/findAll")

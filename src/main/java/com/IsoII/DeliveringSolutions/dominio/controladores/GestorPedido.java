@@ -28,14 +28,11 @@ public class GestorPedido {
 
     private List<ItemMenu> carrito = new ArrayList<>();
 
-    private final ServicePedido servicePedido;
-    private final ServiceItemPedido serviceItemPedido;
+    @Autowired
+    private ServicePedido servicePedido;
 
     @Autowired
-    public GestorPedido(ServicePedido servicePedido, ServiceItemPedido serviceItemPedido) {
-        this.servicePedido = servicePedido;
-        this.serviceItemPedido = serviceItemPedido;
-    }
+    private ServiceItemPedido serviceItemPedido;
 
     // Método para mostrar todos los pedidos
     @GetMapping("/findAll")

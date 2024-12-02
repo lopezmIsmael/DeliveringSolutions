@@ -25,16 +25,14 @@ public class GestorMenu {
 
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
-    private final ServiceItemMenu serviceItemMenu;
-    private final ServiceCartaMenu serviceCartaMenu;
-    private final ServiceRestaurant serviceRestaurant;
+    @Autowired
+    private ServiceItemMenu serviceItemMenu;
 
     @Autowired
-    public GestorMenu(ServiceItemMenu serviceItemMenu, ServiceCartaMenu serviceCartaMenu, ServiceRestaurant serviceRestaurant) {
-        this.serviceItemMenu = serviceItemMenu;
-        this.serviceCartaMenu = serviceCartaMenu;
-        this.serviceRestaurant = serviceRestaurant;
-    }
+    private ServiceCartaMenu serviceCartaMenu;
+
+    @Autowired
+    private ServiceRestaurant serviceRestaurant;
 
     // Método que devuelve una lista de todas las cartas
     @GetMapping("/findAll")
