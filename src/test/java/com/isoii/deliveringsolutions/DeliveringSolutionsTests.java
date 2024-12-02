@@ -1,6 +1,4 @@
-package com.IsoII.DeliveringSolutions;
-
-
+package com.isoii.deliveringsolutions;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
