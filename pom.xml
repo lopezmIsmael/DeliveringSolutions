@@ -5,9 +5,9 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.3</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
+		<version>3.1.5</version>
+		<relativePath/>
+	</parent>	
 	<groupId>DSSL</groupId>
 	<artifactId>DS</artifactId>
 	<version>1.0.0</version>
@@ -59,10 +59,11 @@
         <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
+	<!-- Para MySQL -->
 	<dependency>
-		<groupId>org.xerial</groupId>
-		<artifactId>sqlite-jdbc</artifactId>
-		<version>3.41.2.2</version>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>8.0.33</version>
 	</dependency>
 
 	<dependency>
