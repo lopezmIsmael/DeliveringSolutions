@@ -9,14 +9,7 @@ import com.IsoII.DeliveringSolutions.dominio.entidades.Pago;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Pedido;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Restaurante;
 import com.IsoII.DeliveringSolutions.dominio.entidades.Usuario;
-import com.IsoII.DeliveringSolutions.dominio.service.ServicePedido;
-import com.IsoII.DeliveringSolutions.dominio.service.ServiceRestaurant;
-import com.IsoII.DeliveringSolutions.dominio.service.ServiceUser;
-import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemPedido;
-import com.IsoII.DeliveringSolutions.dominio.service.ServicePago;
-import com.IsoII.DeliveringSolutions.dominio.service.ServiceCodigoPostal;
-import com.IsoII.DeliveringSolutions.dominio.service.ServiceDireccion;
-import com.IsoII.DeliveringSolutions.dominio.service.ServiceItemMenu;
+import com.IsoII.DeliveringSolutions.dominio.service.ServiceGroup;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,34 +31,18 @@ import org.springframework.ui.Model;
 @Controller
 @RequestMapping("/pago")
 public class GestorPago {
-    private final ServiceRestaurant serviceRestaurant;
-    private final ServicePedido servicePedido;
-    private final ServiceItemMenu serviceItemMenu;
-    private final ServiceItemPedido serviceItemPedido;
-    private final ServiceDireccion serviceDireccion;
-    private final ServiceUser serviceUsuario;
-    private final ServicePago servicePago;
-    private final ServiceCodigoPostal serviceCodigoPostal;
+    private final ServiceGroup serviceGroup;
 
     @Autowired
-    public GestorPago(ServiceRestaurant serviceRestaurant, ServicePedido servicePedido, ServiceItemMenu serviceItemMenu,
-                      ServiceItemPedido serviceItemPedido, ServiceDireccion serviceDireccion, ServiceUser serviceUsuario,
-                      ServicePago servicePago, ServiceCodigoPostal serviceCodigoPostal) {
-        this.serviceRestaurant = serviceRestaurant;
-        this.servicePedido = servicePedido;
-        this.serviceItemMenu = serviceItemMenu;
-        this.serviceItemPedido = serviceItemPedido;
-        this.serviceDireccion = serviceDireccion;
-        this.serviceUsuario = serviceUsuario;
-        this.servicePago = servicePago;
-        this.serviceCodigoPostal = serviceCodigoPostal;
+    public GestorPago(ServiceGroup serviceGroup) {
+        this.serviceGroup = serviceGroup;
     }
 
     // Método para listar todos los pagos
     @GetMapping("/findAll")
     @ResponseBody
     public List<Pago> findAll() {
-        return servicePago.findAll();
+        return serviceGroup.getServicePago().findAll();
     }
 
     // Método para registrar un pago
@@ -83,11 +60,11 @@ public class GestorPago {
             return "redirect:/usuarios/login";
         }
 
-        if (serviceDireccion.findByUsuario(usuario) == null) {
+        if (serviceGroup.getServiceDireccion().findByUsuario(usuario) == null) {
             return "redirect:/direccion/formularioRegistro";
         }
 
-        restaurante = serviceRestaurant.findById(restauranteId).orElse(null);
+        restaurante = serviceGroup.getServiceRestaurant().findById(restauranteId).orElse(null);
 
         System.out.println("<<Restaurante>>: " + restaurante.getNombre());
         ObjectMapper objectMapper = new ObjectMapper();
@@ -113,8 +90,8 @@ public class GestorPago {
         }
         System.out.println("<<Total Price>>: " + totalPrice);
 
-        List<Direccion> direcciones = serviceDireccion.findByUsuario(usuario);
-        List<CodigoPostal> codigosPostales = serviceCodigoPostal.findAll();
+        List<Direccion> direcciones = serviceGroup.getServiceDireccion().findByUsuario(usuario);
+        List<CodigoPostal> codigosPostales = serviceGroup.getServiceCodigoPostal().findAll();
 
         model.addAttribute("direcciones", direcciones);
         model.addAttribute("restaurante", restaurante);
@@ -130,7 +107,7 @@ public class GestorPago {
     @GetMapping("/findById/{id}")
     @ResponseBody
     public Pago findById(@PathVariable Integer id) {
-        return servicePago.findById(id).orElse(null);
+        return serviceGroup.getServicePago().findById(id).orElse(null);
     }
 
     // Metodo para registrar un pedido
@@ -150,7 +127,7 @@ public class GestorPago {
         System.out.println("<<DireccionId>>: " + direccion);
 
         Cliente cliente = (Cliente) session.getAttribute("usuario");
-        Restaurante restaurante = serviceRestaurant.findById(restauranteId).orElse(null);
+        Restaurante restaurante = serviceGroup.getServiceRestaurant().findById(restauranteId).orElse(null);
 
         Pedido pedido = new Pedido();
         pedido.setFecha(System.currentTimeMillis());
@@ -158,13 +135,13 @@ public class GestorPago {
         pedido.setCliente(cliente);
         pedido.setRestaurante(restaurante);
 
-        servicePedido.save(pedido);
+        serviceGroup.getServicePedido().save(pedido);
         System.out.println("<<Pedido registrado>>: " + pedido.toString());
         Double total = 0.0;
         List<ItemMenu> items = new ArrayList<>();
         for (Integer itemId : itemIds) {
             System.out.println("<<Item ID>>: " + itemId);
-            Optional<ItemMenu> optionalItem = serviceItemMenu.findById(itemId);
+            Optional<ItemMenu> optionalItem = serviceGroup.getServiceItemMenu().findById(itemId);
             if (optionalItem.isPresent()) {
                 ItemPedido itemPedido = new ItemPedido();
                 items.add(optionalItem.get());
@@ -172,7 +149,7 @@ public class GestorPago {
                 System.out.println("<<Item encontrado>>: " + optionalItem.toString());
                 itemPedido.setItemMenu(optionalItem.get());
                 itemPedido.setPedido(pedido);
-                serviceItemPedido.save(itemPedido);
+                serviceGroup.getServiceItemPedido().save(itemPedido);
                 System.out.println("<<ItemPedido registrado>>: " + itemPedido.toString());
             }
         }
@@ -180,19 +157,19 @@ public class GestorPago {
         Pago pago = new Pago();
         pago.setMetodoPago(metodoPago);
         pago.setPedido(pedido);
-        servicePago.save(pago);
+        serviceGroup.getServicePago().save(pago);
 
         System.out.println("<<Pago registrado>>: " + pago.toString());
 
         pedido.setEstadoPedido("Pagado");
-        servicePedido.save(pedido);
+        serviceGroup.getServicePedido().save(pedido);
 
-        Usuario usuarioRestaurante = serviceUsuario.findById(restaurante.getIdUsuario()).orElse(null);
-        List<Direccion> direccionesRecogida = serviceDireccion.findByUsuario(usuarioRestaurante);
+        Usuario usuarioRestaurante = serviceGroup.getServiceUsuario().findById(restaurante.getIdUsuario()).orElse(null);
+        List<Direccion> direccionesRecogida = serviceGroup.getServiceDireccion().findByUsuario(usuarioRestaurante);
         Direccion direccionRecogida = !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
         System.out.println("<<Direccion de recogida>>: " + direccionRecogida.toString());
 
-        Direccion direccionEntrega = serviceDireccion.findById(direccion).orElse(null);
+        Direccion direccionEntrega = serviceGroup.getServiceDireccion().findById(direccion).orElse(null);
 
         redirectAttributes.addFlashAttribute("pedido", pedido);
         redirectAttributes.addFlashAttribute("items", items);
@@ -215,7 +192,7 @@ public class GestorPago {
     // Método para listar todos los pagos
     @GetMapping("/mostrarPagos")
     public String mostrarPagos(Model model) {
-        List<Pago> pagos = servicePago.findAll();
+        List<Pago> pagos = serviceGroup.getServicePago().findAll();
         if (!pagos.isEmpty()) {
             model.addAttribute("pagos", pagos);
             return "/administrador/ListaPagos";
@@ -228,7 +205,7 @@ public class GestorPago {
     // Método para mostrar los detalles de un pago específico
     @GetMapping("/mostrarPago/{id}")
     public String mostrarPago(@PathVariable Integer id, Model model) {
-        Optional<Pago> optionalPago = servicePago.findById(id);
+        Optional<Pago> optionalPago = serviceGroup.getServicePago().findById(id);
         if (optionalPago.isPresent()) {
             model.addAttribute("pago", optionalPago.get());
             return "/administrador/VerPago";
