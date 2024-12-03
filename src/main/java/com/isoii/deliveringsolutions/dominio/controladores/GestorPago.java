@@ -102,7 +102,7 @@ public class GestorPago {
         model.addAttribute("restaurante", restaurante);
         model.addAttribute("carrito", carrito);
         model.addAttribute("total", totalPrice);
-        model.addAttribute("usuario", usuario);
+        model.addAttribute(USUARIO, usuario);
         model.addAttribute("codigosPostales", codigosPostales);
 
         return "RegistrarPedidos";

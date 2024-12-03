@@ -68,7 +68,7 @@ public class GestorCodigoPostal {
             model.addAttribute("codigosPostales", codigosPostales);
             return "/administrador/ListaCodigoPostales";
         } else {
-            model.addAttribute("error", "No se encontraron códigos postales");
+            model.addAttribute(ERROR_VIEW, "No se encontraron códigos postales");
             return ERROR_VIEW;
         }
     }
@@ -81,7 +81,7 @@ public class GestorCodigoPostal {
             model.addAttribute("codigoPostal", optionalCodigoPostal.get());
             return "/administrador/VerCodigoPostal";
         } else {
-            model.addAttribute("error", "Código postal no encontrado");
+            model.addAttribute(ERROR_VIEW, "Código postal no encontrado");
             return ERROR_VIEW;
         }
     }

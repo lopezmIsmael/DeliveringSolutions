@@ -74,7 +74,7 @@ public class GestorRestaurante {
             Restaurante restaurante = optionalRestaurante.get();
             return "redirect:/restaurantes/findById/" + restaurante.getNombre();
         } else {
-            model.addAttribute("error", RESTAURANTE_NO_ENCONTRADO);
+            model.addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
             return ERROR_VIEW;
         }
     }
@@ -99,7 +99,7 @@ public class GestorRestaurante {
             }
             return "interfazGestionRestaurante";
         } else {
-            model.addAttribute("error", RESTAURANTE_NO_ENCONTRADO);
+            model.addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
             return ERROR_VIEW; 
         }
     }
@@ -109,7 +109,7 @@ public class GestorRestaurante {
     public String registrarRestaurante(@ModelAttribute Restaurante restaurante, Model model) {
         logger.info("Restaurante recibido: " + restaurante.toString());
         if (restaurante.getPass() == null || restaurante.getPass().isEmpty()) {
-            model.addAttribute("error", "Contraseña no puede estar vacía");
+            model.addAttribute(ERROR_VIEW, "Contraseña no puede estar vacía");
             return ERROR_VIEW;
         }
         Restaurante restauranteRegistrado = serviceRestaurant.save(restaurante);
@@ -125,7 +125,7 @@ public class GestorRestaurante {
             model.addAttribute("restaurantes", restaurantes);
             return "/administrador/ListaRestaurantes";
         } else {
-            model.addAttribute("error", "No se encontraron restaurantes");
+            model.addAttribute(ERROR_VIEW, "No se encontraron restaurantes");
             return ERROR_VIEW; 
         }
     }
@@ -139,7 +139,7 @@ public class GestorRestaurante {
             model.addAttribute("restaurante", restaurante);
             return "/administrador/VerRestaurante"; 
         } else {
-            model.addAttribute("error", RESTAURANTE_NO_ENCONTRADO);
+            model.addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
             return ERROR_VIEW;
         }
     }

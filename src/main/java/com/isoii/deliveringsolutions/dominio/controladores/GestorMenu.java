@@ -28,7 +28,6 @@ public class GestorMenu {
     private static final String ERROR = "error";
     private static final String RESTAURANTE_NO_ENCONTRADO = "Restaurante no encontrado";
     private static final String REDIRECT_MODIFICAR_CARTA = "redirect:/cartas/modificar/";
-    private static final String ITEM_RECIBIDO = "ITEM RECIBIDO: ";
     private static final String REDIRECT_REGISTER_CARTA = "redirect:/cartas/register";
 
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
@@ -165,8 +164,8 @@ public class GestorMenu {
         }
 
         if (cartaMenu.getNombre() == null || cartaMenu.getNombre().isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "El nombre de la carta no puede estar vacío");
-            return "redirect:/cartas/register";
+            redirectAttributes.addFlashAttribute(ERROR, "El nombre de la carta no puede estar vacío");
+            return REDIRECT_REGISTER_CARTA;
         }
 
         String restauranteCif = cartaMenu.getRestaurante().getIdUsuario();

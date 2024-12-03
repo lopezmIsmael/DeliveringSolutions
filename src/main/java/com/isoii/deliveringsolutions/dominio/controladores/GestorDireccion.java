@@ -113,7 +113,7 @@ public class GestorDireccion {
             return "/administrador/VerDireccion";
         } else {
             model.addAttribute(ERROR, "Dirección no encontrada");
-            return "error";
+            return ERROR;
         }
     }
 
@@ -126,7 +126,7 @@ public class GestorDireccion {
             return "/administrador/ListaDirecciones";
         } else {
             model.addAttribute(ERROR, "No se encontraron direcciones");
-            return "error";
+            return ERROR;
         }
     }
 

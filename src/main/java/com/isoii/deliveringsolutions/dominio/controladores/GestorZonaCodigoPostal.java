@@ -99,7 +99,7 @@ public class GestorZonaCodigoPostal {
             return "/administrador/ListaZonasCodigoPostal";
         } else {
             model.addAttribute(ERROR_MESSAGE, "No se encontraron zonas con códigos postales.");
-            return "error"; 
+            return ERROR_MESSAGE; 
         }
     }
 
@@ -112,7 +112,7 @@ public class GestorZonaCodigoPostal {
             return "/administrador/VerZonaCodigoPostal"; 
         } else {
             model.addAttribute(ERROR_MESSAGE, "Zona con código postal no encontrada.");
-            return "error";
+            return ERROR_MESSAGE;
         }
     }
 

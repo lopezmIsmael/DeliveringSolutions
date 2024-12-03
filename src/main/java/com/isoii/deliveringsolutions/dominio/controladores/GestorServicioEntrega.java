@@ -72,7 +72,7 @@ public class GestorServicioEntrega {
             model.addAttribute("serviciosEntrega", serviciosEntrega);
             return "/administrador/ListaServiciosEntrega"; 
         } else {
-            model.addAttribute("error", "No se encontraron servicios de entrega");
+            model.addAttribute(ERROR_VIEW, "No se encontraron servicios de entrega");
             return ERROR_VIEW; 
         }
     }
@@ -86,7 +86,7 @@ public class GestorServicioEntrega {
             model.addAttribute("servicioEntrega", servicioEntrega);
             return "/administrador/VerServicioEntrega"; 
         } else {
-            model.addAttribute("error", "Servicio de entrega no encontrado");
+            model.addAttribute(ERROR_VIEW, "Servicio de entrega no encontrado");
             return ERROR_VIEW; 
         }
     }

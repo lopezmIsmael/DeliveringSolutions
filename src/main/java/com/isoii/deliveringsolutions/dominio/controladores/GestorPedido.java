@@ -98,7 +98,7 @@ public class GestorPedido {
             model.addAttribute("pedidos", pedidos);
             return "/administrador/ListaPedidos";
         } else {
-            model.addAttribute("error", "No se encontraron pedidos");
+            model.addAttribute(ERROR_VIEW, "No se encontraron pedidos");
             return ERROR_VIEW;
         }
     }
@@ -125,7 +125,7 @@ public class GestorPedido {
 
             return "/administrador/VerPedido";
         } else {
-            model.addAttribute("error", "Pedido no encontrado");
+            model.addAttribute(ERROR_VIEW, "Pedido no encontrado");
             return ERROR_VIEW;
         }
     }
@@ -138,7 +138,7 @@ public class GestorPedido {
             model.addAttribute("itemsPedidos", itemsPedidos);
             return "/administrador/ListaItemsPedido";
         } else {
-            model.addAttribute("error", "Items de pedido no encontrados");
+            model.addAttribute(ERROR_VIEW, "Items de pedido no encontrados");
             return ERROR_VIEW;
         }
     }
@@ -151,7 +151,7 @@ public class GestorPedido {
             model.addAttribute("itemPedido", optionalItemPedido.get());
             return "/administrador/VerItemPedido";
         } else {
-            model.addAttribute("error", "Item de pedido no encontrado");
+            model.addAttribute(ERROR_VIEW, "Item de pedido no encontrado");
             return ERROR_VIEW; 
         }
     }

@@ -3,6 +3,9 @@ package com.isoii.deliveringsolutions.dominio.controladores;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +53,8 @@ public class GestorCliente {
     private final ServiceClient serviceClient;
     private final ServiceRestaurant serviceRestaurant;
     private final ServicePedido servicePedido;
+
+    Logger logger = LoggerFactory.getLogger(GestorCliente.class);
 
     @Autowired
     public GestorCliente(ServiceCartaMenu serviceCartaMenu, ServiceDireccion serviceDireccion, 
@@ -169,7 +174,7 @@ public class GestorCliente {
     public String editarDatos(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute(USUARIO);
 
-        System.out.println("<<USUARIO>>:: " + usuario);
+        logger.info("<<USUARIO>>:: " + usuario);
 
         model.addAttribute(USUARIO, usuario);
 
@@ -220,7 +225,7 @@ public class GestorCliente {
         }
 
         Cliente clienteRegistrado = serviceClient.save(cliente);
-        System.out.println("Cliente registrado: " + clienteRegistrado);
+        logger.info("Cliente registrado: " + clienteRegistrado);
         return REDIRECT_ROOT;
     }
 

@@ -79,7 +79,7 @@ public class GestorZona {
             model.addAttribute("zonas", zonas);
             return "/administrador/ListaZonas"; 
         } else {
-            model.addAttribute("error", "No se encontraron zonas");
+            model.addAttribute(ERROR_VIEW, "No se encontraron zonas");
             return ERROR_VIEW; 
         }
     }
@@ -103,7 +103,7 @@ public class GestorZona {
             model.addAttribute("zona", zona);
             return "/administrador/VerZona"; 
         } else {
-            model.addAttribute("error", "Zona no encontrada");
+            model.addAttribute(ERROR_VIEW, "Zona no encontrada");
             return ERROR_VIEW;
         }
     }
