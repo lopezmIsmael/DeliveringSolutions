@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import com.isoii.deliveringsolutions.dominio.service.ServiceServicioEntrega;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 // Controlador para gestionar los servicios de entrega
-@Controller
+@RestController
 @RequestMapping("/servicioEntrega")
 public class GestorServicioEntrega {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
@@ -29,7 +29,6 @@ public class GestorServicioEntrega {
 
     // Método para mostrar todos los servicios de entrega
     @GetMapping("/findAll")
-    @ResponseBody
     public List<ServicioEntrega> findAll() {
         return serviceServicioEntrega.findAll();
     }
@@ -42,7 +41,6 @@ public class GestorServicioEntrega {
 
     // Método para buscar un servicio de entrega por su id
     @GetMapping("/findById/{id}")
-    @ResponseBody
     public ServicioEntrega findById(@PathVariable Integer id) {
         return serviceServicioEntrega.findById(id).orElse(null);
     }
