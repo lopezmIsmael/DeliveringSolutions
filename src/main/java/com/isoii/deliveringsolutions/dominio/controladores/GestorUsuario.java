@@ -22,10 +22,16 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceUser;
 
 import jakarta.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 @Controller
 @RequestMapping("/usuarios")
 public class GestorUsuario {
     private static final String REDIRECT_PREFIX = "redirect:/";
+    private static final Logger logger = LoggerFactory.getLogger(GestorUsuario.class);
+
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     private final ServiceUser serviceUsuario;
@@ -64,13 +70,13 @@ public class GestorUsuario {
 
     @PostMapping("/registrarUsuario")
     public String registrarUsuario(@ModelAttribute Usuario usuario) {
-        System.out.println("Usuario recibido: " + usuario.toString());
+        logger.info("Usuario recibido: " + usuario.toString());
         if (usuario.getPass() == null || usuario.getPass().isEmpty()) {
             return REDIRECT_PREFIX + "usuarios/registrarUsuario"; 
         }
 
         Usuario usuarioRegistrado = serviceUsuario.save(usuario);
-        System.out.println("Usuario registrado: " + usuarioRegistrado);
+        logger.info("Usuario registrado: " + usuarioRegistrado);
         return REDIRECT_PREFIX;
     }
 

@@ -175,7 +175,6 @@ public class GestorCliente {
 
         List<Direccion> direcciones = serviceDireccion.findByUsuario(usuario);
 
-        System.out.println("<<DIRECCIONES>>: " + direcciones);
         if (direcciones == null || direcciones.isEmpty()) {
             direcciones = List.of(new Direccion());
         }
@@ -216,7 +215,6 @@ public class GestorCliente {
     @PostMapping("/registrarCliente")
     public String registrarCliente(@ModelAttribute Cliente cliente) {
 
-        System.out.println("Cliente recibido: " + cliente.toString());
         if (cliente.getPass() == null || cliente.getPass().isEmpty()) {
             return "redirect:/clientes/register";
         }
@@ -236,8 +234,6 @@ public class GestorCliente {
     public String toggleFavorito(@PathVariable String id, HttpSession session,
             @RequestParam(value = "favoritos", required = false) String favoritosParam) {
         Usuario usuario = (Usuario) session.getAttribute(USUARIO);
-
-        System.out.println("<<USUARIO>> toogleFavorito Postmapping: " + usuario);
 
         if (usuario == null) {
             return REDIRECT_ROOT;

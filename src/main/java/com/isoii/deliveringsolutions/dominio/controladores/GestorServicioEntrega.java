@@ -13,6 +13,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // Controlador para gestionar los servicios de entrega
 @Controller
@@ -27,6 +29,8 @@ public class GestorServicioEntrega {
     public GestorServicioEntrega(ServiceServicioEntrega serviceServicioEntrega) {
         this.serviceServicioEntrega = serviceServicioEntrega;
     }
+
+    private static final Logger logger = LoggerFactory.getLogger(GestorServicioEntrega.class);
 
     // Método para mostrar todos los servicios de entrega
     @GetMapping("/findAll")
@@ -51,12 +55,12 @@ public class GestorServicioEntrega {
     // Método para registrar un servicio de entrega
     @PostMapping("/registrarServicioEntrega")
     public ResponseEntity<ServicioEntrega> registrarServicioEntrega(@ModelAttribute ServicioEntrega servicioEntrega) {
-        System.out.println("ServicioEntrega recibido: " + servicioEntrega.toString());
+        logger.info("ServicioEntrega recibido: " + servicioEntrega.toString());
         if (servicioEntrega.getFechaRecepcion() == 0 || servicioEntrega.getFechaEntrega() == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         ServicioEntrega servicioEntregaRegistrado = serviceServicioEntrega.save(servicioEntrega);
-        System.out.println("ServicioEntrega registrado: " + servicioEntregaRegistrado);
+        logger.info("ServicioEntrega registrado: " + servicioEntregaRegistrado);
         return new ResponseEntity<>(servicioEntregaRegistrado, HttpStatus.CREATED);
     }
 

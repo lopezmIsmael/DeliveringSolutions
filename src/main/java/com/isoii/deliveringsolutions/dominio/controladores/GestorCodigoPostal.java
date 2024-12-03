@@ -53,12 +53,10 @@ public class GestorCodigoPostal {
     // Método para registrar un código postal
     @PostMapping("/registrarCodigoPostal")
     public ResponseEntity<CodigoPostal> registrarCodigoPostal(@ModelAttribute CodigoPostal codigoPostal) {
-        System.out.println("CodigoPostal recibido: " + codigoPostal.toString());
         if (codigoPostal.getCodigo() == null || codigoPostal.getCodigo().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         CodigoPostal codigoPostalRegistrado = serviceCodigoPostal.save(codigoPostal);
-        System.out.println("CodigoPostal registrado: " + codigoPostalRegistrado);
         return new ResponseEntity<>(codigoPostalRegistrado, HttpStatus.CREATED);
     }
 

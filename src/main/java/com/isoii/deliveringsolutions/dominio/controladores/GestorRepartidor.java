@@ -28,6 +28,9 @@ import com.isoii.deliveringsolutions.dominio.entidades.ServicioEntrega;
 
 import jakarta.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 @RequestMapping("/repartidores")
 public class GestorRepartidor {
@@ -40,6 +43,8 @@ public class GestorRepartidor {
 
     private static final String USUARIO = "usuario";
     private static final String ERROR = "error";
+
+    private static final Logger logger = LoggerFactory.getLogger(GestorRepartidor.class);
 
     @Autowired
     public GestorRepartidor(ServicePedido servicePedido, ServiceDireccion serviceDireccion, 
@@ -185,7 +190,7 @@ public class GestorRepartidor {
     // Método que registra un repartidor
     @PostMapping("/registrarRepartidor")
     public String registrarRepartidor(@ModelAttribute Repartidor repartidor, RedirectAttributes redirectAttributes) {
-        System.out.println("Repartidor recibido: " + repartidor.toString());
+        logger.info("Repartidor recibido: " + repartidor.toString());
         if (repartidor.getPass() == null || repartidor.getPass().isEmpty() || repartidor.getDni().length() != 9
                 || repartidor.getPass().length() < 6) {
             redirectAttributes.addFlashAttribute(ERROR,
@@ -194,7 +199,7 @@ public class GestorRepartidor {
         }
 
         Repartidor repartidorRegistrado = serviceRepartidor.save(repartidor);
-        System.out.println("Repartidor registrado: " + repartidorRegistrado);
+        logger.info("Repartidor registrado: " + repartidorRegistrado);
         redirectAttributes.addFlashAttribute("success", "Repartidor registrado correctamente");
         return "redirect:/";
     }

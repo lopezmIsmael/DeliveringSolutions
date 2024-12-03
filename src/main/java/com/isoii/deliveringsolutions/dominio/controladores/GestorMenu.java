@@ -58,8 +58,6 @@ public class GestorMenu {
         if (optionalRestaurante.isPresent()) {
             Restaurante restaurante = optionalRestaurante.get();
 
-            System.out.println("Restaurante encontrado: " + restaurante.getIdUsuario());
-
             model.addAttribute("restaurante", restaurante);
 
             CartaMenu cartaMenu = new CartaMenu();
@@ -125,14 +123,9 @@ public class GestorMenu {
             model.addAttribute(ERROR, "Carta no válida");
             return REDIRECT_MODIFICAR_CARTA + itemMenu.getCartamenu().getIdCarta();
         }
-        System.out.println("\n" + ITEM_RECIBIDO + itemMenu.getNombre() + "\n");
-        System.out.println("\n" + ITEM_RECIBIDO + itemMenu.getTipo() + "\n");
-        System.out.println("\n" + ITEM_RECIBIDO + itemMenu.getPrecio() + "\n");
 
         Integer cartaMenuID = itemMenu.getCartamenu().getIdCarta();
         Optional<CartaMenu> optionalCarta = serviceCartaMenu.findById(cartaMenuID);
-
-        System.out.println("\nCARTA RECIBIDA: " + cartaMenuID + "\n");
 
         if (!optionalCarta.isPresent()) {
             model.addAttribute(ERROR, "Carta no encontrada");
@@ -158,7 +151,6 @@ public class GestorMenu {
         }
 
         serviceItemMenu.save(itemMenu);
-        System.out.println("\nITEM REGISTRADO: " + itemMenu.toString());
         model.addAttribute("success", "Item registrado exitosamente.");
         model.addAttribute(ITEM_MENU, itemMenu);
         return REDIRECT_MODIFICAR_CARTA + itemMenu.getCartamenu().getIdCarta();
@@ -168,21 +160,18 @@ public class GestorMenu {
     @PostMapping("/registrarCarta")
     public String registrarCarta(@ModelAttribute CartaMenu cartaMenu, RedirectAttributes redirectAttributes) {
         if (cartaMenu.getRestaurante() == null || cartaMenu.getRestaurante().getIdUsuario() == null) {
-            System.out.println("Restaurante no válido: " + cartaMenu.getRestaurante());
             redirectAttributes.addFlashAttribute(ERROR, "Restaurante no válido");
             return REDIRECT_REGISTER_CARTA;
         }
 
         if (cartaMenu.getNombre() == null || cartaMenu.getNombre().isEmpty()) {
-            System.out.println("Nombre de la carta no puede estar vacío");
-            redirectAttributes.addFlashAttribute(ERROR, "El nombre de la carta no puede estar vacío");
-            return REDIRECT_REGISTER_CARTA;
+            redirectAttributes.addFlashAttribute("error", "El nombre de la carta no puede estar vacío");
+            return "redirect:/cartas/register";
         }
 
         String restauranteCif = cartaMenu.getRestaurante().getIdUsuario();
         Optional<Restaurante> optionalRestaurante = serviceRestaurant.findById(restauranteCif);
         if (!optionalRestaurante.isPresent()) {
-            System.out.println(RESTAURANTE_NO_ENCONTRADO + restauranteCif);
             redirectAttributes.addFlashAttribute(ERROR, RESTAURANTE_NO_ENCONTRADO);
             return REDIRECT_REGISTER_CARTA;
         }
@@ -190,9 +179,7 @@ public class GestorMenu {
         Restaurante restaurante = optionalRestaurante.get();
         cartaMenu.setRestaurante(restaurante);
 
-        System.out.println("Carta recibida: " + cartaMenu);
         serviceCartaMenu.save(cartaMenu);
-        System.out.println("Carta registrada: " + cartaMenu);
         redirectAttributes.addFlashAttribute("success", "Carta registrada exitosamente.");
         return "redirect:/restaurantes/gestion/" + restauranteCif;
     }
@@ -213,9 +200,7 @@ public class GestorMenu {
     @DeleteMapping("/eliminarItem/{id}")
     @ResponseBody
     public ResponseEntity<Void> eliminarItem(@PathVariable Integer id) {
-        System.out.println("\nBuscando item: " + id + "\n");
         Optional<ItemMenu> optionalItemMenu = serviceItemMenu.findById(id);
-        System.out.println("\nItem encontrado: " + optionalItemMenu + "\n");
         if (optionalItemMenu.isPresent()) {
             serviceItemMenu.deleteById(optionalItemMenu.get().getIdItemMenu());
             return new ResponseEntity<>(HttpStatus.OK);

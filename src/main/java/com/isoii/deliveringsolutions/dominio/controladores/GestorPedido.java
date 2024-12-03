@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 // Controlador para gestionar los pedidos
 @Controller
 @RequestMapping("/pedido")
@@ -31,6 +34,8 @@ public class GestorPedido {
 
     private final ServicePedido servicePedido;
     private final ServiceItemPedido serviceItemPedido;
+
+    private static final Logger logger = LoggerFactory.getLogger(GestorPedido.class);
 
     @Autowired
     public GestorPedido(ServicePedido servicePedido, ServiceItemPedido serviceItemPedido) {
@@ -61,12 +66,12 @@ public class GestorPedido {
     // Método para registrar un pedido
     @PostMapping("/registrarPedido")
     public ResponseEntity<Pedido> registrarPedido(@ModelAttribute Pedido pedido) {
-        System.out.println("Pedido recibido: " + pedido.toString());
+        logger.info("Pedido recibido: " + pedido.toString());
         if (pedido.getFecha() == 0 || pedido.getEstadoPedido() == null || pedido.getEstadoPedido().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Pedido pedidoRegistrado = servicePedido.save(pedido);
-        System.out.println("Pedido registrado: " + pedidoRegistrado);
+        logger.info("Pedido registrado: " + pedidoRegistrado);
         return new ResponseEntity<>(pedidoRegistrado, HttpStatus.CREATED);
     }
 
@@ -75,7 +80,6 @@ public class GestorPedido {
     public ResponseEntity<String> addToCart(@ModelAttribute ItemMenu item) {
         carrito.add(item);
         // Aquí puedes agregar la lógica para añadir el item al carrito
-        System.out.println("Item añadido al carrito: " + item.getNombre() + " - " + item.getPrecio());
         return new ResponseEntity<>("Item añadido al carrito", HttpStatus.OK);
     }
 
