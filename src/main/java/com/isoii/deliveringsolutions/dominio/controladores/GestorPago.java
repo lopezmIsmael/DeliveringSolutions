@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 @Controller
 @RequestMapping("/pago")
 public class GestorPago {
-    private static final String USUARIO = "usuario";
     private static final String ERROR = "error";
     private final ServiceGroup serviceGroup;
     private static final Logger logger = LoggerFactory.getLogger(GestorPago.class);
