@@ -65,6 +65,9 @@ public class GestorPago {
         }
 
         restaurante = serviceGroup.getServiceRestaurant().findById(restauranteId).orElse(null);
+        if (restaurante == null) {
+            return "redirect:/error"; // or any appropriate error handling
+        }
 
         System.out.println("<<Restaurante>>: " + restaurante.getNombre());
         ObjectMapper objectMapper = new ObjectMapper();
@@ -160,25 +163,26 @@ public class GestorPago {
         serviceGroup.getServicePago().save(pago);
 
         System.out.println("<<Pago registrado>>: " + pago.toString());
+        if (restaurante != null) {
+            pedido.setEstadoPedido("Pagado");
+            serviceGroup.getServicePedido().save(pedido);
 
-        pedido.setEstadoPedido("Pagado");
-        serviceGroup.getServicePedido().save(pedido);
+            Usuario usuarioRestaurante = serviceGroup.getServiceUsuario().findById(restaurante.getIdUsuario()).orElse(null);
+            List<Direccion> direccionesRecogida = serviceGroup.getServiceDireccion().findByUsuario(usuarioRestaurante);
+            Direccion direccionRecogida = !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
+            System.out.println("<<Direccion de recogida>>: " + direccionRecogida.toString());
 
-        Usuario usuarioRestaurante = serviceGroup.getServiceUsuario().findById(restaurante.getIdUsuario()).orElse(null);
-        List<Direccion> direccionesRecogida = serviceGroup.getServiceDireccion().findByUsuario(usuarioRestaurante);
-        Direccion direccionRecogida = !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
-        System.out.println("<<Direccion de recogida>>: " + direccionRecogida.toString());
+            Direccion direccionEntrega = serviceGroup.getServiceDireccion().findById(direccion).orElse(null);
 
-        Direccion direccionEntrega = serviceGroup.getServiceDireccion().findById(direccion).orElse(null);
-
-        redirectAttributes.addFlashAttribute("pedido", pedido);
-        redirectAttributes.addFlashAttribute("items", items);
-        redirectAttributes.addFlashAttribute("pago", pago);
-        redirectAttributes.addFlashAttribute("restaurante", restaurante);
-        redirectAttributes.addFlashAttribute("cliente", cliente);
-        redirectAttributes.addFlashAttribute("total", total);
-        redirectAttributes.addFlashAttribute("direccionRecogida", direccionRecogida);
-        redirectAttributes.addFlashAttribute("direccionEntrega", direccionEntrega);
+            redirectAttributes.addFlashAttribute("pedido", pedido);
+            redirectAttributes.addFlashAttribute("items", items);
+            redirectAttributes.addFlashAttribute("pago", pago);
+            redirectAttributes.addFlashAttribute("restaurante", restaurante);
+            redirectAttributes.addFlashAttribute("cliente", cliente);
+            redirectAttributes.addFlashAttribute("total", total);
+            redirectAttributes.addFlashAttribute("direccionRecogida", direccionRecogida);
+            redirectAttributes.addFlashAttribute("direccionEntrega", direccionEntrega);
+        }
 
         return "redirect:/pago/confirmacion";
     }
