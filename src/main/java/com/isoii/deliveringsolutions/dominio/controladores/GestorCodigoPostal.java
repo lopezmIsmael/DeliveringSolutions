@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
@@ -15,9 +14,10 @@ import com.isoii.deliveringsolutions.dominio.entidades.CodigoPostal;
 import com.isoii.deliveringsolutions.dominio.service.ServiceCodigoPostal;
 
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RestController;
 
 // Controlador para gestionar los códigos postales
-@Controller
+@RestController
 @RequestMapping("/codigoPostal")
 public class GestorCodigoPostal {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
@@ -31,7 +31,6 @@ public class GestorCodigoPostal {
 
     // Método para obtener todos los códigos postales
     @GetMapping("/findAll")
-    @ResponseBody
     public List<CodigoPostal> findAll() {
         return serviceCodigoPostal.findAll();
     }
@@ -44,7 +43,6 @@ public class GestorCodigoPostal {
 
     // Método para obtener un código postal por su id
     @GetMapping("/findById/{id}")
-    @ResponseBody
     public CodigoPostal findById(@PathVariable Integer id) {
         return serviceCodigoPostal.findById(id).orElse(null);
     }
