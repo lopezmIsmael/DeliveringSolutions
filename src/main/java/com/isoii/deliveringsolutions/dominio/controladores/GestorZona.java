@@ -17,6 +17,9 @@ import com.isoii.deliveringsolutions.dominio.entidades.ZonaCodigoPostal;
 import com.isoii.deliveringsolutions.dominio.service.ServiceZona;
 import com.isoii.deliveringsolutions.dominio.service.ServiceZonaCodigoPostal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 // Controlador para gestionar las zonas
 @Controller
 @RequestMapping("/zona")
@@ -25,6 +28,8 @@ public class GestorZona {
 
     private final ServiceZona serviceZona;
     private final ServiceZonaCodigoPostal serviceZonaCodigoPostal;
+
+    private static final Logger logger = LoggerFactory.getLogger(GestorZona.class);
 
     @Autowired
     public GestorZona(ServiceZona serviceZona, ServiceZonaCodigoPostal serviceZonaCodigoPostal) {
@@ -55,12 +60,12 @@ public class GestorZona {
     // Método para registrar una zona
     @PostMapping("/registrarZona")
     public String registrarZona(@ModelAttribute Zona zona) {
-        System.out.println("Zona recibida: " + zona.toString());
+        logger.info("Zona recibida: " + zona.toString());
         if (zona.getNombre() == null || zona.getNombre().isEmpty()) {
             return "Error";
         }
         Zona zonaRegistrada = serviceZona.save(zona);
-        System.out.println("Zona registrada: " + zonaRegistrada);
+        logger.info("Zona registrada: " + zonaRegistrada);
         return "redirect:/zonaCodigoPostal/register";
 
     }

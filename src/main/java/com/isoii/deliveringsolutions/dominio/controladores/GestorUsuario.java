@@ -22,10 +22,16 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceUser;
 
 import jakarta.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 // Controlador para gestionar los usuarios
 @Controller
 @RequestMapping("/usuarios")
 public class GestorUsuario {
+    private static final Logger logger = LoggerFactory.getLogger(GestorUsuario.class);
+    private static final String REDIRECT_HOME = "redirect:/";
+
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     private final ServiceUser serviceUsuario;
@@ -71,14 +77,14 @@ public class GestorUsuario {
     // Método que registra un cliente
     @PostMapping("/registrarUsuario")
     public String registrarUsuario(@ModelAttribute Usuario usuario) {
-        System.out.println("Usuario recibido: " + usuario.toString());
+        logger.info("Usuario recibido: " + usuario.toString());
         if (usuario.getPass() == null || usuario.getPass().isEmpty()) {
             return "redirect:/usuarios/registrarUsuario"; 
         }
 
         Usuario usuarioRegistrado = serviceUsuario.save(usuario);
-        System.out.println("Usuario registrado: " + usuarioRegistrado);
-        return "redirect:/";
+        logger.info("Usuario registrado: " + usuarioRegistrado);
+        return REDIRECT_HOME;
     }
 
     // Método que elimina un cliente por su id

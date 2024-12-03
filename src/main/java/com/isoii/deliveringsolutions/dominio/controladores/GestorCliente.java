@@ -169,13 +169,10 @@ public class GestorCliente {
     public String editarDatos(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
 
-        System.out.println("<<USUARIO>>:: " + usuario);
-
         model.addAttribute("usuario", usuario);
 
         List<Direccion> direcciones = serviceDireccion.findByUsuario(usuario);
 
-        System.out.println("<<DIRECCIONES>>: " + direcciones);
         if (direcciones == null || direcciones.isEmpty()) {
             direcciones = List.of(new Direccion());
         }
@@ -220,13 +217,11 @@ public class GestorCliente {
     @PostMapping("/registrarCliente")
     public String registrarCliente(@ModelAttribute Cliente cliente) {
 
-        System.out.println("Cliente recibido: " + cliente.toString());
         if (cliente.getPass() == null || cliente.getPass().isEmpty()) {
             return "redirect:/clientes/register";
         }
 
         Cliente clienteRegistrado = serviceClient.save(cliente);
-        System.out.println("Cliente registrado: " + clienteRegistrado);
         return "redirect:/";
     }
 
@@ -242,8 +237,6 @@ public class GestorCliente {
     public String toggleFavorito(@PathVariable String id, HttpSession session,
             @RequestParam(value = "favoritos", required = false) String favoritosParam) {
         Usuario usuario = (Usuario) session.getAttribute("usuario");
-
-        System.out.println("<<USUARIO>> toogleFavorito Postmapping: " + usuario);
 
         if (usuario == null) {
             return "redirect:/";

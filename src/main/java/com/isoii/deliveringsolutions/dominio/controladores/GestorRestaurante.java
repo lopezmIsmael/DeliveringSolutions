@@ -23,10 +23,14 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceCartaMenu;
 import com.isoii.deliveringsolutions.dominio.service.ServiceDireccion;
 import com.isoii.deliveringsolutions.dominio.service.ServiceRestaurant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 // Controlador para gestionar los restaurantes
 @Controller
 @RequestMapping("/restaurantes")
 public class GestorRestaurante {
+    private static final Logger logger = LoggerFactory.getLogger(GestorRestaurante.class);
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     private final ServiceCartaMenu serviceCartaMenu;
@@ -101,13 +105,13 @@ public class GestorRestaurante {
     // Método para registrar un restaurante
     @PostMapping("/registrarRestaurante")
     public String registrarRestaurante(@ModelAttribute Restaurante restaurante, Model model) {
-        System.out.println("Restaurante recibido: " + restaurante.toString());
+        logger.info("Restaurante recibido: " + restaurante.toString());
         if (restaurante.getPass() == null || restaurante.getPass().isEmpty()) {
             model.addAttribute("error", "Contraseña no puede estar vacía");
             return "error";
         }
         Restaurante restauranteRegistrado = serviceRestaurant.save(restaurante);
-        System.out.println("Restaurante registrado: " + restauranteRegistrado);
+        logger.info("Restaurante registrado: " + restauranteRegistrado);
         return "redirect:/restaurantes/gestion/" + restauranteRegistrado.getIdUsuario();
     }
 
