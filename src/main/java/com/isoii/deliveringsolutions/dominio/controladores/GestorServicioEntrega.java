@@ -18,6 +18,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/servicioEntrega")
 public class GestorServicioEntrega {
+    private static final String ERROR_VIEW = "error";
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     private final ServiceServicioEntrega serviceServicioEntrega;
@@ -68,7 +69,7 @@ public class GestorServicioEntrega {
             return "/administrador/ListaServiciosEntrega"; 
         } else {
             model.addAttribute("error", "No se encontraron servicios de entrega");
-            return "error"; 
+            return ERROR_VIEW; 
         }
     }
 
@@ -82,7 +83,7 @@ public class GestorServicioEntrega {
             return "/administrador/VerServicioEntrega"; 
         } else {
             model.addAttribute("error", "Servicio de entrega no encontrado");
-            return "error"; 
+            return ERROR_VIEW; 
         }
     }
 

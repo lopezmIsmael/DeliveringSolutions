@@ -31,6 +31,8 @@ import org.springframework.ui.Model;
 @Controller
 @RequestMapping("/pago")
 public class GestorPago {
+    private static final String USUARIO = "usuario";
+    private static final String ERROR = "error";
     private final ServiceGroup serviceGroup;
 
     @Autowired
@@ -53,8 +55,7 @@ public class GestorPago {
         System.out.println("<<RestauranteId>>: " + restauranteId);
         System.out.println("<<CartData>>: " + cartData);
 
-        Restaurante restaurante = new Restaurante();
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        Usuario usuario = (Usuario) session.getAttribute(USUARIO);
 
         if (usuario == null) {
             return "redirect:/usuarios/login";
@@ -64,7 +65,7 @@ public class GestorPago {
             return "redirect:/direccion/formularioRegistro";
         }
 
-        restaurante = serviceGroup.getServiceRestaurant().findById(restauranteId).orElse(null);
+        Restaurante restaurante = serviceGroup.getServiceRestaurant().findById(restauranteId).orElse(null);
 
         System.out.println("<<Restaurante>>: " + restaurante.getNombre());
         ObjectMapper objectMapper = new ObjectMapper();
@@ -126,7 +127,7 @@ public class GestorPago {
         System.out.println("<<RestauranteId>>: " + restauranteId);
         System.out.println("<<DireccionId>>: " + direccion);
 
-        Cliente cliente = (Cliente) session.getAttribute("usuario");
+        Cliente cliente = (Cliente) session.getAttribute(USUARIO);
         Restaurante restaurante = serviceGroup.getServiceRestaurant().findById(restauranteId).orElse(null);
 
         Pedido pedido = new Pedido();
@@ -197,8 +198,8 @@ public class GestorPago {
             model.addAttribute("pagos", pagos);
             return "/administrador/ListaPagos";
         } else {
-            model.addAttribute("error", "No se encontraron pagos");
-            return "error";
+            model.addAttribute(ERROR, "No se encontraron pagos");
+            return ERROR;
         }
     }
 
@@ -210,8 +211,8 @@ public class GestorPago {
             model.addAttribute("pago", optionalPago.get());
             return "/administrador/VerPago";
         } else {
-            model.addAttribute("error", "Pago no encontrado");
-            return "error";
+            model.addAttribute(ERROR, "Pago no encontrado");
+            return ERROR;
         }
     }
 

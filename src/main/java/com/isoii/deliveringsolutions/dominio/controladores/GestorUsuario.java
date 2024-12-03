@@ -22,10 +22,10 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceUser;
 
 import jakarta.servlet.http.HttpSession;
 
-// Controlador para gestionar los usuarios
 @Controller
 @RequestMapping("/usuarios")
 public class GestorUsuario {
+    private static final String REDIRECT_PREFIX = "redirect:/";
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     private final ServiceUser serviceUsuario;
@@ -35,60 +35,51 @@ public class GestorUsuario {
         this.serviceUsuario = serviceUsuario;
     }
 
-    // Método que devuelve una lista de todos los clientes
     @GetMapping("/findAll")
     @ResponseBody
     public List<Usuario> findAll() {
         return serviceUsuario.findAll();
     }
 
-    // Método que muestra el formulario de registro de cliente
     @GetMapping("/register")
     public String mostrarFormularioRegistro() {
         return "rol";
     }
 
-    // Método que busca un solo cliente por su id
     @GetMapping("/findById/{id}")
     @ResponseBody
     public Usuario findById(@PathVariable String id) {
         return serviceUsuario.findById(id).orElse(null);
     }
 
-    // Metodo que muestra formulario de login
     @GetMapping("/login")
     public String mostrarFormularioLogin() {
         return "index"; 
     }
 
-    // Metodo que muestra formulario de aboutUs
     @GetMapping("/aboutUs")
     public String mostrarAboutUs() {
         return "aboutUs"; 
     }
 
-
-    // Método que registra un cliente
     @PostMapping("/registrarUsuario")
     public String registrarUsuario(@ModelAttribute Usuario usuario) {
         System.out.println("Usuario recibido: " + usuario.toString());
         if (usuario.getPass() == null || usuario.getPass().isEmpty()) {
-            return "redirect:/usuarios/registrarUsuario"; 
+            return REDIRECT_PREFIX + "usuarios/registrarUsuario"; 
         }
 
         Usuario usuarioRegistrado = serviceUsuario.save(usuario);
         System.out.println("Usuario registrado: " + usuarioRegistrado);
-        return "redirect:/";
+        return REDIRECT_PREFIX;
     }
 
-    // Método que elimina un cliente por su id
     @DeleteMapping("/deleteById/{id}")
     public ResponseEntity<String> deleteById(@PathVariable String id) {
         serviceUsuario.deleteById(id);
         return new ResponseEntity<>("Usuario eliminado", HttpStatus.OK);
     }
 
-    // Método para loguear un usuario
     @PostMapping("/loginUsuario")
     public String loginUsuario(@RequestParam String username, @RequestParam String password,
             RedirectAttributes redirectAttributes, HttpSession session) {
@@ -97,15 +88,15 @@ public class GestorUsuario {
             session.setAttribute("usuario", usuarioLogueado);
             redirectAttributes.addFlashAttribute("mensaje", "Inicio de sesión exitoso.");
             if(usuarioLogueado.gettipoUsuario().equals("CLIENTE"))
-                return "redirect:/clientes/verRestaurantes";
+                return REDIRECT_PREFIX + "clientes/verRestaurantes";
             else if(usuarioLogueado.gettipoUsuario().equals("REPARTIDOR"))
-                return "redirect:/repartidores/login";
+                return REDIRECT_PREFIX + "repartidores/login";
             else if(usuarioLogueado.gettipoUsuario().equals("RESTAURANTE"))
-                return "redirect:/restaurantes/gestion/" + username;
+                return REDIRECT_PREFIX + "restaurantes/gestion/" + username;
         } else {
             redirectAttributes.addFlashAttribute("error", "Usuario o contraseña incorrectos.");
-            return "redirect:/";
+            return REDIRECT_PREFIX;
         }
-        return "redirect:/";
+        return REDIRECT_PREFIX;
     }
 }
