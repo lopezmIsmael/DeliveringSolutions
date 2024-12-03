@@ -9,6 +9,7 @@ import com.isoii.deliveringsolutions.dominio.entidades.ItemPedido;
 import org.springframework.ui.Model;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.web.bind.annotation.RestController;
-
 // Controlador para gestionar los pedidos
-@RestController
+@Controller
 @RequestMapping("/pedido")
 public class GestorPedido {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
@@ -40,6 +39,7 @@ public class GestorPedido {
 
     // Método para mostrar todos los pedidos
     @GetMapping("/findAll")
+    @ResponseBody
     public List<Pedido> findAll() {
         return servicePedido.findAll();
     }
@@ -52,6 +52,7 @@ public class GestorPedido {
 
     // Método para buscar un pedido por su id
     @GetMapping("/findById/{id}")
+    @ResponseBody
     public Pedido findById(@PathVariable Integer id) {
         return servicePedido.findById(id).orElse(null);
     }
