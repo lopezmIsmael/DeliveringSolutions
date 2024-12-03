@@ -170,7 +170,12 @@ public class GestorPago {
             Usuario usuarioRestaurante = serviceGroup.getServiceUsuario().findById(restaurante.getIdUsuario()).orElse(null);
             List<Direccion> direccionesRecogida = serviceGroup.getServiceDireccion().findByUsuario(usuarioRestaurante);
             Direccion direccionRecogida = !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
-            System.out.println("<<Direccion de recogida>>: " + direccionRecogida.toString());
+
+            if (direccionRecogida != null) {
+                System.out.println("<<Direccion de recogida>>: " + direccionRecogida.toString());
+            } else {
+                System.out.println("<<Direccion de recogida no encontrada>>");
+            }
 
             Direccion direccionEntrega = serviceGroup.getServiceDireccion().findById(direccion).orElse(null);
 
