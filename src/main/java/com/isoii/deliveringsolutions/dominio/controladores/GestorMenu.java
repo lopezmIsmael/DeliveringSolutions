@@ -9,6 +9,7 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceRestaurant;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +18,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.web.bind.annotation.RestController;
-
 // Controlador para gestionar las cartas de menú
-@RestController
+@Controller
 @RequestMapping("/cartas")
 public class GestorMenu {
 
@@ -39,6 +38,7 @@ public class GestorMenu {
 
     // Método que devuelve una lista de todas las cartas
     @GetMapping("/findAll")
+    @ResponseBody
     public List<CartaMenu> findAll() {
         return serviceCartaMenu.findAll();
     }
@@ -65,12 +65,14 @@ public class GestorMenu {
 
     // Método que busca una sola carta por su id
     @GetMapping("/findById/{id}")
+    @ResponseBody
     public CartaMenu findById(@PathVariable Integer id) {
         return serviceCartaMenu.findById(id).orElse(null);
     }
 
     // Método que devuelve una lista de todos los items del menú
     @GetMapping("/items/findAll")
+    @ResponseBody
     public List<ItemMenu> findAllItems() {
         return serviceItemMenu.findAll();
     }
@@ -188,6 +190,7 @@ public class GestorMenu {
 
     // Método que elimina un item
     @DeleteMapping("/eliminarItem/{id}")
+    @ResponseBody
     public ResponseEntity<Void> eliminarItem(@PathVariable Integer id) {
         Optional<ItemMenu> optionalItemMenu = serviceItemMenu.findById(id);
         if (optionalItemMenu.isPresent()) {
