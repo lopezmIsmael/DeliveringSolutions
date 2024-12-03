@@ -66,12 +66,12 @@ public class GestorPedido {
     // Método para registrar un pedido
     @PostMapping("/registrarPedido")
     public ResponseEntity<Pedido> registrarPedido(@ModelAttribute Pedido pedido) {
-        logger.info("Pedido recibido: " + pedido.toString());
+        logger.info("Pedido recibido: {}", pedido.toString());
         if (pedido.getFecha() == 0 || pedido.getEstadoPedido() == null || pedido.getEstadoPedido().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Pedido pedidoRegistrado = servicePedido.save(pedido);
-        logger.info("Pedido registrado: " + pedidoRegistrado);
+        logger.info("Pedido registrado: {}", pedidoRegistrado);
         return new ResponseEntity<>(pedidoRegistrado, HttpStatus.CREATED);
     }
 

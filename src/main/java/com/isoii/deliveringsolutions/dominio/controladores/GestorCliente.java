@@ -174,7 +174,7 @@ public class GestorCliente {
     public String editarDatos(Model model, HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute(USUARIO);
 
-        logger.info("<<USUARIO>>:: " + usuario);
+        logger.info("<<USUARIO>>: {}", usuario);
 
         model.addAttribute(USUARIO, usuario);
 
@@ -225,7 +225,7 @@ public class GestorCliente {
         }
 
         Cliente clienteRegistrado = serviceClient.save(cliente);
-        logger.info("Cliente registrado: " + clienteRegistrado);
+        logger.info("Cliente registrado: {}", clienteRegistrado);
         return REDIRECT_ROOT;
     }
 

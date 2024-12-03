@@ -107,13 +107,13 @@ public class GestorRestaurante {
     // Método para registrar un restaurante
     @PostMapping("/registrarRestaurante")
     public String registrarRestaurante(@ModelAttribute Restaurante restaurante, Model model) {
-        logger.info("Restaurante recibido: " + restaurante.toString());
+        logger.info("Restaurante recibido: {}", restaurante.toString());
         if (restaurante.getPass() == null || restaurante.getPass().isEmpty()) {
             model.addAttribute(ERROR_VIEW, "Contraseña no puede estar vacía");
             return ERROR_VIEW;
         }
         Restaurante restauranteRegistrado = serviceRestaurant.save(restaurante);
-        logger.info("Restaurante registrado: " + restauranteRegistrado);
+        logger.info("Restaurante registrado: {}", restauranteRegistrado);
         return "redirect:/restaurantes/gestion/" + restauranteRegistrado.getIdUsuario();
     }
 

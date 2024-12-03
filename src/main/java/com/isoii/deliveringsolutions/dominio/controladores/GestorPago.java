@@ -54,7 +54,7 @@ public class GestorPago {
     @PostMapping("/register")
     public String mostrarFormularioRegistro(@RequestParam("cartData") String cartData,
             @RequestParam("restauranteId") String restauranteId, Model model, HttpSession session) {
-        logger.info("<<RestauranteId>>: " + restauranteId);
+        logger.info("<<RestauranteId>>: {}", restauranteId);
 
         Usuario usuario = (Usuario) session.getAttribute(USUARIO);
 
@@ -71,7 +71,7 @@ public class GestorPago {
             return "redirect:/error"; // or any appropriate error handling
         }
 
-        logger.info("<<Restaurante>>: " + restaurante.getNombre());
+        logger.info("<<Restaurante>>: {}", restaurante.getNombre());
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -84,16 +84,16 @@ public class GestorPago {
             e.printStackTrace();
         }
 
-        logger.info("<<Carrito size>>: " + carrito.size());
+        logger.info("<<Carrito size>>: {}", carrito.size());
         for (ItemMenu item : carrito) {
-            logger.info("<<Item>>: " + item.getNombre() + ", Precio: " + item.getPrecio());
+            logger.info("<<Item>>: {}, Precio: {}", item.getNombre(), item.getPrecio());
         }
 
         double totalPrice = 0;
         for (ItemMenu item : carrito) {
             totalPrice += item.getPrecio();
         }
-        logger.info("<<Total Price>>: " + totalPrice);
+        logger.info("<<Total Price>>: {}", totalPrice);
 
         List<Direccion> direcciones = serviceGroup.getServiceDireccion().findByUsuario(usuario);
         List<CodigoPostal> codigosPostales = serviceGroup.getServiceCodigoPostal().findAll();
@@ -127,9 +127,9 @@ public class GestorPago {
             RedirectAttributes redirectAttributes) {
 
         logger.info("<<ESTOY EN REGISTRAR PEDIDO: GestorPago>>");
-        logger.info("<<Metodo de pago>>: " + metodoPago);
-        logger.info("<<RestauranteId>>: " + restauranteId);
-        logger.info("<<DireccionId>>: " + direccion);
+        logger.info("<<Metodo de pago>>: {}", metodoPago);
+        logger.info("<<RestauranteId>>: {}", restauranteId);
+        logger.info("<<DireccionId>>: {}", direccion);
 
         Cliente cliente = (Cliente) session.getAttribute(USUARIO);
         Restaurante restaurante = serviceGroup.getServiceRestaurant().findById(restauranteId).orElse(null);
@@ -141,7 +141,7 @@ public class GestorPago {
         pedido.setRestaurante(restaurante);
 
         serviceGroup.getServicePedido().save(pedido);
-        logger.info("<<Pedido registrado>>: " + pedido.toString());
+        logger.info("<<Pedido registrado>>: {}", pedido.toString());
         Double total = 0.0;
         List<ItemMenu> items = new ArrayList<>();
         for (Integer itemId : itemIds) {
@@ -151,11 +151,11 @@ public class GestorPago {
                 ItemPedido itemPedido = new ItemPedido();
                 items.add(optionalItem.get());
                 total += optionalItem.get().getPrecio();
-                logger.info("<<Item encontrado>>: " + optionalItem.toString());
+                logger.info("<<Item encontrado>>: {}", optionalItem.toString());
                 itemPedido.setItemMenu(optionalItem.get());
                 itemPedido.setPedido(pedido);
                 serviceGroup.getServiceItemPedido().save(itemPedido);
-                logger.info("<<ItemPedido registrado>>: " + itemPedido.toString());
+                logger.info("<<ItemPedido registrado>>: {}", itemPedido.toString());
             }
         }
 
@@ -164,7 +164,7 @@ public class GestorPago {
         pago.setPedido(pedido);
         serviceGroup.getServicePago().save(pago);
 
-        logger.info("<<Pago registrado>>: " + pago.toString());
+        logger.info("<<Pago registrado>>: {}", pago.toString());
         if (restaurante != null) {
             pedido.setEstadoPedido("Pagado");
             serviceGroup.getServicePedido().save(pedido);
@@ -174,7 +174,7 @@ public class GestorPago {
             Direccion direccionRecogida = !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
 
             if (direccionRecogida != null) {
-                logger.info("<<Direccion de recogida>>: " + direccionRecogida.toString());
+                logger.info("<<Direccion de recogida>>: {}", direccionRecogida.toString());
             } else {
                 logger.info("<<Direccion de recogida no encontrada>>");
             }
