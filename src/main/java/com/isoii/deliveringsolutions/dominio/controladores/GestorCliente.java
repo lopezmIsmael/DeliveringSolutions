@@ -39,6 +39,8 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceRestaurant;
 @RequestMapping("/clientes")
 public class GestorCliente {
 
+    private static final String USUARIO = "usuario";
+
     private final ServiceCartaMenu serviceCartaMenu;
     private final ServiceDireccion serviceDireccion;
     private final ServiceClient serviceClient;
@@ -82,8 +84,8 @@ public class GestorCliente {
     @GetMapping("/verRestaurantes")
     public String verRestaurantes(@RequestParam(value = "favoritos", required = false) String favoritosParam,
             Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        model.addAttribute("usuario", usuario);
+        Usuario usuario = (Usuario) session.getAttribute(USUARIO);
+        model.addAttribute(USUARIO, usuario);
 
         boolean vistaFavoritos = "true".equalsIgnoreCase(favoritosParam);
         model.addAttribute("vistaFavoritos", vistaFavoritos);
@@ -121,8 +123,8 @@ public class GestorCliente {
     // Método que filtra los restaurantes por nombre
     @GetMapping("/filtrar")
     public String filtrarRestaurantes(@RequestParam(required = false) String nombre, Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        model.addAttribute("usuario", usuario);
+        Usuario usuario = (Usuario) session.getAttribute(USUARIO);
+        model.addAttribute(USUARIO, usuario);
         model.addAttribute("vistaFavoritos", false);
 
         List<Restaurante> restaurantes = serviceRestaurant.findAll();
@@ -140,7 +142,7 @@ public class GestorCliente {
     @GetMapping("/verMenusRestaurante/{id}")
     public String verMenusRestaurante(@PathVariable String id, Model model, HttpSession session) {
 
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        Usuario usuario = (Usuario) session.getAttribute(USUARIO);
         if (usuario == null) {
             return "redirect:/"; 
         }
@@ -170,11 +172,11 @@ public class GestorCliente {
     // direcciones
     @GetMapping("/editarDatos")
     public String editarDatos(Model model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        Usuario usuario = (Usuario) session.getAttribute(USUARIO);
 
         System.out.println("<<USUARIO>>:: " + usuario);
 
-        model.addAttribute("usuario", usuario);
+        model.addAttribute(USUARIO, usuario);
 
         List<Direccion> direcciones = serviceDireccion.findByUsuario(usuario);
 
@@ -204,11 +206,11 @@ public class GestorCliente {
         List<Pedido> pedidosCliente = new ArrayList<>();
         for (Pedido pedido : pedidos) {
             // Si el pedido pertenece al cliente, mostrar
-            if (pedido.getCliente().getIdUsuario().equals(((Usuario) session.getAttribute("usuario")).getIdUsuario())) {
+            if (pedido.getCliente().getIdUsuario().equals(((Usuario) session.getAttribute(USUARIO)).getIdUsuario())) {
                 pedidosCliente.add(pedido);
             }
         }
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        Usuario usuario = (Usuario) session.getAttribute(USUARIO);
         Cliente cliente = serviceClient.findById(usuario.getIdUsuario()).orElse(null);
         if (cliente == null) {
             return "redirect:/";
@@ -244,7 +246,7 @@ public class GestorCliente {
     @PostMapping("/toggleFavorito/{id}")
     public String toggleFavorito(@PathVariable String id, HttpSession session,
             @RequestParam(value = "favoritos", required = false) String favoritosParam) {
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        Usuario usuario = (Usuario) session.getAttribute(USUARIO);
 
         System.out.println("<<USUARIO>> toogleFavorito Postmapping: " + usuario);
 
