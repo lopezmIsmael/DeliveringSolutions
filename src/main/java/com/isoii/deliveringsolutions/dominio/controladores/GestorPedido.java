@@ -24,6 +24,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/pedido")
 public class GestorPedido {
+    private static final String ERROR_VIEW = "error";
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     private List<ItemMenu> carrito = new ArrayList<>();
@@ -94,7 +95,7 @@ public class GestorPedido {
             return "/administrador/ListaPedidos";
         } else {
             model.addAttribute("error", "No se encontraron pedidos");
-            return "error";
+            return ERROR_VIEW;
         }
     }
 
@@ -121,7 +122,7 @@ public class GestorPedido {
             return "/administrador/VerPedido";
         } else {
             model.addAttribute("error", "Pedido no encontrado");
-            return "error";
+            return ERROR_VIEW;
         }
     }
 
@@ -134,7 +135,7 @@ public class GestorPedido {
             return "/administrador/ListaItemsPedido";
         } else {
             model.addAttribute("error", "Items de pedido no encontrados");
-            return "error";
+            return ERROR_VIEW;
         }
     }
 
@@ -147,7 +148,7 @@ public class GestorPedido {
             return "/administrador/VerItemPedido";
         } else {
             model.addAttribute("error", "Item de pedido no encontrado");
-            return "error"; 
+            return ERROR_VIEW; 
         }
     }
 

@@ -21,6 +21,7 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceZonaCodigoPostal;
 @Controller
 @RequestMapping("/zona")
 public class GestorZona {
+    private static final String ERROR_VIEW = "error";
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     private final ServiceZona serviceZona;
@@ -57,7 +58,7 @@ public class GestorZona {
     public String registrarZona(@ModelAttribute Zona zona) {
         System.out.println("Zona recibida: " + zona.toString());
         if (zona.getNombre() == null || zona.getNombre().isEmpty()) {
-            return "Error";
+            return ERROR_VIEW;
         }
         Zona zonaRegistrada = serviceZona.save(zona);
         System.out.println("Zona registrada: " + zonaRegistrada);
@@ -74,7 +75,7 @@ public class GestorZona {
             return "/administrador/ListaZonas"; 
         } else {
             model.addAttribute("error", "No se encontraron zonas");
-            return "error"; 
+            return ERROR_VIEW; 
         }
     }
 
@@ -98,7 +99,7 @@ public class GestorZona {
             return "/administrador/VerZona"; 
         } else {
             model.addAttribute("error", "Zona no encontrada");
-            return "error";
+            return ERROR_VIEW;
         }
     }
 

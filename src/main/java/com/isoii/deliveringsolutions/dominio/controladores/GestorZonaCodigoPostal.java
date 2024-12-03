@@ -21,6 +21,7 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceZonaCodigoPostal;
 @Controller
 @RequestMapping("/zonaCodigoPostal")
 public class GestorZonaCodigoPostal {
+    private static final String ERROR_MESSAGE = "error";
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     private final ServiceZonaCodigoPostal serviceZonaCodigoPostal;
@@ -68,14 +69,14 @@ public class GestorZonaCodigoPostal {
         Zona zona = serviceZona.findById(zonaId).orElse(null);
 
         if (zona == null) {
-            redirectAttributes.addFlashAttribute("error", "Debe seleccionar una zona y un código postal válidos.");
+            redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "Debe seleccionar una zona y un código postal válidos.");
             return "redirect:/zonaCodigoPostal/register";
         }
 
         for (int codigoPostalId : codigoPostalIds) {
             CodigoPostal codigoPostal = serviceCodigoPostal.findById(codigoPostalId).orElse(null);
             if (codigoPostal == null) {
-                redirectAttributes.addFlashAttribute("error", "Debe seleccionar una zona y un código postal válidos.");
+                redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "Debe seleccionar una zona y un código postal válidos.");
                 return "redirect:/zonaCodigoPostal/register";
             }
             ZonaCodigoPostal zonaCodigoPostal = new ZonaCodigoPostal();
@@ -97,7 +98,7 @@ public class GestorZonaCodigoPostal {
             model.addAttribute("zonasCodigosPostales", zonasCodigosPostales);
             return "/administrador/ListaZonasCodigoPostal";
         } else {
-            model.addAttribute("error", "No se encontraron zonas con códigos postales.");
+            model.addAttribute(ERROR_MESSAGE, "No se encontraron zonas con códigos postales.");
             return "error"; 
         }
     }
@@ -110,7 +111,7 @@ public class GestorZonaCodigoPostal {
             model.addAttribute("zonaCodigoPostal", optionalZonaCodigoPostal.get());
             return "/administrador/VerZonaCodigoPostal"; 
         } else {
-            model.addAttribute("error", "Zona con código postal no encontrada.");
+            model.addAttribute(ERROR_MESSAGE, "Zona con código postal no encontrada.");
             return "error";
         }
     }

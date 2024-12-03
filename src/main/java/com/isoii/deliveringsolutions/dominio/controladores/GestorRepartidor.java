@@ -38,6 +38,9 @@ public class GestorRepartidor {
     private final ServiceZona serviceZona;
     private final ServiceZonaCodigoPostal serviceZonaCodigoPostal;
 
+    private static final String USUARIO = "usuario";
+    private static final String ERROR = "error";
+
     @Autowired
     public GestorRepartidor(ServicePedido servicePedido, ServiceDireccion serviceDireccion, 
                             ServiceRepartidor serviceRepartidor, ServiceServicioEntrega serviceServicioEntrega, 
@@ -76,10 +79,10 @@ public class GestorRepartidor {
 
     @GetMapping("/login")
     public String mostrarFormularioLogin(Model model, HttpSession session) {
-        Repartidor repartidor = (Repartidor) session.getAttribute("usuario");
+        Repartidor repartidor = (Repartidor) session.getAttribute(USUARIO);
         if (repartidor == null) {
-            model.addAttribute("error", "Debe iniciar sesión primero.");
-            return "error";
+            model.addAttribute(ERROR, "Debe iniciar sesión primero.");
+            return ERROR;
         }
 
         List<ZonaCodigoPostal> zonaCodigosPostales = serviceZonaCodigoPostal.findAll();
@@ -114,8 +117,8 @@ public class GestorRepartidor {
         Pedido pedido = servicePedido.findById(id).orElse(null);
 
         if (pedido == null) {
-            model.addAttribute("error", "Pedido no encontrado.");
-            return "error";
+            model.addAttribute(ERROR, "Pedido no encontrado.");
+            return ERROR;
         }
 
         List<Direccion> direcciones = serviceDireccion.findByUsuario(pedido.getCliente());
@@ -132,7 +135,7 @@ public class GestorRepartidor {
     public String calcularTiempos(@PathVariable Integer id, Model model, HttpSession session) {
         Pedido pedido = servicePedido.findById(id).orElse(null);
         List<ServicioEntrega> serviciosEntrega = serviceServicioEntrega.findAll();
-        Repartidor repartidor = (Repartidor) session.getAttribute("usuario");
+        Repartidor repartidor = (Repartidor) session.getAttribute(USUARIO);
         ServicioEntrega servicioEntrega = null;
         for (ServicioEntrega s : serviciosEntrega) {
             if (s.getPedido().getIdPedido() == id) {
@@ -142,7 +145,7 @@ public class GestorRepartidor {
             }
         }
         if (servicioEntrega == null) {
-            model.addAttribute("error", "No se ha encontrado el servicio de entrega.");
+            model.addAttribute(ERROR, "No se ha encontrado el servicio de entrega.");
             return "CalcularTiempos";
         }
 
@@ -185,7 +188,7 @@ public class GestorRepartidor {
         System.out.println("Repartidor recibido: " + repartidor.toString());
         if (repartidor.getPass() == null || repartidor.getPass().isEmpty() || repartidor.getDni().length() != 9
                 || repartidor.getPass().length() < 6) {
-            redirectAttributes.addFlashAttribute("error",
+            redirectAttributes.addFlashAttribute(ERROR,
                     "La contraseña no puede estar vacía, el DNI debe tener 9 caracteres y la contraseña debe tener al menos 6 caracteres.");
             return "redirect:/repartidores/register";
         }
@@ -202,7 +205,7 @@ public class GestorRepartidor {
             RedirectAttributes redirectAttributes, HttpSession session) {
         Pedido pedido = servicePedido.findById(id).orElse(null);
         if (pedido == null) {
-            redirectAttributes.addFlashAttribute("error", "El pedido no existe.");
+            redirectAttributes.addFlashAttribute(ERROR, "El pedido no existe.");
             return "redirect:/repartidores/gestionar/" + id;
         }
 
@@ -214,7 +217,7 @@ public class GestorRepartidor {
             servicioEntrega.setFechaEntrega(System.currentTimeMillis());
             servicioEntrega.setFechaRecepcion(pedido.getFecha());
             servicioEntrega.setPedido(pedido);
-            servicioEntrega.setRepartidor((Repartidor) session.getAttribute("usuario"));
+            servicioEntrega.setRepartidor((Repartidor) session.getAttribute(USUARIO));
 
             serviceServicioEntrega.save(servicioEntrega);
 
@@ -233,8 +236,8 @@ public class GestorRepartidor {
             model.addAttribute("repartidores", repartidores);
             return "/administrador/ListaRepartidores";
         } else {
-            model.addAttribute("error", "No se encontraron repartidores");
-            return "error";
+            model.addAttribute(ERROR, "No se encontraron repartidores");
+            return ERROR;
         }
     }
 
@@ -247,8 +250,8 @@ public class GestorRepartidor {
             model.addAttribute("repartidor", repartidor);
             return "/administrador/VerRepartidor";
         } else {
-            model.addAttribute("error", "Repartidor no encontrado");
-            return "error";
+            model.addAttribute(ERROR, "Repartidor no encontrado");
+            return ERROR;
         }
     }
 

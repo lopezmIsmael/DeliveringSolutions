@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 @Controller
 @RequestMapping("/codigoPostal")
 public class GestorCodigoPostal {
+    private static final String ERROR_VIEW = "error";
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     private final ServiceCodigoPostal serviceCodigoPostal;
@@ -70,7 +71,7 @@ public class GestorCodigoPostal {
             return "/administrador/ListaCodigoPostales";
         } else {
             model.addAttribute("error", "No se encontraron códigos postales");
-            return "error";
+            return ERROR_VIEW;
         }
     }
 
@@ -83,7 +84,7 @@ public class GestorCodigoPostal {
             return "/administrador/VerCodigoPostal";
         } else {
             model.addAttribute("error", "Código postal no encontrado");
-            return "error";
+            return ERROR_VIEW;
         }
     }
 }

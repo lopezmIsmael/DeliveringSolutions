@@ -24,6 +24,9 @@ import java.util.Optional;
 @RequestMapping("/direccion")
 public class GestorDireccion {
 
+    private static final String USUARIO = "usuario";
+    private static final String ERROR = "error";
+
     private final ServiceDireccion serviceDireccion;
     private final ServiceCodigoPostal serviceCodigoPostal;
 
@@ -39,8 +42,8 @@ public class GestorDireccion {
         model.addAttribute("direccion", new Direccion());
         List<CodigoPostal> codigosPostales = serviceCodigoPostal.findAll();
         model.addAttribute("codigosPostales", codigosPostales);
-        Usuario usuario = (Usuario) session.getAttribute("usuario");
-        model.addAttribute("usuario", usuario);
+        Usuario usuario = (Usuario) session.getAttribute(USUARIO);
+        model.addAttribute(USUARIO, usuario);
 
         return "RegistrarDireccion";
     }
@@ -56,7 +59,7 @@ public class GestorDireccion {
         if (direccion.getCalle() == null || direccion.getCalle().trim().isEmpty() ||
                 direccion.getNumero() == null || direccion.getNumero().trim().isEmpty() ||
                 codigoPostalId == null || idUsuario == null) {
-            redirectAttributes.addFlashAttribute("error", "Rellenar los campos obligatorios");
+            redirectAttributes.addFlashAttribute(ERROR, "Rellenar los campos obligatorios");
             return "redirect:/direccion/formularioRegistro";
         }
 
@@ -64,7 +67,7 @@ public class GestorDireccion {
         Optional<Usuario> usuarioOptional = serviceDireccion.findUsuarioById(idUsuario);
 
         if (codigoPostal == null || usuarioOptional.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Código Postal o Usuario no válido");
+            redirectAttributes.addFlashAttribute(ERROR, "Código Postal o Usuario no válido");
             return "redirect:/direccion/formularioRegistro";
         }
 
@@ -75,13 +78,12 @@ public class GestorDireccion {
 
         redirectAttributes.addFlashAttribute("mensaje", "Dirección registrada con éxito");
 
-        Object usuario = session.getAttribute("usuario");
+        Object usuario = session.getAttribute(USUARIO);
 
         if (usuario instanceof Cliente) {
             return "redirect:/clientes/verRestaurantes";
         }
-        if (usuario instanceof Restaurante) {
-            Restaurante restaurante = (Restaurante) usuario;
+        if (usuario instanceof Restaurante restaurante) {
             return "redirect:/restaurantes/gestion/" + restaurante.getIdUsuario();
         }
 
@@ -110,7 +112,7 @@ public class GestorDireccion {
             model.addAttribute("direccion", direccionOpt.get());
             return "/administrador/VerDireccion";
         } else {
-            model.addAttribute("error", "Dirección no encontrada");
+            model.addAttribute(ERROR, "Dirección no encontrada");
             return "error";
         }
     }
@@ -123,7 +125,7 @@ public class GestorDireccion {
             model.addAttribute("direcciones", direcciones);
             return "/administrador/ListaDirecciones";
         } else {
-            model.addAttribute("error", "No se encontraron direcciones");
+            model.addAttribute(ERROR, "No se encontraron direcciones");
             return "error";
         }
     }

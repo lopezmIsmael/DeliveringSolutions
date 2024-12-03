@@ -27,6 +27,8 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceRestaurant;
 @Controller
 @RequestMapping("/restaurantes")
 public class GestorRestaurante {
+    private static final String ERROR_VIEW = "error";
+    private static final String RESTAURANTE_NO_ENCONTRADO = "Restaurante no encontrado";
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     private final ServiceCartaMenu serviceCartaMenu;
@@ -68,8 +70,8 @@ public class GestorRestaurante {
             Restaurante restaurante = optionalRestaurante.get();
             return "redirect:/restaurantes/findById/" + restaurante.getNombre();
         } else {
-            model.addAttribute("error", "Restaurante no encontrado");
-            return "verRestaurantes";
+            model.addAttribute("error", RESTAURANTE_NO_ENCONTRADO);
+            return ERROR_VIEW;
         }
     }
 
@@ -93,8 +95,8 @@ public class GestorRestaurante {
             }
             return "interfazGestionRestaurante";
         } else {
-            model.addAttribute("error", "Restaurante no encontrado");
-            return "error"; 
+            model.addAttribute("error", RESTAURANTE_NO_ENCONTRADO);
+            return ERROR_VIEW; 
         }
     }
 
@@ -104,7 +106,7 @@ public class GestorRestaurante {
         System.out.println("Restaurante recibido: " + restaurante.toString());
         if (restaurante.getPass() == null || restaurante.getPass().isEmpty()) {
             model.addAttribute("error", "Contraseña no puede estar vacía");
-            return "error";
+            return ERROR_VIEW;
         }
         Restaurante restauranteRegistrado = serviceRestaurant.save(restaurante);
         System.out.println("Restaurante registrado: " + restauranteRegistrado);
@@ -120,7 +122,7 @@ public class GestorRestaurante {
             return "/administrador/ListaRestaurantes";
         } else {
             model.addAttribute("error", "No se encontraron restaurantes");
-            return "error"; 
+            return ERROR_VIEW; 
         }
     }
 
@@ -133,8 +135,8 @@ public class GestorRestaurante {
             model.addAttribute("restaurante", restaurante);
             return "/administrador/VerRestaurante"; 
         } else {
-            model.addAttribute("error", "Restaurante no encontrado");
-            return "error";
+            model.addAttribute("error", RESTAURANTE_NO_ENCONTRADO);
+            return ERROR_VIEW;
         }
     }
 
