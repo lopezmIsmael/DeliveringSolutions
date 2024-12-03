@@ -4,14 +4,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
@@ -23,7 +24,7 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceDireccion;
 import com.isoii.deliveringsolutions.dominio.service.ServiceRestaurant;
 
 // Controlador para gestionar los restaurantes
-@RestController
+@Controller
 @RequestMapping("/restaurantes")
 public class GestorRestaurante {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
@@ -41,6 +42,7 @@ public class GestorRestaurante {
 
     // Método para mostrar todos los restaurantes
     @GetMapping("/findAll")
+    @ResponseBody
     public List<Restaurante> findAll() {
         return serviceRestaurant.findAll();
     }
@@ -53,6 +55,7 @@ public class GestorRestaurante {
 
     // Método para buscar un restaurante por su id
     @GetMapping("/findById/{id}")
+    @ResponseBody
     public Restaurante findById(@PathVariable String id) {
         return serviceRestaurant.findById(id).orElse(null);
     }
