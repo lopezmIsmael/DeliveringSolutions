@@ -10,19 +10,23 @@ import java.util.Optional;
 // Clase que implementa los servicios de la entidad Pedido
 @Service
 public class ServicePedido {
+    private final PedidoDAO pedidoDAO;
+
     @Autowired
-    private PedidoDAO pedidoDAO;
+    public ServicePedido(PedidoDAO pedidoDAO) {
+        this.pedidoDAO = pedidoDAO;
+    }
     
-        public List<Pedido> findAll(){
-            return pedidoDAO.findAll();
-        }
+    public List<Pedido> findAll(){
+        return pedidoDAO.findAll();
+    }
     
-        public Optional<Pedido> findById(Integer id){
-            return pedidoDAO.findById(id);
-        }
+    public Optional<Pedido> findById(Integer id){
+        return pedidoDAO.findById(id);
+    }
     
-        public Pedido save(Pedido pedido){
-            return pedidoDAO.save(pedido);
+    public Pedido save(Pedido pedido){
+        return pedidoDAO.save(pedido);
     }
 
     public void deleteById(Integer id){

@@ -10,8 +10,12 @@ import java.util.Optional;
 // Clase que implementa los servicios de la entidad Repartidor
 @Service
 public class ServiceRepartidor {
+    private final RepartidorDAO repartidorDAO;
+
     @Autowired
-    private RepartidorDAO repartidorDAO;
+    public ServiceRepartidor(RepartidorDAO repartidorDAO) {
+        this.repartidorDAO = repartidorDAO;
+    }
 
     public List<Repartidor> findAll(){
         return repartidorDAO.findAll();

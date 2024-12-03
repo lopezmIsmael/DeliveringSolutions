@@ -11,8 +11,12 @@ import java.util.Optional;
 @Service
 public class ServiceZonaCodigoPostal {
 
+    private final ZonaCodigoPostalDAO zonaCodigoPostalDAO;
+
     @Autowired
-    private ZonaCodigoPostalDAO zonaCodigoPostalDAO;
+    public ServiceZonaCodigoPostal(ZonaCodigoPostalDAO zonaCodigoPostalDAO) {
+        this.zonaCodigoPostalDAO = zonaCodigoPostalDAO;
+    }
 
     public List<ZonaCodigoPostal> findAll(){
         return zonaCodigoPostalDAO.findAll();

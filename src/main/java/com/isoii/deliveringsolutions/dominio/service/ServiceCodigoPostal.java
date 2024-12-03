@@ -11,8 +11,12 @@ import com.isoii.deliveringsolutions.persistencia.CodigoPostalDAO;
 // Clase que implementa los servicios de la entidad CodigoPostal
 @Service
 public class ServiceCodigoPostal {
+    private final CodigoPostalDAO codigoPostalDAO;
+
     @Autowired
-    private CodigoPostalDAO codigoPostalDAO;
+    public ServiceCodigoPostal(CodigoPostalDAO codigoPostalDAO) {
+        this.codigoPostalDAO = codigoPostalDAO;
+    }
     
     public List<CodigoPostal> findAll(){
         return codigoPostalDAO.findAll();

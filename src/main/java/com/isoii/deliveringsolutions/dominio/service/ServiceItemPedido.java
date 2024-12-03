@@ -10,24 +10,28 @@ import java.util.Optional;
 // Clase que implementa los servicios de la entidad ItemPedido
 @Service
 public class ServiceItemPedido {
-    
-        @Autowired
-        private ItemPedidoDAO itemPedidoDAO;
-    
-        public List<ItemPedido> findAll(){
-            return itemPedidoDAO.findAll();
-        }
-    
-        public Optional<ItemPedido> findById(Integer id){
-            return itemPedidoDAO.findById(id);
-        }
-    
-        public ItemPedido save(ItemPedido itemsPedidos){
-            return itemPedidoDAO.save(itemsPedidos);
-        }
-    
-        public void deleteById(Integer id){
-            itemPedidoDAO.deleteById(id);
-        }
-    
+
+    private final ItemPedidoDAO itemPedidoDAO;
+
+    @Autowired
+    public ServiceItemPedido(ItemPedidoDAO itemPedidoDAO) {
+        this.itemPedidoDAO = itemPedidoDAO;
+    }
+
+    public List<ItemPedido> findAll(){
+        return itemPedidoDAO.findAll();
+    }
+
+    public Optional<ItemPedido> findById(Integer id){
+        return itemPedidoDAO.findById(id);
+    }
+
+    public ItemPedido save(ItemPedido itemsPedidos){
+        return itemPedidoDAO.save(itemsPedidos);
+    }
+
+    public void deleteById(Integer id){
+        itemPedidoDAO.deleteById(id);
+    }
+
 }

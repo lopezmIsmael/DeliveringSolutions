@@ -11,8 +11,12 @@ import java.util.Optional;
 @Service
 public class ServicePago {
 
+    private final PagoDAO pagoDAO;
+
     @Autowired
-    private PagoDAO pagoDAO;
+    public ServicePago(PagoDAO pagoDAO) {
+        this.pagoDAO = pagoDAO;
+    }
 
     public List<Pago> findAll(){
         return pagoDAO.findAll();

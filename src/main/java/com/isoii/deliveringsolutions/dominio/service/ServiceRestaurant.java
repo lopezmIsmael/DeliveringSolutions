@@ -10,8 +10,12 @@ import java.util.Optional;
 // Clase que implementa los servicios de la entidad Restaurante
 @Service
 public class ServiceRestaurant {
+    private final RestauranteDAO restauranteDAO;
+
     @Autowired
-    private RestauranteDAO restauranteDAO;
+    public ServiceRestaurant(RestauranteDAO restauranteDAO) {
+        this.restauranteDAO = restauranteDAO;
+    }
 
     public List<Restaurante> findAll(){
         return restauranteDAO.findAll();

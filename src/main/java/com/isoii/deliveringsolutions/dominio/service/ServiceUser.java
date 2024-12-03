@@ -10,8 +10,12 @@ import java.util.Optional;
 // Clase que implementa los servicios de la entidad Usuario
 @Service
 public class ServiceUser {
+    private final UsuarioDAO usuarioDAO;
+
     @Autowired
-    private UsuarioDAO usuarioDAO;
+    public ServiceUser(UsuarioDAO usuarioDAO) {
+        this.usuarioDAO = usuarioDAO;
+    }
 
     public List<Usuario> findAll(){
         return usuarioDAO.findAll();

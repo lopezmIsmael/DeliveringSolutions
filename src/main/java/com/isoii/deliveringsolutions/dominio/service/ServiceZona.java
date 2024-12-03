@@ -10,8 +10,12 @@ import java.util.Optional;
 // Clase que implementa los servicios de la entidad Zona
 @Service
 public class ServiceZona {
+    private final ZonaDAO zonaDAO;
+
     @Autowired
-    private ZonaDAO zonaDAO;
+    public ServiceZona(ZonaDAO zonaDAO) {
+        this.zonaDAO = zonaDAO;
+    }
     
     public List<Zona> findAll(){
         return zonaDAO.findAll();

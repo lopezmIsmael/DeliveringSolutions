@@ -10,8 +10,12 @@ import java.util.Optional;
 // Clase que implementa los servicios de la entidad Cliente
 @Service
 public class ServiceClient {
+    private final ClienteDAO clienteDAO;
+
     @Autowired
-    private ClienteDAO clienteDAO;
+    public ServiceClient(ClienteDAO clienteDAO) {
+        this.clienteDAO = clienteDAO;
+    }
 
     public List<Cliente> findAll(){
         return clienteDAO.findAll();

@@ -11,8 +11,12 @@ import java.util.Optional;
 // Clase que implementa los servicios de la entidad ItemMenu
 @Service
 public class ServiceItemMenu {
+    private final ItemMenuDAO itemMenuDAO;
+
     @Autowired
-    private ItemMenuDAO itemMenuDAO;
+    public ServiceItemMenu(ItemMenuDAO itemMenuDAO) {
+        this.itemMenuDAO = itemMenuDAO;
+    }
 
     public List<ItemMenu> findAll(){
         return itemMenuDAO.findAll();
