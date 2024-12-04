@@ -141,7 +141,7 @@ public class GestorPago {
         pedido.setRestaurante(restaurante);
 
         serviceGroup.getServicePedido().save(pedido);
-        logger.info("<<Pedido registrado>>: {}", pedido.toString());
+        logger.info("<<Pedido registrado>>: {}", pedido);
         Double total = 0.0;
         List<ItemMenu> items = new ArrayList<>();
         for (Integer itemId : itemIds) {
@@ -151,11 +151,11 @@ public class GestorPago {
                 ItemPedido itemPedido = new ItemPedido();
                 items.add(optionalItem.get());
                 total += optionalItem.get().getPrecio();
-                logger.info("<<Item encontrado>>: {}", optionalItem.toString());
+                logger.info("<<Item encontrado>>: {}", optionalItem);
                 itemPedido.setItemMenu(optionalItem.get());
                 itemPedido.setPedido(pedido);
                 serviceGroup.getServiceItemPedido().save(itemPedido);
-                logger.info("<<ItemPedido registrado>>: {}", itemPedido.toString());
+                logger.info("<<ItemPedido registrado>>: {}", itemPedido);
             }
         }
 
@@ -164,7 +164,7 @@ public class GestorPago {
         pago.setPedido(pedido);
         serviceGroup.getServicePago().save(pago);
 
-        logger.info("<<Pago registrado>>: {}", pago.toString());
+        logger.info("<<Pago registrado>>: {}", pago);
         if (restaurante != null) {
             pedido.setEstadoPedido("Pagado");
             serviceGroup.getServicePedido().save(pedido);
@@ -174,7 +174,7 @@ public class GestorPago {
             Direccion direccionRecogida = !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
 
             if (direccionRecogida != null) {
-                logger.info("<<Direccion de recogida>>: {}", direccionRecogida.toString());
+                logger.info("<<Direccion de recogida>>: {}", direccionRecogida);
             } else {
                 logger.info("<<Direccion de recogida no encontrada>>");
             }

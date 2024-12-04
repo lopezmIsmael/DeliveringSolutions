@@ -70,7 +70,7 @@ public class GestorUsuario {
 
     @PostMapping("/registrarUsuario")
     public String registrarUsuario(@ModelAttribute Usuario usuario) {
-        logger.info("Usuario recibido: {}", usuario.toString());
+        logger.info("Usuario recibido: {}", usuario);
         if (usuario.getPass() == null || usuario.getPass().isEmpty()) {
             return REDIRECT_PREFIX + "usuarios/registrarUsuario"; 
         }

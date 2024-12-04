@@ -61,7 +61,7 @@ public class GestorZona {
     // Método para registrar una zona
     @PostMapping("/registrarZona")
     public String registrarZona(@ModelAttribute Zona zona) {
-        logger.info("Zona recibida: {}", zona.toString());
+        logger.info("Zona recibida: {}", zona);
         if (zona.getNombre() == null || zona.getNombre().isEmpty()) {
             return ERROR_VIEW;
         }

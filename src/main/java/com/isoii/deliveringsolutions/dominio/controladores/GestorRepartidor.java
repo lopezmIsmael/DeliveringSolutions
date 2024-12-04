@@ -190,7 +190,7 @@ public class GestorRepartidor {
     // Método que registra un repartidor
     @PostMapping("/registrarRepartidor")
     public String registrarRepartidor(@ModelAttribute Repartidor repartidor, RedirectAttributes redirectAttributes) {
-        logger.info("Repartidor recibido: {}", repartidor.toString());
+        logger.info("Repartidor recibido: {}", repartidor);
         if (repartidor.getPass() == null || repartidor.getPass().isEmpty() || repartidor.getDni().length() != 9
                 || repartidor.getPass().length() < 6) {
             redirectAttributes.addFlashAttribute(ERROR,

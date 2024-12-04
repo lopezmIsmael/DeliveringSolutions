@@ -55,7 +55,7 @@ public class GestorServicioEntrega {
     // Método para registrar un servicio de entrega
     @PostMapping("/registrarServicioEntrega")
     public ResponseEntity<ServicioEntrega> registrarServicioEntrega(@ModelAttribute ServicioEntrega servicioEntrega) {
-        logger.info("ServicioEntrega recibido: {}", servicioEntrega.toString());
+        logger.info("ServicioEntrega recibido: {}", servicioEntrega);
         if (servicioEntrega.getFechaRecepcion() == 0 || servicioEntrega.getFechaEntrega() == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
