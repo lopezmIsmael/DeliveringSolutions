@@ -70,7 +70,7 @@ public class GestorCliente {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     @GetMapping("/findAll")
-    @ResponseBody
+    
     public List<Cliente> findAll() {
         return serviceClient.findAll();
     }
@@ -81,7 +81,7 @@ public class GestorCliente {
     }
 
     @GetMapping("/findById/{id}")
-    @ResponseBody
+    
     public Cliente findById(@PathVariable String id) {
         return serviceClient.findById(id).orElse(null);
     }

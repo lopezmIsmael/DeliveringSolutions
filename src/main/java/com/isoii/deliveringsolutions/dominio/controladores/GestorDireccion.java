@@ -92,14 +92,14 @@ public class GestorDireccion {
 
     // Método para encontrar una dirección por ID y mostrar su información
     @GetMapping("/findById/{id}")
-    @ResponseBody
+    
     public Direccion findById(@PathVariable Long id) {
         return serviceDireccion.findById(id).orElse(null);
     }
 
     // Método para encontrar todas las direcciones y mostrarlas
     @GetMapping("/findAll")
-    @ResponseBody
+    
     public List<Direccion> findAll() {
         return serviceDireccion.findAll();
     }

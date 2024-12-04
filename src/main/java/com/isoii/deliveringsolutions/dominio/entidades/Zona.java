@@ -1,13 +1,14 @@
 package com.isoii.deliveringsolutions.dominio.entidades;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
-import jakarta.persistence.Id;
+
+import java.io.Serializable;
+
 
 // Entidad que representa la tabla Zona en la base de datos
 @Entity 
-public class Zona {
+public class Zona implements Serializable{
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

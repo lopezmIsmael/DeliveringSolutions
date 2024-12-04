@@ -48,7 +48,7 @@ public class GestorRestaurante {
 
     // Método para mostrar todos los restaurantes
     @GetMapping("/findAll")
-    @ResponseBody
+    
     public List<Restaurante> findAll() {
         return serviceRestaurant.findAll();
     }
@@ -61,7 +61,7 @@ public class GestorRestaurante {
 
     // Método para buscar un restaurante por su id
     @GetMapping("/findById/{id}")
-    @ResponseBody
+    
     public Restaurante findById(@PathVariable String id) {
         return serviceRestaurant.findById(id).orElse(null);
     }

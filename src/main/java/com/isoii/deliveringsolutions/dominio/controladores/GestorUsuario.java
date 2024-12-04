@@ -42,7 +42,7 @@ public class GestorUsuario {
     }
 
     @GetMapping("/findAll")
-    @ResponseBody
+    
     public List<Usuario> findAll() {
         return serviceUsuario.findAll();
     }
@@ -53,7 +53,7 @@ public class GestorUsuario {
     }
 
     @GetMapping("/findById/{id}")
-    @ResponseBody
+    
     public Usuario findById(@PathVariable String id) {
         return serviceUsuario.findById(id).orElse(null);
     }

@@ -37,7 +37,7 @@ public class GestorZonaCodigoPostal {
 
     // Método para listar todas las zonas con códigos postales
     @GetMapping("/findAll")
-    @ResponseBody
+    
     public List<ZonaCodigoPostal> findAll() {
         return serviceZonaCodigoPostal.findAll();
     }
@@ -55,7 +55,7 @@ public class GestorZonaCodigoPostal {
 
     // Método para buscar una zona con código postal por su id
     @GetMapping("/findById/{id}")
-    @ResponseBody
+    
     public ZonaCodigoPostal findById(@PathVariable Long id) {
         return serviceZonaCodigoPostal.findById(id).orElse(null);
     }

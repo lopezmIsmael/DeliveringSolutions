@@ -45,7 +45,7 @@ public class GestorPago {
 
     // Método para listar todos los pagos
     @GetMapping("/findAll")
-    @ResponseBody
+    
     public List<Pago> findAll() {
         return serviceGroup.getServicePago().findAll();
     }
@@ -110,7 +110,7 @@ public class GestorPago {
 
     // Metodo para buscar un pago por ID
     @GetMapping("/findById/{id}")
-    @ResponseBody
+    
     public Pago findById(@PathVariable Integer id) {
         return serviceGroup.getServicePago().findById(id).orElse(null);
     }
@@ -145,7 +145,7 @@ public class GestorPago {
         Double total = 0.0;
         List<ItemMenu> items = new ArrayList<>();
         for (Integer itemId : itemIds) {
-            logger.info("<<Item ID>>: " + itemId);
+            logger.info("<<Item ID>>: {}", itemId);
             Optional<ItemMenu> optionalItem = serviceGroup.getServiceItemMenu().findById(itemId);
             if (optionalItem.isPresent()) {
                 ItemPedido itemPedido = new ItemPedido();

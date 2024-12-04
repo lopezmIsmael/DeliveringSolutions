@@ -40,7 +40,7 @@ public class GestorZona {
 
     // Método para mostrar todas las zonas
     @GetMapping("/findAll")
-    @ResponseBody
+    
     public List<Zona> findAll() {
         return serviceZona.findAll();
     }
@@ -53,7 +53,7 @@ public class GestorZona {
 
     // Método para buscar una zona por su id
     @GetMapping("/findById/{id}")
-    @ResponseBody
+    
     public Zona findById(@PathVariable Integer id) {
         return serviceZona.findById(id).orElse(null);
     }

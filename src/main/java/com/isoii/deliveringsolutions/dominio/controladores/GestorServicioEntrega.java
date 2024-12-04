@@ -34,7 +34,7 @@ public class GestorServicioEntrega {
 
     // Método para mostrar todos los servicios de entrega
     @GetMapping("/findAll")
-    @ResponseBody
+    
     public List<ServicioEntrega> findAll() {
         return serviceServicioEntrega.findAll();
     }
@@ -47,7 +47,7 @@ public class GestorServicioEntrega {
 
     // Método para buscar un servicio de entrega por su id
     @GetMapping("/findById/{id}")
-    @ResponseBody
+    
     public ServicioEntrega findById(@PathVariable Integer id) {
         return serviceServicioEntrega.findById(id).orElse(null);
     }

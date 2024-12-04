@@ -62,7 +62,7 @@ public class GestorRepartidor {
 
     // Método que devuelve una lista de todos los repartidores
     @GetMapping("/findAll")
-    @ResponseBody
+    
     public List<Repartidor> findAll() {
         return serviceRepartidor.findAll();
     }
@@ -77,7 +77,7 @@ public class GestorRepartidor {
 
     // Método que busca un solo repartidor por su id
     @GetMapping("/findById/{id}")
-    @ResponseBody
+    
     public Repartidor findById(@PathVariable String id) {
         return serviceRepartidor.findById(id).orElse(null);
     }
