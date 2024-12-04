@@ -6,10 +6,14 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Column;
 
+
+import java.io.Serializable;
+
 // Entidad que representa la tabla Usuario en la base de datos
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Usuario {
+public class Usuario implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "idUsuario", nullable = false, length = 50)
