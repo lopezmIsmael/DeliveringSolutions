@@ -81,7 +81,7 @@ public class GestorPago {
             carrito = objectMapper.readValue(cartData, new TypeReference<List<ItemMenu>>() {
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("<<Error al convertir el carrito>>: {}", e);
         }
 
         logger.info("<<Carrito size>>: {}", carrito.size());

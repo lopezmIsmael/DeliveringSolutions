@@ -84,7 +84,7 @@ public class GestorPedido {
     }
 
     // Método para mostrar el carrito
-    @RequestMapping("/carrito")
+    @GetMapping("/carrito")
     public String mostrarCarrito(Model model) {
         model.addAttribute("carrito", carrito);
         return "verMenusRestaurante"; 
