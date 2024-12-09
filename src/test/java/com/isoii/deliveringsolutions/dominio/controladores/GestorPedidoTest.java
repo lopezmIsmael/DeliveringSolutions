@@ -3,8 +3,6 @@ package com.isoii.deliveringsolutions.dominio.controladores;
 import com.isoii.deliveringsolutions.dominio.entidades.Pedido;
 import com.isoii.deliveringsolutions.dominio.entidades.Cliente;
 import com.isoii.deliveringsolutions.dominio.entidades.Restaurante;
-import com.isoii.deliveringsolutions.dominio.entidades.ItemMenu;
-import com.isoii.deliveringsolutions.dominio.entidades.ItemPedido;
 import com.isoii.deliveringsolutions.dominio.service.ServiceItemPedido;
 import com.isoii.deliveringsolutions.dominio.service.ServicePedido;
 
@@ -26,7 +24,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 class GestorPedidoTest {
@@ -238,6 +235,4 @@ class GestorPedidoTest {
             verify(servicePedido, times(1)).findById(-1);
         }
     }
-
-    // Puedes continuar de manera similar para los demás métodos del controlador
 }
