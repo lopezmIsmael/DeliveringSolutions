@@ -53,8 +53,10 @@ public class GestorZona {
 
     // Método para buscar una zona por su id
     @GetMapping("/findById/{id}")
-    
     public Zona findById(@PathVariable Integer id) {
+        if (id == null) {
+            throw new NullPointerException("El id no debe ser nulo");
+        }
         return serviceZona.findById(id).orElse(null);
     }
 
@@ -87,6 +89,9 @@ public class GestorZona {
     // Método para ver detalles de una zona
     @GetMapping("/mostrarZona/{id}")
     public String mostrarZona(@PathVariable Integer id, Model model) {
+        if (id == null) {
+            throw new NullPointerException("El id no debe ser nulo");
+        }
         Optional<Zona> optionalZona = serviceZona.findById(id);
         List<ZonaCodigoPostal> zonasCodigosPostales = serviceZonaCodigoPostal.findAll();
         List<CodigoPostal> codigosPostales = new ArrayList<>();
