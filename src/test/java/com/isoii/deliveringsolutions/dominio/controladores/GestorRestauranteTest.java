@@ -7,13 +7,13 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceCartaMenu;
 import com.isoii.deliveringsolutions.dominio.service.ServiceDireccion;
 import com.isoii.deliveringsolutions.dominio.service.ServiceRestaurant;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ui.Model;
 
 import java.util.Arrays;
@@ -24,6 +24,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class GestorRestauranteTest {
 
     @Mock
@@ -43,11 +44,6 @@ class GestorRestauranteTest {
 
     private static final String ERROR_VIEW = "error"; 
     private static final String RESTAURANTE_NO_ENCONTRADO = "Restaurante no encontrado"; 
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Nested
     @DisplayName("Tests para findAll")
@@ -213,6 +209,7 @@ class GestorRestauranteTest {
             assertEquals("redirect:/restaurantes/findById/RestauranteEjemplo", resultado, "Debe redirigir a la página del restaurante encontrado");
             verify(serviceRestaurant, times(1)).findById(nombre);
             verify(model, never()).addAttribute(eq(ERROR_VIEW), anyString());
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -227,6 +224,7 @@ class GestorRestauranteTest {
             assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el restaurante no existe");
             verify(serviceRestaurant, times(1)).findById(nombre);
             verify(model, times(1)).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -241,6 +239,7 @@ class GestorRestauranteTest {
             assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el nombre es null");
             verify(serviceRestaurant, times(1)).findById(nombre);
             verify(model, times(1)).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -255,6 +254,7 @@ class GestorRestauranteTest {
             assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el nombre es una cadena vacía");
             verify(serviceRestaurant, times(1)).findById(nombre);
             verify(model, times(1)).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -269,6 +269,7 @@ class GestorRestauranteTest {
             assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el nombre contiene caracteres especiales");
             verify(serviceRestaurant, times(1)).findById(nombre);
             verify(model, times(1)).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -285,6 +286,7 @@ class GestorRestauranteTest {
             assertEquals("Error en el servicio", exception.getMessage(), "El mensaje de la excepción debe coincidir");
             verify(serviceRestaurant, times(1)).findById(nombre);
             verify(model, never()).addAttribute(eq(ERROR_VIEW), anyString());
+            verifyNoMoreInteractions(model);
         }
     }
 
@@ -316,6 +318,7 @@ class GestorRestauranteTest {
             verify(model).addAttribute("menus", menus);
             verify(model).addAttribute("direcciones", direcciones);
             verify(model).addAttribute("direccion", direcciones);
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -342,6 +345,7 @@ class GestorRestauranteTest {
             verify(model).addAttribute("menus", menus);
             verify(model).addAttribute("direcciones", direcciones);
             verify(model).addAttribute("direccion", direcciones);
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -352,22 +356,33 @@ class GestorRestauranteTest {
             restaurante.setNombre("RestauranteEjemplo");
 
             List<CartaMenu> menus = Arrays.asList(new CartaMenu());
-            List<Direccion> direcciones = null;
 
             when(serviceRestaurant.findById(id)).thenReturn(Optional.of(restaurante));
             when(serviceCartaMenu.findByRestaurante(restaurante)).thenReturn(menus);
-            when(serviceDireccion.findByUsuario(restaurante)).thenReturn(direcciones);
+            when(serviceDireccion.findByUsuario(restaurante)).thenThrow(new RuntimeException("Error en serviceDireccion"));
 
-            String resultado = gestorRestaurante.gestionRestaurante(id, model);
+            // Ejecutar el método y capturar la excepción
+            RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+                gestorRestaurante.gestionRestaurante(id, model);
+            }, "Debe propagar la excepción lanzada por serviceDireccion.findByUsuario");
 
-            assertEquals("interfazGestionRestaurante", resultado, "Debe retornar la vista 'interfazGestionRestaurante'");
+            assertEquals("Error en serviceDireccion", exception.getMessage(), "El mensaje de la excepción debe coincidir");
+
+            // Verificar las interacciones con los servicios
             verify(serviceRestaurant, times(1)).findById(id);
             verify(serviceCartaMenu, times(1)).findByRestaurante(restaurante);
             verify(serviceDireccion, times(1)).findByUsuario(restaurante);
+
+            // Verificar que "restaurante" y "menus" fueron agregados al modelo
             verify(model).addAttribute("restaurante", restaurante);
             verify(model).addAttribute("menus", menus);
-            verify(model).addAttribute("direcciones", direcciones);
-            verify(model).addAttribute("direccion", new Direccion());
+
+            // Verificar que "direcciones" y "direccion" **no** fueron agregados al modelo debido a la excepción
+            verify(model, never()).addAttribute(eq("direcciones"), any());
+            verify(model, never()).addAttribute(eq("direccion"), any());
+
+            // Asegurar que no haya más interacciones con el modelo
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -394,6 +409,7 @@ class GestorRestauranteTest {
             verify(model).addAttribute("menus", menus);
             verify(model).addAttribute("direcciones", direcciones);
             verify(model).addAttribute("direccion", direcciones);
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -414,6 +430,7 @@ class GestorRestauranteTest {
             verify(model, never()).addAttribute(eq("menus"), any());
             verify(model, never()).addAttribute(eq("direcciones"), any());
             verify(model, never()).addAttribute(eq("direccion"), any());
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -434,6 +451,7 @@ class GestorRestauranteTest {
             verify(model, never()).addAttribute(eq("menus"), any());
             verify(model, never()).addAttribute(eq("direcciones"), any());
             verify(model, never()).addAttribute(eq("direccion"), any());
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -454,6 +472,7 @@ class GestorRestauranteTest {
             verify(model, never()).addAttribute(eq("menus"), any());
             verify(model, never()).addAttribute(eq("direcciones"), any());
             verify(model, never()).addAttribute(eq("direccion"), any());
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -474,6 +493,7 @@ class GestorRestauranteTest {
             verify(model, never()).addAttribute(eq("menus"), any());
             verify(model, never()).addAttribute(eq("direcciones"), any());
             verify(model, never()).addAttribute(eq("direccion"), any());
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -494,6 +514,7 @@ class GestorRestauranteTest {
             verify(serviceCartaMenu, never()).findByRestaurante(any());
             verify(serviceDireccion, never()).findByUsuario(any());
             verify(model, never()).addAttribute(anyString(), any());
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -502,8 +523,6 @@ class GestorRestauranteTest {
             String id = "restaurante123";
             Restaurante restaurante = new Restaurante();
             restaurante.setNombre("RestauranteEjemplo");
-
-            List<CartaMenu> menus = Arrays.asList(new CartaMenu());
 
             when(serviceRestaurant.findById(id)).thenReturn(Optional.of(restaurante));
             when(serviceCartaMenu.findByRestaurante(restaurante)).thenThrow(new RuntimeException("Error en serviceCartaMenu"));
@@ -517,6 +536,7 @@ class GestorRestauranteTest {
             verify(serviceCartaMenu, times(1)).findByRestaurante(restaurante);
             verify(serviceDireccion, never()).findByUsuario(any());
             verify(model, never()).addAttribute(anyString(), any());
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -532,15 +552,28 @@ class GestorRestauranteTest {
             when(serviceCartaMenu.findByRestaurante(restaurante)).thenReturn(menus);
             when(serviceDireccion.findByUsuario(restaurante)).thenThrow(new RuntimeException("Error en serviceDireccion"));
 
+            // Ejecutar el método y capturar la excepción
             RuntimeException exception = assertThrows(RuntimeException.class, () -> {
                 gestorRestaurante.gestionRestaurante(id, model);
             }, "Debe propagar la excepción lanzada por serviceDireccion.findByUsuario");
 
             assertEquals("Error en serviceDireccion", exception.getMessage(), "El mensaje de la excepción debe coincidir");
+
+            // Verificar las interacciones con los servicios
             verify(serviceRestaurant, times(1)).findById(id);
             verify(serviceCartaMenu, times(1)).findByRestaurante(restaurante);
             verify(serviceDireccion, times(1)).findByUsuario(restaurante);
-            verify(model, never()).addAttribute(anyString(), any());
+
+            // Verificar que "restaurante" y "menus" fueron agregados al modelo
+            verify(model).addAttribute("restaurante", restaurante);
+            verify(model).addAttribute("menus", menus);
+
+            // Verificar que "direcciones" y "direccion" **no** fueron agregados al modelo debido a la excepción
+            verify(model, never()).addAttribute(eq("direcciones"), any());
+            verify(model, never()).addAttribute(eq("direccion"), any());
+
+            // Asegurar que no haya más interacciones con el modelo
+            verifyNoMoreInteractions(model);
         }
     }
 
@@ -565,6 +598,7 @@ class GestorRestauranteTest {
             assertEquals("redirect:/restaurantes/gestion/usuario123", resultado, "Debe redirigir correctamente después del registro");
             verify(serviceRestaurant, times(1)).save(restaurante);
             verify(model, never()).addAttribute(eq(ERROR_VIEW), anyString());
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -578,6 +612,7 @@ class GestorRestauranteTest {
             assertEquals(ERROR_VIEW, resultado, "Debe retornar ERROR_VIEW cuando la contraseña es null");
             verify(serviceRestaurant, never()).save(any());
             verify(model, times(1)).addAttribute(ERROR_VIEW, "Contraseña no puede estar vacía");
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -591,6 +626,7 @@ class GestorRestauranteTest {
             assertEquals(ERROR_VIEW, resultado, "Debe retornar ERROR_VIEW cuando la contraseña es una cadena vacía");
             verify(serviceRestaurant, never()).save(any());
             verify(model, times(1)).addAttribute(ERROR_VIEW, "Contraseña no puede estar vacía");
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -610,6 +646,7 @@ class GestorRestauranteTest {
             assertEquals("redirect:/restaurantes/gestion/usuario456", resultado, "Debe redirigir correctamente después del registro");
             verify(serviceRestaurant, times(1)).save(restaurante);
             verify(model, never()).addAttribute(eq(ERROR_VIEW), anyString());
+            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -628,6 +665,7 @@ class GestorRestauranteTest {
             assertEquals("Error al guardar el restaurante", exception.getMessage(), "El mensaje de la excepción debe coincidir");
             verify(serviceRestaurant, times(1)).save(restaurante);
             verify(model, never()).addAttribute(eq(ERROR_VIEW), anyString());
+            verifyNoMoreInteractions(model);
         }
     }
 }
