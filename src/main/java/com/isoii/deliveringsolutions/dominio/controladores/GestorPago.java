@@ -139,9 +139,9 @@ public class GestorPago {
         pedido.setEstadoPedido("Pendiente");
         pedido.setCliente(cliente);
         pedido.setRestaurante(restaurante);
-
         serviceGroup.getServicePedido().save(pedido);
         logger.info("<<Pedido registrado>>: {}", pedido);
+
         Double total = 0.0;
         List<ItemMenu> items = new ArrayList<>();
         for (Integer itemId : itemIds) {
@@ -168,6 +168,7 @@ public class GestorPago {
         if (restaurante != null) {
             pedido.setEstadoPedido("Pagado");
             serviceGroup.getServicePedido().save(pedido);
+            logger.info("<<Pedido registrado>>: {}", pedido);
 
             Usuario usuarioRestaurante = serviceGroup.getServiceUsuario().findById(restaurante.getIdUsuario()).orElse(null);
             List<Direccion> direccionesRecogida = serviceGroup.getServiceDireccion().findByUsuario(usuarioRestaurante);

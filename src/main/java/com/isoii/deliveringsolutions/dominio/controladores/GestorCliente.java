@@ -200,12 +200,19 @@ public class GestorCliente {
     public String verPedidos(Model model, HttpSession session) {
         List<Pedido> pedidos = servicePedido.findAll();
         List<Pedido> pedidosCliente = new ArrayList<>();
+
+        Usuario usuario = (Usuario) session.getAttribute(USUARIO);
+        if (usuario == null) {
+            return REDIRECT_ROOT;
+        }
+
         for (Pedido pedido : pedidos) {
-            if (pedido.getCliente().getIdUsuario().equals(((Usuario) session.getAttribute(USUARIO)).getIdUsuario())) {
+            if (pedido.getCliente() != null && 
+                pedido.getCliente().getIdUsuario().equals(usuario.getIdUsuario())) {
                 pedidosCliente.add(pedido);
             }
         }
-        Usuario usuario = (Usuario) session.getAttribute(USUARIO);
+
         Cliente cliente = serviceClient.findById(usuario.getIdUsuario()).orElse(null);
         if (cliente == null) {
             return REDIRECT_ROOT;

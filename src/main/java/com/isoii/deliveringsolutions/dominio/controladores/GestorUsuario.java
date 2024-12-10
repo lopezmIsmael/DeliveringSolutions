@@ -41,7 +41,6 @@ public class GestorUsuario {
     }
 
     @GetMapping("/findAll")
-    
     public List<Usuario> findAll() {
         return serviceUsuario.findAll();
     }
@@ -52,8 +51,10 @@ public class GestorUsuario {
     }
 
     @GetMapping("/findById/{id}")
-    
     public Usuario findById(@PathVariable String id) {
+        if (id == null) {
+            throw new NullPointerException("ID cannot be null");
+        }
         return serviceUsuario.findById(id).orElse(null);
     }
 
@@ -81,6 +82,9 @@ public class GestorUsuario {
 
     @DeleteMapping("/deleteById/{id}")
     public ResponseEntity<String> deleteById(@PathVariable String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
         serviceUsuario.deleteById(id);
         return new ResponseEntity<>("Usuario eliminado", HttpStatus.OK);
     }
