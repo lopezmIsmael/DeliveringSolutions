@@ -3,31 +3,16 @@ package com.isoii.deliveringsolutions.dominio.controladores;
 import com.isoii.deliveringsolutions.dominio.entidades.ServicioEntrega;
 import com.isoii.deliveringsolutions.dominio.service.ServiceServicioEntrega;
 
-import jakarta.inject.Inject;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -37,14 +22,8 @@ import java.util.List;
 @WebMvcTest(GestorServicioEntrega.class)
 public class GestorServicioEntregaTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
     @MockBean
     private ServiceServicioEntrega serviceServicioEntrega;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private ServicioEntrega servicioEntrega;
 
@@ -64,8 +43,8 @@ public class GestorServicioEntregaTest {
     @Test
     @DisplayName("Debe retornar una lista vacía cuando no hay entregas")
     public void testFindAllEmptyList(){
-        when(serviceServicioEntrega.findAll()).thenReturn(Collections.emptyList());
-        List<ServicioEntrega> servicios = serviceServicioEntrega.findAll();
+        when(gestorServicioEntrega.findAll()).thenReturn(Collections.emptyList());
+        List<ServicioEntrega> servicios = gestorServicioEntrega.findAll();
         assertNotNull(servicios, "La lista no debe ser nula");
         assertTrue(servicios.isEmpty(), "La lista debe estar vacía");
         verify(serviceServicioEntrega, times(1)).findAll();
@@ -76,9 +55,9 @@ public class GestorServicioEntregaTest {
     @Test
     @DisplayName("Debe retornar una lista con entregas existentes")
     public void testFindAllWithElements() {
-        when(serviceServicioEntrega.findAll()).thenReturn(List.of(servicioEntrega));
+        when(gestorServicioEntrega.findAll()).thenReturn(List.of(servicioEntrega));
 
-        List<ServicioEntrega> servicios = serviceServicioEntrega.findAll();
+        List<ServicioEntrega> servicios = gestorServicioEntrega.findAll();
 
         assertNotNull(servicios, "La lista no debe ser nula");
         assertEquals(1, servicios.size(), "La lista debe tener un elemento");
@@ -117,8 +96,7 @@ public class GestorServicioEntregaTest {
     public void testRegistrarServicioEntregaValid() {
         when(serviceServicioEntrega.save(any(ServicioEntrega.class))).thenReturn(servicioEntrega);
 
-        ServicioEntrega result = serviceServicioEntrega.save(servicioEntrega);
-
+        ServicioEntrega result = gestorServicioEntrega.registrarServicioEntrega(servicioEntrega).getBody();
         assertNotNull(result, "El servicio registrado no debe ser nulo");
         assertEquals(servicioEntrega, result, "El servicio debe coincidir");
         verify(serviceServicioEntrega, times(1)).save(servicioEntrega);
