@@ -495,7 +495,7 @@ class GestorPagoTest {
             verify(servicePedido, times(1)).save(any(Pedido.class));
 
             // Verificar que se agrega el atributo de error
-            verify(redirectAttributes, times(1)).addFlashAttribute("error", "Ocurrió un error al procesar el pedido.");
+            verify(redirectAttributes, times(1)).addFlashAttribute("error", "Ocurrió un error inesperado al procesar el pedido.");
         }
 
         @Test
@@ -578,7 +578,7 @@ class GestorPagoTest {
             when(session.getAttribute("usuario")).thenReturn(usuario);
 
             // Llamada al método del controlador
-            String resultado = gestorPago.mostrarConfirmacion(model);
+            String resultado = gestorPago.mostrarConfirmacion(session, model);
 
             // Verificar la vista retornada
             assertEquals("ConfirmacionPedido", resultado, "Debe retornar la vista 'confirmacion'");
@@ -591,7 +591,7 @@ class GestorPagoTest {
             when(session.getAttribute("usuario")).thenReturn(null);
 
             // Llamada al método del controlador
-            String resultado = gestorPago.mostrarConfirmacion(model);
+            String resultado = gestorPago.mostrarConfirmacion(session, model);
 
             // Verificar la redirección al login
             assertEquals("redirect:/login", resultado, "Debe redirigir al login cuando la sesión es inválida");
@@ -607,7 +607,7 @@ class GestorPagoTest {
             when(session.getAttribute("usuario")).thenReturn(null);
 
             // Llamada al método del controlador
-            String resultado = gestorPago.mostrarConfirmacion(model);
+            String resultado = gestorPago.mostrarConfirmacion(session, model);
 
             // Verificar la redirección al login
             assertEquals("redirect:/login", resultado, "Debe redirigir al login cuando no hay usuario autenticado");
@@ -624,7 +624,7 @@ class GestorPagoTest {
             when(session.getAttribute("usuario")).thenReturn(usuario);
 
             // Llamada al método del controlador con modelo null
-            String resultado = gestorPago.mostrarConfirmacion(model);
+            String resultado = gestorPago.mostrarConfirmacion(session, model);
 
             // Verificar la vista retornada
             assertEquals("ConfirmacionPedido", resultado, "Debe retornar la vista 'confirmacion' incluso si el modelo es null");

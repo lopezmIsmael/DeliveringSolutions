@@ -125,79 +125,120 @@ public class GestorPago {
             @RequestParam("itemIds") List<Integer> itemIds,
             Model model,
             RedirectAttributes redirectAttributes) {
+        try{
 
-        logger.info("<<ESTOY EN REGISTRAR PEDIDO: GestorPago>>");
-        logger.info("<<Metodo de pago>>: {}", metodoPago);
-        logger.info("<<RestauranteId>>: {}", restauranteId);
-        logger.info("<<DireccionId>>: {}", direccion);
-
-        Cliente cliente = (Cliente) session.getAttribute(USUARIO);
-        Restaurante restaurante = serviceGroup.getServiceRestaurant().findById(restauranteId).orElse(null);
-
-        Pedido pedido = new Pedido();
-        pedido.setFecha(System.currentTimeMillis());
-        pedido.setEstadoPedido("Pendiente");
-        pedido.setCliente(cliente);
-        pedido.setRestaurante(restaurante);
-        serviceGroup.getServicePedido().save(pedido);
-        logger.info("<<Pedido registrado>>: {}", pedido);
-
-        Double total = 0.0;
-        List<ItemMenu> items = new ArrayList<>();
-        for (Integer itemId : itemIds) {
-            logger.info("<<Item ID>>: {}", itemId);
-            Optional<ItemMenu> optionalItem = serviceGroup.getServiceItemMenu().findById(itemId);
-            if (optionalItem.isPresent()) {
-                ItemPedido itemPedido = new ItemPedido();
-                items.add(optionalItem.get());
-                total += optionalItem.get().getPrecio();
-                logger.info("<<Item encontrado>>: {}", optionalItem);
-                itemPedido.setItemMenu(optionalItem.get());
-                itemPedido.setPedido(pedido);
-                serviceGroup.getServiceItemPedido().save(itemPedido);
-                logger.info("<<ItemPedido registrado>>: {}", itemPedido);
+            logger.info("<<ESTOY EN REGISTRAR PEDIDO: GestorPago>>");
+            // Validar carrito vacío
+            if (itemIds == null || itemIds.isEmpty()) {
+                logger.error("<<Error: carrito vacío>>");
+                redirectAttributes.addFlashAttribute("error", "El carrito está vacío.");
+                return "redirect:/error";
             }
-        }
 
-        Pago pago = new Pago();
-        pago.setMetodoPago(metodoPago);
-        pago.setPedido(pedido);
-        serviceGroup.getServicePago().save(pago);
+            // Validar método de pago nulo
+            if (metodoPago == null || metodoPago.isEmpty()) {
+                logger.error("<<Error: método de pago no especificado>>");
+                redirectAttributes.addFlashAttribute("error", "El método de pago es inválido.");
+                return "redirect:/error";
+            }
 
-        logger.info("<<Pago registrado>>: {}", pago);
-        if (restaurante != null) {
-            pedido.setEstadoPedido("Pagado");
+            // Validar restaurante
+            Restaurante restaurante = serviceGroup.getServiceRestaurant().findById(restauranteId).orElse(null);
+            if (restaurante == null) {
+                logger.error("<<Error: Restaurante no encontrado>>");
+                redirectAttributes.addFlashAttribute("error", "El restaurante no existe.");
+                return "redirect:/error";
+            }
+
+            // Validar dirección
+            Direccion direccionEntrega = serviceGroup.getServiceDireccion().findById(direccion).orElse(null);
+            if (direccionEntrega == null) {
+                logger.error("<<Error: Dirección no válida>>");
+                redirectAttributes.addFlashAttribute("error", "La dirección de entrega no existe.");
+                return "redirect:/error";
+            }
+
+            logger.info("<<Metodo de pago>>: {}", metodoPago);
+            logger.info("<<RestauranteId>>: {}", restauranteId);
+            logger.info("<<DireccionId>>: {}", direccion);
+
+            Cliente cliente = (Cliente) session.getAttribute(USUARIO);
+
+            Pedido pedido = new Pedido();
+            pedido.setFecha(System.currentTimeMillis());
+            pedido.setEstadoPedido("Pendiente");
+            pedido.setCliente(cliente);
+            pedido.setRestaurante(restaurante);
             serviceGroup.getServicePedido().save(pedido);
             logger.info("<<Pedido registrado>>: {}", pedido);
 
-            Usuario usuarioRestaurante = serviceGroup.getServiceUsuario().findById(restaurante.getIdUsuario()).orElse(null);
-            List<Direccion> direccionesRecogida = serviceGroup.getServiceDireccion().findByUsuario(usuarioRestaurante);
-            Direccion direccionRecogida = !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
-
-            if (direccionRecogida != null) {
-                logger.info("<<Direccion de recogida>>: {}", direccionRecogida);
-            } else {
-                logger.info("<<Direccion de recogida no encontrada>>");
+            Double total = 0.0;
+            List<ItemMenu> items = new ArrayList<>();
+            for (Integer itemId : itemIds) {
+                logger.info("<<Item ID>>: {}", itemId);
+                Optional<ItemMenu> optionalItem = serviceGroup.getServiceItemMenu().findById(itemId);
+                if (optionalItem.isPresent()) {
+                    ItemPedido itemPedido = new ItemPedido();
+                    items.add(optionalItem.get());
+                    total += optionalItem.get().getPrecio();
+                    logger.info("<<Item encontrado>>: {}", optionalItem);
+                    itemPedido.setItemMenu(optionalItem.get());
+                    itemPedido.setPedido(pedido);
+                    serviceGroup.getServiceItemPedido().save(itemPedido);
+                    logger.info("<<ItemPedido registrado>>: {}", itemPedido);
+                }
             }
 
-            Direccion direccionEntrega = serviceGroup.getServiceDireccion().findById(direccion).orElse(null);
+            Pago pago = new Pago();
+            pago.setMetodoPago(metodoPago);
+            pago.setPedido(pedido);
+            serviceGroup.getServicePago().save(pago);
 
-            redirectAttributes.addFlashAttribute("pedido", pedido);
-            redirectAttributes.addFlashAttribute("items", items);
-            redirectAttributes.addFlashAttribute("pago", pago);
-            redirectAttributes.addFlashAttribute("restaurante", restaurante);
-            redirectAttributes.addFlashAttribute("cliente", cliente);
-            redirectAttributes.addFlashAttribute("total", total);
-            redirectAttributes.addFlashAttribute("direccionRecogida", direccionRecogida);
-            redirectAttributes.addFlashAttribute("direccionEntrega", direccionEntrega);
+            logger.info("<<Pago registrado>>: {}", pago);
+            if (restaurante != null) {
+                pedido.setEstadoPedido("Pagado");
+                serviceGroup.getServicePedido().save(pedido);
+                logger.info("<<Pedido registrado>>: {}", pedido);
+
+                Usuario usuarioRestaurante = serviceGroup.getServiceUsuario().findById(restaurante.getIdUsuario()).orElse(null);
+                List<Direccion> direccionesRecogida = serviceGroup.getServiceDireccion().findByUsuario(usuarioRestaurante);
+                Direccion direccionRecogida = !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
+
+                if (direccionRecogida != null) {
+                    logger.info("<<Direccion de recogida>>: {}", direccionRecogida);
+                } else {
+                    logger.info("<<Direccion de recogida no encontrada>>");
+                }
+
+                redirectAttributes.addFlashAttribute("pedido", pedido);
+                redirectAttributes.addFlashAttribute("items", items);
+                redirectAttributes.addFlashAttribute("pago", pago);
+                redirectAttributes.addFlashAttribute("restaurante", restaurante);
+                redirectAttributes.addFlashAttribute("cliente", cliente);
+                redirectAttributes.addFlashAttribute("total", total);
+                redirectAttributes.addFlashAttribute("direccionRecogida", direccionRecogida);
+                redirectAttributes.addFlashAttribute("direccionEntrega", direccionEntrega);
+            }
+
+            return "redirect:/pago/confirmacion";
+        } catch (Exception e) {
+            logger.error("<<Error inesperado>>: {}", e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "Ocurrió un error inesperado al procesar el pedido.");
+            return "redirect:/error";
         }
-
-        return "redirect:/pago/confirmacion";
     }
 
     // Método para mostrar el formulario de registro de un pago
     @GetMapping("/confirmacion")
-    public String mostrarConfirmacion(Model model) {
+    public String mostrarConfirmacion(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute(USUARIO);
+    
+        if (usuario == null) {
+            logger.error("<<Error: sesión inválida o usuario no autenticado>>");
+            return "redirect:/login";
+        }
+        logger.info("<<Usuario autenticado>>: {}", usuario.getIdUsuario());
+        model.addAttribute(USUARIO, usuario);
         return "ConfirmacionPedido";
     }
 
