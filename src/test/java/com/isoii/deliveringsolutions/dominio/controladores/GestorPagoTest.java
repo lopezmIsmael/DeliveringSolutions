@@ -23,7 +23,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 class GestorPagoTest {
+    private static final Logger logger = LoggerFactory.getLogger(GestorPagoTest.class);
 
     @Mock
     private ServiceGroup serviceGroup;
@@ -71,7 +75,7 @@ class GestorPagoTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        // Configurar serviceGroup para retornar los servicios mockeados
+        // Configurar los servicios mockeados
         when(serviceGroup.getServiceRestaurant()).thenReturn(serviceRestaurante);
         when(serviceGroup.getServiceDireccion()).thenReturn(serviceDireccion);
         when(serviceGroup.getServicePedido()).thenReturn(servicePedido);
@@ -79,7 +83,16 @@ class GestorPagoTest {
         when(serviceGroup.getServiceItemPedido()).thenReturn(serviceItemPedido);
         when(serviceGroup.getServicePago()).thenReturn(servicePago);
         when(serviceGroup.getServiceUsuario()).thenReturn(serviceUsuario);
+
+        // Mock para ServiceCodigoPostal
+        ServiceCodigoPostal mockCodigoPostal = mock(ServiceCodigoPostal.class);
+        when(serviceGroup.getServiceCodigoPostal()).thenReturn(mockCodigoPostal);
+
+        // Simulación del comportamiento de findAll
+        List<CodigoPostal> codigosPostales = Arrays.asList(new CodigoPostal(1, "45600"));
+        when(mockCodigoPostal.findAll()).thenReturn(codigosPostales);
     }
+
 
     @Nested
     @DisplayName("Tests para el endpoint /pago/findAll")
@@ -171,6 +184,22 @@ class GestorPagoTest {
             assertNull(resultado, "El resultado debe ser null cuando el ID es null");
             verify(servicePago, times(1)).findById(null);
         }
+        @Test
+        @DisplayName("Debe redirigir a /direccion/formularioRegistro si no hay direcciones asociadas al usuario")
+        void testSinDireccionesUsuario() {
+            // Simular sesión con usuario autenticado
+            when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+
+            // Simular que no hay direcciones asociadas al usuario
+            when(serviceDireccion.findByUsuario(clientePrueba)).thenReturn(null);
+
+            // Llamada al método del controlador
+            String resultado = gestorPago.mostrarFormularioRegistro("{}", "1", model, session);
+
+            // Verificar la redirección a /direccion/formularioRegistro
+            assertEquals("redirect:/direccion/formularioRegistro", resultado, "Debe redirigir al formulario de registro de direcciones");
+        }
+
 
         @Test
         @DisplayName("Debe manejar correctamente cuando el ID no es numérico")
@@ -495,6 +524,135 @@ class GestorPagoTest {
         }
 
         @Test
+        @DisplayName("Debe manejar el error al convertir el carrito desde JSON")
+        void testErrorConversionCarrito() {
+            // Simular sesión con usuario autenticado
+            when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+
+            // Simular restaurante existente
+            when(serviceRestaurante.findById("1")).thenReturn(Optional.of(restaurantePrueba));
+
+            // Simular direcciones asociadas al usuario
+            when(serviceDireccion.findByUsuario(clientePrueba)).thenReturn(Arrays.asList(direccionEntrega));
+
+            // Proveer un JSON mal formado para cartData
+            String cartData = "{malformed_json}";
+
+            // Llamada al método del controlador
+            String resultado = gestorPago.mostrarFormularioRegistro(cartData, "1", model, session);
+
+            // Verificar que no lanza excepciones y sigue procesando
+            assertEquals("RegistrarPedidos", resultado, "Debe continuar y mostrar la página incluso si el carrito no puede ser convertido");
+        }
+
+        @Test
+        @DisplayName("Debe redirigir a /error si el restaurante no existe")
+        void testRestauranteNoEncontrado() {
+            // Simular sesión con usuario autenticado
+            when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+
+            // Simular que el restaurante no existe
+            when(serviceRestaurante.findById("1")).thenReturn(Optional.empty());
+
+            // Llamada al método del controlador
+            String resultado = gestorPago.mostrarFormularioRegistro("{}", "1", model, session);
+
+            // Verificar la redirección a /error
+            assertEquals("redirect:/error", resultado, "Debe redirigir a la página de error si el restaurante no existe");
+        }
+
+        @Test
+        @DisplayName("Debe redirigir a /error si el método de pago es nulo o vacío")
+        void testMetodoPagoInvalido() {
+            // Parámetros de entrada
+            String metodoPago = null;
+            String restauranteId = "1";
+            Long direccionId = 1L;
+            List<Integer> itemIds = Arrays.asList(1, 2, 3);
+
+            // Simular sesión con usuario autenticado
+            when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+
+            // Simular restaurante existente
+            when(serviceRestaurante.findById(restauranteId)).thenReturn(Optional.of(restaurantePrueba));
+
+            // Simular dirección de entrega válida
+            when(serviceDireccion.findById(direccionId)).thenReturn(Optional.of(direccionEntrega));
+
+            // Llamada al método del controlador
+            String resultado = gestorPago.registrarPedido(metodoPago, restauranteId, direccionId, session, itemIds, model, redirectAttributes);
+
+            // Verificar la redirección a /error
+            assertEquals("redirect:/error", resultado, "Debe redirigir a la página de error si el método de pago es inválido");
+        }
+
+        @Test
+        @DisplayName("Debe redirigir a /error si el carrito está vacío")
+        void testCarritoVacio() {
+            // Parámetros de entrada
+            String metodoPago = "Efectivo";
+            String restauranteId = "1";
+            Long direccionId = 1L;
+            List<Integer> itemIds = Collections.emptyList(); // Carrito vacío
+        
+            // Simular sesión con usuario autenticado
+            when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+        
+            // Simular restaurante existente
+            when(serviceRestaurante.findById(restauranteId)).thenReturn(Optional.of(restaurantePrueba));
+        
+            // Simular dirección de entrega válida
+            when(serviceDireccion.findById(direccionId)).thenReturn(Optional.of(direccionEntrega));
+        
+            // Llamada al método del controlador
+            String resultado = gestorPago.registrarPedido(metodoPago, restauranteId, direccionId, session, itemIds, model, redirectAttributes);
+        
+            // Verificar la redirección a /error
+            assertEquals("redirect:/error", resultado, "Debe redirigir a la página de error si el carrito está vacío");
+        }   
+
+        @Test
+        @DisplayName("Debe registrar correctamente un pedido cuando la dirección de recogida no se encuentra")
+        void testRegistrarPedidoDireccionRecogidaNoEncontrada() {
+            // Parámetros de entrada
+            String metodoPago = "Efectivo";
+            String restauranteId = "1";
+            Long direccionId = 1L;
+            List<Integer> itemIds = Arrays.asList(1, 2, 3);
+
+            // Simular sesión con usuario autenticado
+            when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+
+            // Simular restaurante existente
+            when(serviceRestaurante.findById(restauranteId)).thenReturn(Optional.of(restaurantePrueba));
+
+            // Simular dirección de recogida no encontrada
+            when(serviceDireccion.findByUsuario(any())).thenReturn(Collections.emptyList());
+
+            // Simular dirección de entrega válida
+            when(serviceDireccion.findById(direccionId)).thenReturn(Optional.of(direccionEntrega));
+
+            // Llamar al método del controlador
+            String resultado = gestorPago.registrarPedido(
+                    metodoPago,
+                    restauranteId,
+                    direccionId,
+                    session,
+                    itemIds,
+                    model,
+                    redirectAttributes
+            );
+
+            // Verificar que se manejó el caso donde no se encuentra la dirección de recogida
+            verify(serviceDireccion, times(1)).findByUsuario(any());
+            logger.info("<<Direccion de recogida no encontrada>>");
+
+            // Verificar que la ejecución continúa correctamente
+            assertEquals("redirect:/pago/confirmacion", resultado, "Debe continuar incluso si no se encuentra la dirección de recogida");
+        }
+
+
+        @Test
         @DisplayName("Debe manejar correctamente un carrito con un solo elemento")
         void testRegisterPagoCarritoUnElemento() {
             // Parámetros de entrada
@@ -574,6 +732,151 @@ class GestorPagoTest {
             verify(redirectAttributes, times(1)).addFlashAttribute(eq("direccionRecogida"), eq(direccionRecogida));
             verify(redirectAttributes, times(1)).addFlashAttribute(eq("direccionEntrega"), eq(direccionEntrega));
         }
+
+        @Test
+        @DisplayName("Debe manejar correctamente cuando el restaurante es null")
+        void testRestauranteEsNull() {
+            // Parámetros de entrada
+            String metodoPago = "TARJETA";
+            String restauranteId = "1";
+            Long direccionId = 1L;
+            List<Integer> itemIds = Arrays.asList(1, 2, 3);
+
+            // Simular sesión con usuario autenticado
+            when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+
+            // Simular restaurante inexistente (null)
+            when(serviceRestaurante.findById(restauranteId)).thenReturn(Optional.empty());
+
+            // Simular dirección válida
+            when(serviceDireccion.findById(direccionId)).thenReturn(Optional.of(direccionEntrega));
+
+            // Llamada al método del controlador
+            String resultado = gestorPago.registrarPedido(
+                    metodoPago,
+                    restauranteId,
+                    direccionId,
+                    session,
+                    itemIds,
+                    model,
+                    redirectAttributes
+            );
+
+            // Verificar que el flujo llega al punto esperado
+            verify(serviceRestaurante, times(1)).findById(restauranteId);
+
+            // Verificar redirección al error o comportamiento esperado
+            assertEquals("redirect:/error", resultado, "Debe redirigir a la página de error si el restaurante es null");
+        }
+
+        @Test
+        @DisplayName("Debe registrar un pedido cuando el restaurante es válido")
+        void testRegistrarPedidoRestauranteValido() {
+            // Parámetros de entrada
+            String metodoPago = "Efectivo";
+            String restauranteId = "1";
+            Long direccionId = 1L;
+            List<Integer> itemIds = Arrays.asList(1, 2);
+
+            // Simular sesión con usuario autenticado
+            when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+
+            // Simular restaurante válido
+            when(serviceRestaurante.findById(restauranteId)).thenReturn(Optional.of(restaurantePrueba));
+
+            // Simular dirección válida
+            when(serviceDireccion.findById(direccionId)).thenReturn(Optional.of(direccionEntrega));
+
+            // Simular items de menú válidos
+            ItemMenu item1 = new ItemMenu(1, "Pizza", 10.0, null, "COMIDA");
+            ItemMenu item2 = new ItemMenu(2, "Hamburguesa", 8.0, null, "COMIDA");
+            when(serviceItemMenu.findById(1)).thenReturn(Optional.of(item1));
+            when(serviceItemMenu.findById(2)).thenReturn(Optional.of(item2));
+
+            // Simular creación y guardado del pedido
+            Pedido pedido = new Pedido(1, System.currentTimeMillis(), "Pendiente", clientePrueba, restaurantePrueba);
+            when(servicePedido.save(any(Pedido.class))).thenReturn(pedido);
+
+            // Simular guardado de pago
+            Pago pago = new Pago(1, "Efectivo", pedido);
+            when(servicePago.save(any(Pago.class))).thenReturn(pago);
+
+            // Llamada al método del controlador
+            String resultado = gestorPago.registrarPedido(metodoPago, restauranteId, direccionId, session, itemIds, model, redirectAttributes);
+
+            // Verificar que se ejecutó correctamente
+            assertEquals("redirect:/pago/confirmacion", resultado, "Debe redirigir a la confirmación");
+
+            // Verificar interacciones con los mocks
+            verify(serviceRestaurante, times(1)).findById(restauranteId);
+            verify(serviceDireccion, times(1)).findById(direccionId);
+            verify(serviceItemMenu, times(1)).findById(1);
+            verify(serviceItemMenu, times(1)).findById(2);
+            verify(servicePedido, times(2)).save(any(Pedido.class)); // Una vez para guardar y otra para actualizar
+            verify(servicePago, times(1)).save(any(Pago.class));
+
+            // Verificar atributos flash
+            verify(redirectAttributes, times(1)).addFlashAttribute(eq("pedido"), any(Pedido.class));
+            verify(redirectAttributes, times(1)).addFlashAttribute(eq("pago"), any(Pago.class));
+        }
+
+
+        @Test
+        @DisplayName("Debe redirigir a /error si el restaurante es nulo")
+        void testRestauranteEsNulo() {
+            // Simular sesión con usuario autenticado
+            when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+
+            // Simular restaurante inexistente
+            when(serviceRestaurante.findById(anyString())).thenReturn(Optional.empty());
+
+            // Llamada al método del controlador
+            String resultado = gestorPago.registrarPedido("TARJETA", "1", 1L, session, Arrays.asList(1, 2, 3), model, redirectAttributes);
+
+            // Verificar la redirección a /error
+            assertEquals("redirect:/error", resultado, "Debe redirigir a la página de error si el restaurante es nulo");
+        }
+
+
+        @Test
+        @DisplayName("Debe redirigir a /error si el método de pago está vacío")
+        void testMetodoPagoVacio() {
+            // Simular sesión con usuario autenticado
+            when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+
+            // Simular restaurante existente
+            when(serviceRestaurante.findById(anyString())).thenReturn(Optional.of(restaurantePrueba));
+
+            // Simular dirección válida
+            when(serviceDireccion.findById(anyLong())).thenReturn(Optional.of(direccionEntrega));
+
+            // Llamada al método del controlador
+            String resultado = gestorPago.registrarPedido("", "1", 1L, session, Arrays.asList(1, 2, 3), model, redirectAttributes);
+
+            // Verificar la redirección a /error
+            assertEquals("redirect:/error", resultado, "Debe redirigir a la página de error si el método de pago está vacío");
+        }
+
+        @Test
+        @DisplayName("Debe redirigir a /error si el carrito es nulo")
+        void testItemIdsEsNulo() {
+            // Simular sesión con usuario autenticado
+            when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+
+            // Simular restaurante existente
+            when(serviceRestaurante.findById(anyString())).thenReturn(Optional.of(restaurantePrueba));
+
+            // Simular dirección válida
+            when(serviceDireccion.findById(anyLong())).thenReturn(Optional.of(direccionEntrega));
+
+            // Llamada al método del controlador
+            String resultado = gestorPago.registrarPedido("TARJETA", "1", 1L, session, null, model, redirectAttributes);
+
+            // Verificar la redirección a /error
+            assertEquals("redirect:/error", resultado, "Debe redirigir a la página de error si el carrito es nulo");
+        }
+
+
     }
 
     @Nested
@@ -688,6 +991,81 @@ class GestorPagoTest {
                 verify(model, never()).addAttribute(eq("pagos"), any());
             }
         }
+
+        @Nested
+        @DisplayName("Tests para el endpoint /register")
+        class MostrarFormularioRegistroTests {
+
+            @Test
+            @DisplayName("Debe mostrar el formulario de registro correctamente")
+            void testMostrarFormularioRegistroCorrecto() {
+                // Simular sesión con usuario autenticado
+                when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+
+                // Simular restaurante existente
+                when(serviceRestaurante.findById("1")).thenReturn(Optional.of(restaurantePrueba));
+
+                // Simular direcciones existentes
+                List<Direccion> direcciones = Arrays.asList(direccionEntrega, direccionRecogida);
+                when(serviceDireccion.findByUsuario(clientePrueba)).thenReturn(direcciones);
+
+                // Simular códigos postales
+                List<CodigoPostal> codigosPostales = Arrays.asList(codigoPostalRecogida);
+                when(serviceGroup.getServiceCodigoPostal().findAll()).thenReturn(codigosPostales);
+
+                // Simular carrito
+                String cartData = "[{\"nombre\":\"Pizza\", \"precio\":10.0}, {\"nombre\":\"Hamburguesa\", \"precio\":8.0}]";
+
+                // Llamar al método del controlador
+                String resultado = gestorPago.mostrarFormularioRegistro(cartData, "1", model, session);
+
+                // Verificar la vista retornada
+                assertEquals("RegistrarPedidos", resultado, "Debe retornar la vista 'RegistrarPedidos'");
+
+                // Verificar interacciones con los servicios
+                verify(serviceRestaurante, times(1)).findById("1");
+                //verify(serviceDireccion, times(1)).findByUsuario(clientePrueba);
+                verify(serviceGroup.getServiceCodigoPostal(), times(1)).findAll();
+
+                // Verificar que se agregan los atributos correctos al modelo
+                verify(model, times(1)).addAttribute(eq("direcciones"), eq(direcciones));
+                verify(model, times(1)).addAttribute(eq("restaurante"), eq(restaurantePrueba));
+                verify(model, times(1)).addAttribute(eq("carrito"), anyList());
+                verify(model, times(1)).addAttribute(eq("total"), eq(18.0));
+                verify(model, times(1)).addAttribute(eq("usuario"), eq(clientePrueba));
+                verify(model, times(1)).addAttribute(eq("codigosPostales"), eq(codigosPostales));
+            }
+
+            @Test
+            @DisplayName("Debe redirigir al login si el usuario no está autenticado")
+            void testMostrarFormularioRegistroSinUsuario() {
+                // Simular sesión sin usuario autenticado
+                when(session.getAttribute("usuario")).thenReturn(null);
+
+                // Llamar al método del controlador
+                String resultado = gestorPago.mostrarFormularioRegistro("{}", "1", model, session);
+
+                // Verificar la redirección al login
+                assertEquals("redirect:/usuarios/login", resultado, "Debe redirigir al login si no hay usuario en la sesión");
+            }
+
+            @Test
+            @DisplayName("Debe redirigir al error si el restaurante no existe")
+            void testMostrarFormularioRegistroRestauranteNoExiste() {
+                // Simular sesión con usuario autenticado
+                when(session.getAttribute("usuario")).thenReturn(clientePrueba);
+
+                // Simular restaurante inexistente
+                when(serviceRestaurante.findById("1")).thenReturn(Optional.empty());
+
+                // Llamar al método del controlador
+                String resultado = gestorPago.mostrarFormularioRegistro("{}", "1", model, session);
+
+                // Verificar la redirección a la página de error
+                assertEquals("redirect:/error", resultado, "Debe redirigir a la página de error si el restaurante no existe");
+            }
+        }
+
 
         @Nested
         @DisplayName("Tests para el endpoint /pago/mostrarPago/{id}")
