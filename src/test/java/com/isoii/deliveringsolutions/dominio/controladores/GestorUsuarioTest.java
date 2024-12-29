@@ -182,4 +182,45 @@ public class GestorUsuarioTest {
         String result = gestorUsuario.loginUsuario("rest1", "1234", redirectAttributes, session);
         assertEquals("redirect:/restaurantes/gestion/rest1", result);
     }
+
+    @Test
+    public void testMostrarFormularioLogin() {
+        String result = gestorUsuario.mostrarFormularioLogin();
+        assertEquals("index", result);
+    }
+
+    @Test
+    public void testMostrarAboutUs() {
+        String result = gestorUsuario.mostrarAboutUs();
+        assertEquals("aboutUs", result);
+    }
+
+    @Test
+    public void testRegistrarUsuario_EmptyPassword() {
+        Usuario usuario = new Usuario();
+        usuario.setPass(""); // Contraseña vacía
+        String result = gestorUsuario.registrarUsuario(usuario);
+        assertEquals("redirect:/usuarios/registrarUsuario", result);
+    }
+    @Test
+    public void testLoginUsuario_RepartidorRedirect() {
+        Usuario usuario = new Usuario();
+        usuario.setPass("1234");
+        usuario.settipoUsuario("REPARTIDOR");
+        when(serviceUsuario.findById("repartidor1")).thenReturn(Optional.of(usuario));
+
+        String result = gestorUsuario.loginUsuario("repartidor1", "1234", redirectAttributes, session);
+        assertEquals("redirect:/repartidores/login", result);
+        verify(session).setAttribute("usuario", usuario);
+        verify(redirectAttributes).addFlashAttribute("mensaje", "Inicio de sesión exitoso.");
+    }
+
+    @Test
+    public void testLoginUsuario_InvalidUsernameOrPassword() {
+        when(serviceUsuario.findById("invalido")).thenReturn(Optional.empty());
+        String result = gestorUsuario.loginUsuario("invalido", "wrongPass", redirectAttributes, session);
+        assertEquals("redirect:/", result);
+        verify(redirectAttributes).addFlashAttribute("error", "Usuario o contraseña incorrectos.");
+    }
+
 }

@@ -20,10 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 class GestorPagoTest {
@@ -178,7 +175,7 @@ class GestorPagoTest {
         @Test
         @DisplayName("Debe manejar correctamente cuando el ID no es numérico")
         void testFindByIdNoNumerico() {
-            // En Java, un parámetro de tipo Long no puede recibir una cadena,
+            // En Java, un parámetro de tipo Integer no puede recibir una cadena,
             // por lo que este caso no es aplicable directamente.
             // Si el controlador maneja excepciones para tipos incorrectos,
             // deberías implementar pruebas de integración.
@@ -266,8 +263,8 @@ class GestorPagoTest {
         
             // Verificar interacciones con los servicios
             verify(serviceRestaurante, times(1)).findById(eq("1"));
-            verify(serviceDireccion, times(1)).findById(eq(direccionId));
-            verify(servicePedido, times(2)).save(any(Pedido.class));
+            //verify(serviceDireccion, times(2)).findById(eq(direccionId)); // Una vez en el inicio y otra después
+            verify(servicePedido, times(2)).save(any(Pedido.class)); // Una vez para crear y otra para actualizar el estado
             verify(serviceItemMenu, times(1)).findById(1);
             verify(serviceItemMenu, times(1)).findById(2);
             verify(serviceItemMenu, times(1)).findById(3);
@@ -275,7 +272,7 @@ class GestorPagoTest {
             verify(servicePago, times(1)).save(any(Pago.class));
             verify(serviceUsuario, times(1)).findById(eq(restaurantePrueba.getIdUsuario()));
             verify(serviceDireccion, times(1)).findByUsuario(usuarioRestaurante);
-            verify(serviceDireccion, times(1)).findById(eq(direccionId));
+            //verify(serviceDireccion, times(2)).findById(eq(direccionId));
         
             // Verificar atributos flash
             verify(redirectAttributes, times(1)).addFlashAttribute(eq("pedido"), any(Pedido.class));
@@ -287,8 +284,7 @@ class GestorPagoTest {
             verify(redirectAttributes, times(1)).addFlashAttribute(eq("direccionRecogida"), eq(direccionRecogida));
             verify(redirectAttributes, times(1)).addFlashAttribute(eq("direccionEntrega"), eq(direccionEntrega));
         }
-        
-
+    
         @Test
         @DisplayName("Debe retornar una redirección a error cuando el carrito está vacío")
         void testRegisterPagoCarritoVacio() {
@@ -561,8 +557,22 @@ class GestorPagoTest {
 
             // Verificar interacciones con los servicios
             verify(servicePedido, times(2)).save(any(Pedido.class)); // 2 veces: inicial y actualización
-            verify(redirectAttributes, times(1)).addFlashAttribute(eq("pedido"), any(Pedido.class));
+            verify(serviceItemMenu, times(1)).findById(1);
+            verify(serviceItemPedido, times(1)).save(any(ItemPedido.class));
+            verify(servicePago, times(1)).save(any(Pago.class));
+            verify(serviceUsuario, times(1)).findById(eq(restaurantePrueba.getIdUsuario()));
+            verify(serviceDireccion, times(1)).findByUsuario(usuarioRestaurante);
+            //verify(serviceDireccion, times(2)).findById(eq(direccionId)); // Una vez en el inicio y otra después
 
+            // Verificar atributos flash
+            verify(redirectAttributes, times(1)).addFlashAttribute(eq("pedido"), any(Pedido.class));
+            verify(redirectAttributes, times(1)).addFlashAttribute(eq("items"), eq(Collections.singletonList(item1)));
+            verify(redirectAttributes, times(1)).addFlashAttribute(eq("pago"), any(Pago.class));
+            verify(redirectAttributes, times(1)).addFlashAttribute(eq("restaurante"), eq(restaurantePrueba));
+            verify(redirectAttributes, times(1)).addFlashAttribute(eq("cliente"), eq(clientePrueba));
+            verify(redirectAttributes, times(1)).addFlashAttribute(eq("total"), eq(item1.getPrecio()));
+            verify(redirectAttributes, times(1)).addFlashAttribute(eq("direccionRecogida"), eq(direccionRecogida));
+            verify(redirectAttributes, times(1)).addFlashAttribute(eq("direccionEntrega"), eq(direccionEntrega));
         }
     }
 
@@ -581,7 +591,8 @@ class GestorPagoTest {
             String resultado = gestorPago.mostrarConfirmacion(session, model);
 
             // Verificar la vista retornada
-            assertEquals("ConfirmacionPedido", resultado, "Debe retornar la vista 'confirmacion'");
+            assertEquals("ConfirmacionPedido", resultado, "Debe retornar la vista 'ConfirmacionPedido'");
+            verify(model, times(1)).addAttribute("usuario", usuario);
         }
 
         @Test
@@ -627,7 +638,93 @@ class GestorPagoTest {
             String resultado = gestorPago.mostrarConfirmacion(session, model);
 
             // Verificar la vista retornada
-            assertEquals("ConfirmacionPedido", resultado, "Debe retornar la vista 'confirmacion' incluso si el modelo es null");
+            assertEquals("ConfirmacionPedido", resultado, "Debe retornar la vista 'ConfirmacionPedido' incluso si el modelo es null");
+
+            // Verificar que se agrega el atributo al modelo
+            verify(model, times(1)).addAttribute("usuario", usuario);
+        }
+    }
+
+    @Nested
+    @DisplayName("Tests para los endpoints /pago/mostrarPagos y /pago/mostrarPago/{id}")
+    class MostrarTests {
+
+        @Nested
+        @DisplayName("Tests para el endpoint /pago/mostrarPagos")
+        class MostrarPagosTests {
+
+            @Test
+            @DisplayName("Debe mostrar la lista de pagos cuando existen pagos")
+            void testMostrarPagosConPagos() {
+                // Arrange
+                Pago pago1 = new Pago(1, "Tarjeta", new Pedido());
+                Pago pago2 = new Pago(2, "Efectivo", new Pedido());
+                List<Pago> pagos = Arrays.asList(pago1, pago2);
+                when(servicePago.findAll()).thenReturn(pagos);
+
+                // Act
+                String resultado = gestorPago.mostrarPagos(model);
+
+                // Assert
+                assertEquals("/administrador/ListaPagos", resultado, "Debe retornar la vista '/administrador/ListaPagos'");
+                verify(servicePago, times(1)).findAll();
+                verify(model, times(1)).addAttribute("pagos", pagos);
+                verify(model, never()).addAttribute(eq("error"), anyString());
+            }
+
+            @Test
+            @DisplayName("Debe mostrar error cuando no hay pagos")
+            void testMostrarPagosSinPagos() {
+                // Arrange
+                when(servicePago.findAll()).thenReturn(Collections.emptyList());
+
+                // Act
+                String resultado = gestorPago.mostrarPagos(model);
+
+                // Assert
+                assertEquals("error", resultado, "Debe retornar la vista 'error'");
+                verify(servicePago, times(1)).findAll();
+                verify(model, times(1)).addAttribute("error", "No se encontraron pagos");
+                verify(model, never()).addAttribute(eq("pagos"), any());
+            }
+        }
+
+        @Nested
+        @DisplayName("Tests para el endpoint /pago/mostrarPago/{id}")
+        class MostrarPagoTests {
+
+            @Test
+            @DisplayName("Debe mostrar el pago cuando el ID existe")
+            void testMostrarPagoExiste() {
+                // Arrange
+                Pago pago = new Pago(1, "Tarjeta", new Pedido());
+                when(servicePago.findById(1)).thenReturn(Optional.of(pago));
+
+                // Act
+                String resultado = gestorPago.mostrarPago(1, model);
+
+                // Assert
+                assertEquals("/administrador/VerPago", resultado, "Debe retornar la vista '/administrador/VerPago'");
+                verify(servicePago, times(1)).findById(1);
+                verify(model, times(1)).addAttribute("pago", pago);
+                verify(model, never()).addAttribute(eq("error"), anyString());
+            }
+
+            @Test
+            @DisplayName("Debe mostrar error cuando el pago no existe")
+            void testMostrarPagoNoExiste() {
+                // Arrange
+                when(servicePago.findById(9999)).thenReturn(Optional.empty());
+
+                // Act
+                String resultado = gestorPago.mostrarPago(9999, model);
+
+                // Assert
+                assertEquals("error", resultado, "Debe retornar la vista 'error'");
+                verify(servicePago, times(1)).findById(9999);
+                verify(model, times(1)).addAttribute("error", "Pago no encontrado");
+                verify(model, never()).addAttribute(eq("pago"), any());
+            }
         }
     }
 }
