@@ -118,12 +118,18 @@ public class GestorMenu {
     public String registrarItem(@ModelAttribute ItemMenu itemMenu, Model model, RedirectAttributes redirectAttributes,
             BindingResult result) {
 
-        if (itemMenu.getCartamenu() == null || itemMenu.getCartamenu().getIdCarta() == 0) {
-            model.addAttribute(ERROR, "Carta no válida");
-            return REDIRECT_MODIFICAR_CARTA + itemMenu.getCartamenu().getIdCarta();
+        if (itemMenu.getCartamenu() == null) {
+            redirectAttributes.addFlashAttribute("error", "Carta no válida");
+            return "redirect:/cartas/modificar/null";
         }
 
         Integer cartaMenuID = itemMenu.getCartamenu().getIdCarta();
+
+        if (cartaMenuID == 0) {
+            redirectAttributes.addFlashAttribute("error", "ID de Carta no puede ser 0");
+            return "redirect:/cartas/modificar/0";
+        }
+
         Optional<CartaMenu> optionalCarta = serviceCartaMenu.findById(cartaMenuID);
 
         if (!optionalCarta.isPresent()) {

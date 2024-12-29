@@ -13,6 +13,8 @@ import org.mockito.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +42,12 @@ public class GestorMenuTest {
 
     @Mock
     private Model model;
+
+    @Mock
+    private RedirectAttributes redirectAttributes;
+
+    @Mock
+    private BindingResult bindingResult;
 
     @BeforeEach
     public void setup() {
@@ -181,4 +189,353 @@ public class GestorMenuTest {
         assertEquals("error", result);
         verify(model).addAttribute("error", "Menú no encontrado");
     }
+
+    @Test
+    public void testMostrarFormularioRegistroItem() {
+        String viewName = gestorMenu.mostrarFormularioRegistroItem(model);
+        assertEquals("Pruebas-RegisterItemMenu", viewName);
+        verify(model).addAttribute(eq("itemMenu"), any(ItemMenu.class));
+    }
+
+    @Test
+    public void testMostrarFormularioModificar_CartaMenuExists() {
+        Integer id = 1;
+        CartaMenu cartaMenu = new CartaMenu();
+        when(serviceCartaMenu.findById(id)).thenReturn(Optional.of(cartaMenu));
+
+        String viewName = gestorMenu.mostrarFormularioModificar(id, model);
+
+        assertEquals("gestorItems", viewName);
+        verify(model).addAttribute("cartaMenu", cartaMenu);
+        verify(serviceItemMenu).findByCartaMenu(cartaMenu);
+    }
+
+    @Test
+    public void testMostrarFormularioModificar_CartaMenuNotFound() {
+        Integer id = 999;
+        when(serviceCartaMenu.findById(id)).thenReturn(Optional.empty());
+
+        String viewName = gestorMenu.mostrarFormularioModificar(id, model);
+
+        assertEquals("error", viewName);
+        verify(model).addAttribute("error", "Carta no encontrada");
+    }
+
+    @Test
+    public void testRegistrarItem_Success() {
+        // Configuración del objeto ItemMenu
+        ItemMenu itemMenu = new ItemMenu();
+        CartaMenu cartaMenu = new CartaMenu();
+        cartaMenu.setIdCarta(1); // Asegúrate de que ID sea válido
+        itemMenu.setCartamenu(cartaMenu);
+        itemMenu.setNombre("Test Item");
+        itemMenu.setTipo("Main Course");
+        itemMenu.setPrecio(10.0);
+
+        // Mock del comportamiento del serviceCartaMenu
+        when(serviceCartaMenu.findById(1)).thenReturn(Optional.of(cartaMenu));
+
+        // Llamada al método
+        String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
+
+        // Verificación
+        assertEquals("redirect:/cartas/modificar/1", viewName);
+        verify(serviceItemMenu).save(itemMenu); // Verificar que se haya llamado a save
+        verify(model).addAttribute("success", "Item registrado exitosamente.");
+    }
+
+
+    @Test
+    public void testRegistrarItem_CartaMenuNotFound() {
+        ItemMenu itemMenu = new ItemMenu();
+        itemMenu.setCartamenu(new CartaMenu());
+
+        when(serviceCartaMenu.findById(anyInt())).thenReturn(Optional.empty());
+
+        String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
+
+        assertEquals("redirect:/cartas/modificar/" + itemMenu.getCartamenu().getIdCarta(), viewName);
+        //verify(model).addAttribute("error", "Carta no válida");
+    }
+
+    @Test
+    public void testRegistrarCarta_RestauranteNotFound() {
+        CartaMenu cartaMenu = new CartaMenu();
+
+        when(serviceRestaurant.findById(any())).thenReturn(Optional.empty());
+
+        String viewName = gestorMenu.registrarCarta(cartaMenu, redirectAttributes);
+
+        assertEquals("redirect:/cartas/register", viewName);
+        verify(redirectAttributes).addFlashAttribute("error", "Restaurante no válido");
+    }
+
+    @Test
+    public void testMostrarItems_ItemsFound() {
+        when(serviceItemMenu.findAll()).thenReturn(List.of(new ItemMenu()));
+
+        String viewName = gestorMenu.mostrarItems(model);
+
+        assertEquals("/administrador/ListaItemsMenu", viewName);
+        verify(model).addAttribute(eq("items"), anyList());
+    }
+
+    @Test
+    public void testMostrarItems_ItemsNotFound() {
+        when(serviceItemMenu.findAll()).thenReturn(List.of());
+
+        String viewName = gestorMenu.mostrarItems(model);
+
+        assertEquals("error", viewName);
+        verify(model).addAttribute("error", "No se encontraron items");
+    }
+
+    @Test
+    public void testFindAllItems_WithResults() {
+        // Mock del comportamiento del servicio para devolver una lista de ItemMenu
+        List<ItemMenu> items = List.of(new ItemMenu(), new ItemMenu());
+        when(serviceItemMenu.findAll()).thenReturn(items);
+
+        // Llama al método
+        List<ItemMenu> result = gestorMenu.findAllItems();
+
+        // Verifica que se devuelve la lista esperada
+        assertEquals(2, result.size());
+        verify(serviceItemMenu).findAll(); // Verifica que el método del servicio fue llamado
+    }
+
+    @Test
+    public void testFindAllItems_EmptyList() {
+        // Mock del comportamiento del servicio para devolver una lista vacía
+        when(serviceItemMenu.findAll()).thenReturn(List.of());
+
+        // Llama al método
+        List<ItemMenu> result = gestorMenu.findAllItems();
+
+        // Verifica que se devuelve una lista vacía
+        assertTrue(result.isEmpty());
+        verify(serviceItemMenu).findAll(); // Verifica que el método del servicio fue llamado
+    }
+
+    @Test
+    public void testRegistrarItem_CartamenuNoEncontrado() {
+        ItemMenu itemMenu = new ItemMenu();
+        CartaMenu cartaMenu = new CartaMenu();
+        cartaMenu.setIdCarta(1);
+        itemMenu.setCartamenu(cartaMenu);
+
+        when(serviceCartaMenu.findById(1)).thenReturn(Optional.empty());
+
+        String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
+
+        assertEquals("redirect:/cartas/modificar/1", viewName);
+        verify(model).addAttribute(eq("error"), eq("Carta no encontrada"));
+    }
+
+    @Test
+    public void testRegistrarItem_NombreVacio() {
+        ItemMenu itemMenu = new ItemMenu();
+        CartaMenu cartaMenu = new CartaMenu();
+        cartaMenu.setIdCarta(1);
+        itemMenu.setCartamenu(cartaMenu);
+        itemMenu.setNombre(""); // Nombre vacío
+
+        when(serviceCartaMenu.findById(1)).thenReturn(Optional.of(cartaMenu));
+
+        String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
+
+        assertEquals("redirect:/cartas/modificar/1", viewName);
+        verify(model).addAttribute(eq("error"), eq("Carta no válida, nombre no puede estar vacío"));
+    }
+
+    @Test
+    public void testRegistrarItem_TipoVacio() {
+        ItemMenu itemMenu = new ItemMenu();
+        CartaMenu cartaMenu = new CartaMenu();
+        cartaMenu.setIdCarta(1);
+        itemMenu.setCartamenu(cartaMenu);
+        itemMenu.setNombre("Nombre válido");
+        itemMenu.setTipo(""); // Tipo vacío
+
+        when(serviceCartaMenu.findById(1)).thenReturn(Optional.of(cartaMenu));
+
+        String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
+
+        assertEquals("redirect:/cartas/modificar/1", viewName);
+        verify(model).addAttribute(eq("error"), eq("Carta no válida, tipo no puede estar vacío"));
+    }
+
+    @Test
+    public void testRegistrarItem_PrecioInvalido() {
+        ItemMenu itemMenu = new ItemMenu();
+        CartaMenu cartaMenu = new CartaMenu();
+        cartaMenu.setIdCarta(1);
+        itemMenu.setCartamenu(cartaMenu);
+        itemMenu.setNombre("Nombre válido");
+        itemMenu.setTipo("Tipo válido");
+        itemMenu.setPrecio(0); // Precio inválido
+
+        when(serviceCartaMenu.findById(1)).thenReturn(Optional.of(cartaMenu));
+
+        String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
+
+        assertEquals("redirect:/cartas/modificar/1", viewName);
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("El precio debe ser mayor que 0"));
+    }
+
+    @Test
+    public void testRegistrarItem_Success2() {
+        ItemMenu itemMenu = new ItemMenu();
+        CartaMenu cartaMenu = new CartaMenu();
+        cartaMenu.setIdCarta(1);
+        itemMenu.setCartamenu(cartaMenu);
+        itemMenu.setNombre("Nombre válido");
+        itemMenu.setTipo("Tipo válido");
+        itemMenu.setPrecio(10.0); // Precio válido
+
+        when(serviceCartaMenu.findById(1)).thenReturn(Optional.of(cartaMenu));
+
+        String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
+
+        assertEquals("redirect:/cartas/modificar/1", viewName);
+        verify(serviceItemMenu).save(itemMenu); // Verifica que se guardó el item
+        verify(model).addAttribute(eq("success"), eq("Item registrado exitosamente."));
+    }
+
+    @Test
+    public void testRegistrarCarta_RestauranteNulo() {
+        CartaMenu cartaMenu = new CartaMenu(); // Sin restaurante asociado
+
+        String viewName = gestorMenu.registrarCarta(cartaMenu, redirectAttributes);
+
+        assertEquals("redirect:/cartas/register", viewName);
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("Restaurante no válido"));
+    }
+
+    @Test
+    public void testRegistrarCarta_IdUsuarioNulo() {
+        CartaMenu cartaMenu = new CartaMenu();
+        Restaurante restaurante = new Restaurante();
+        cartaMenu.setRestaurante(restaurante); // Restaurante sin ID
+
+        String viewName = gestorMenu.registrarCarta(cartaMenu, redirectAttributes);
+
+        assertEquals("redirect:/cartas/register", viewName);
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("Restaurante no válido"));
+    }
+
+    @Test
+    public void testRegistrarCarta_NombreVacio() {
+        CartaMenu cartaMenu = new CartaMenu();
+        Restaurante restaurante = new Restaurante("1", "pass", "restaurante", "cif", "nombre");
+        cartaMenu.setRestaurante(restaurante); // Restaurante válido
+        cartaMenu.setNombre(""); // Nombre vacío
+
+        String viewName = gestorMenu.registrarCarta(cartaMenu, redirectAttributes);
+
+        assertEquals("redirect:/cartas/register", viewName);
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("El nombre de la carta no puede estar vacío"));
+    }
+
+    @Test
+    public void testRegistrarCarta_RestauranteNoEncontrado() {
+        CartaMenu cartaMenu = new CartaMenu();
+        Restaurante restaurante = new Restaurante("1", "pass", "restaurante", "cif", "nombre");
+        cartaMenu.setRestaurante(restaurante);
+        cartaMenu.setNombre("Carta válida");
+
+        when(serviceRestaurant.findById("1")).thenReturn(Optional.empty()); // Restaurante no encontrado
+
+        String viewName = gestorMenu.registrarCarta(cartaMenu, redirectAttributes);
+
+        assertEquals("redirect:/cartas/register", viewName);
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("Restaurante no encontrado"));
+    }
+
+    @Test
+    public void testRegistrarCarta_Success() {
+        CartaMenu cartaMenu = new CartaMenu();
+        Restaurante restaurante = new Restaurante("1", "pass", "restaurante", "cif", "nombre");
+        cartaMenu.setRestaurante(restaurante);
+        cartaMenu.setNombre("Carta válida");
+
+        when(serviceRestaurant.findById("1")).thenReturn(Optional.of(restaurante)); // Restaurante encontrado
+
+        String viewName = gestorMenu.registrarCarta(cartaMenu, redirectAttributes);
+
+        assertEquals("redirect:/restaurantes/gestion/1", viewName);
+        verify(serviceCartaMenu).save(cartaMenu); // Verifica que se guardó la carta
+        verify(redirectAttributes).addFlashAttribute(eq("success"), eq("Carta registrada exitosamente."));
+    }
+
+
+    @Test
+    public void testMostrarItem_ItemExists() {
+        Integer id = 1;
+        ItemMenu itemMenu = new ItemMenu();
+        when(serviceItemMenu.findById(id)).thenReturn(Optional.of(itemMenu));
+
+        String viewName = gestorMenu.mostrarItem(id, model);
+
+        assertEquals("/administrador/VerItemMenu", viewName);
+        verify(model).addAttribute(eq("itemMenu"), eq(itemMenu));
+    }
+
+    @Test
+    public void testMostrarItem_ItemNotFound() {
+        Integer id = 1;
+        when(serviceItemMenu.findById(id)).thenReturn(Optional.empty());
+
+        String viewName = gestorMenu.mostrarItem(id, model);
+
+        assertEquals("error", viewName);
+        verify(model).addAttribute(eq("error"), eq("Item no encontrado"));
+    }
+
+    @Test
+    public void testMostrarMenus_MenusFound() {
+        List<CartaMenu> cartas = List.of(new CartaMenu(), new CartaMenu());
+        when(serviceCartaMenu.findAll()).thenReturn(cartas);
+
+        String viewName = gestorMenu.mostrarMenus(model);
+
+        assertEquals("/administrador/ListaMenus", viewName);
+        verify(model).addAttribute(eq("cartas"), eq(cartas));
+    }
+
+    @Test
+    public void testMostrarMenus_NoMenusFound() {
+        when(serviceCartaMenu.findAll()).thenReturn(List.of());
+
+        String viewName = gestorMenu.mostrarMenus(model);
+
+        assertEquals("error", viewName);
+        verify(model).addAttribute(eq("error"), eq("No se encontraron menús"));
+    }
+
+
+    @Test
+    public void testRegistrarItem_CartamenuEsNull() {
+        ItemMenu itemMenu = new ItemMenu(); // No se establece cartamenu
+
+        String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
+
+        assertEquals("redirect:/cartas/modificar/null", viewName);
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("Carta no válida"));
+    }
+
+    @Test
+    public void testRegistrarItem_IdCartaEsCero() {
+        ItemMenu itemMenu = new ItemMenu();
+        CartaMenu cartaMenu = new CartaMenu();
+        cartaMenu.setIdCarta(0); // ID inválido
+        itemMenu.setCartamenu(cartaMenu);
+
+        String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
+
+        assertEquals("redirect:/cartas/modificar/0", viewName);
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("ID de Carta no puede ser 0"));
+    }
+
+
 }
