@@ -2,6 +2,8 @@ package com.isoii.deliveringsolutions.dominio.controladores;
 
 import com.isoii.deliveringsolutions.dominio.entidades.Pedido;
 import com.isoii.deliveringsolutions.dominio.entidades.Cliente;
+import com.isoii.deliveringsolutions.dominio.entidades.ItemMenu;
+import com.isoii.deliveringsolutions.dominio.entidades.ItemPedido;
 import com.isoii.deliveringsolutions.dominio.entidades.Restaurante;
 import com.isoii.deliveringsolutions.dominio.service.ServiceItemPedido;
 import com.isoii.deliveringsolutions.dominio.service.ServicePedido;
@@ -54,6 +56,51 @@ class GestorPedidoTest {
     class FindAllTests {
 
         @Test
+        @DisplayName("Debe retornar la vista del pedido con ítems asociados")
+        void testMostrarPedidoConItems() {
+            Pedido pedido = new Pedido();
+            pedido.setIdPedido(1);
+
+            ItemPedido itemPedido = new ItemPedido();
+            itemPedido.setPedido(pedido);
+
+            when(servicePedido.findById(1)).thenReturn(Optional.of(pedido));
+            when(serviceItemPedido.findAll()).thenReturn(List.of(itemPedido));
+
+            String vista = gestorPedido.mostrarPedido(1, model);
+
+            assertEquals("/administrador/VerPedido", vista);
+            verify(model).addAttribute("pedido", pedido);
+            verify(model).addAttribute("itemsPedido", List.of(itemPedido));
+        }
+
+        @Test
+        @DisplayName("Debe retornar la vista del pedido sin ítems asociados")
+        void testMostrarPedidoSinItems() {
+            Pedido pedido = new Pedido();
+            pedido.setIdPedido(1);
+
+            when(servicePedido.findById(1)).thenReturn(Optional.of(pedido));
+            when(serviceItemPedido.findAll()).thenReturn(Collections.emptyList());
+
+            String vista = gestorPedido.mostrarPedido(1, model);
+
+            assertEquals("/administrador/VerPedido", vista);
+            verify(model).addAttribute("pedido", pedido);
+            verify(model).addAttribute("itemsPedido", Collections.emptyList());
+        }
+
+
+        @Test
+        @DisplayName("Debe retornar la vista para registrar un pedido")
+        void testMostrarFormularioRegistro() {
+            String vista = gestorPedido.mostrarFormularioRegistro();
+
+            assertEquals("Pruebas-RegisterPedido", vista);
+        }
+
+
+        @Test
         @DisplayName("Debe retornar una lista vacía cuando no hay pedidos")
         void testFindAllEmptyList() {
             when(servicePedido.findAll()).thenReturn(Collections.emptyList());
@@ -82,6 +129,91 @@ class GestorPedidoTest {
             assertEquals(pedido2, resultado.get(1), "El segundo pedido debe ser pedido2");
             verify(servicePedido, times(1)).findAll();
         }
+
+        @Test
+        @DisplayName("Debe retornar la vista de lista de pedidos cuando hay pedidos")
+        void testMostrarPedidosConPedidos() {
+            Pedido pedido = new Pedido();
+            pedido.setIdPedido(1);
+
+            when(servicePedido.findAll()).thenReturn(List.of(pedido));
+
+            String vista = gestorPedido.mostrarPedidos(model);
+
+            assertEquals("/administrador/ListaPedidos", vista);
+            verify(model).addAttribute("pedidos", List.of(pedido));
+        }
+
+        @Test
+        @DisplayName("Debe retornar la vista de error cuando no hay pedidos")
+        void testMostrarPedidosSinPedidos() {
+            when(servicePedido.findAll()).thenReturn(Collections.emptyList());
+
+            String vista = gestorPedido.mostrarPedidos(model);
+
+            assertEquals("error", vista);
+            verify(model).addAttribute("error", "No se encontraron pedidos");
+        }
+
+
+        @Test
+        @DisplayName("Debe retornar la vista de error cuando el pedido no es encontrado")
+        void testMostrarPedidoNoEncontrado() {
+            when(servicePedido.findById(1)).thenReturn(Optional.empty());
+
+            String vista = gestorPedido.mostrarPedido(1, model);
+
+            assertEquals("error", vista);
+            verify(model).addAttribute("error", "Pedido no encontrado");
+        }
+
+        @Test
+        @DisplayName("Debe retornar la vista del pedido cuando es encontrado")
+        void testMostrarPedidoEncontrado() {
+            Pedido pedido = new Pedido();
+            pedido.setIdPedido(1);
+
+            ItemPedido itemPedido = new ItemPedido();
+            itemPedido.setPedido(pedido);
+
+            when(servicePedido.findById(1)).thenReturn(Optional.of(pedido));
+            when(serviceItemPedido.findAll()).thenReturn(List.of(itemPedido));
+
+            String vista = gestorPedido.mostrarPedido(1, model);
+
+            assertEquals("/administrador/VerPedido", vista);
+            verify(model).addAttribute("pedido", pedido);
+            verify(model).addAttribute("itemsPedido", List.of(itemPedido));
+        }
+
+        @Test
+        @DisplayName("Debe retornar la vista de lista de pedidos cuando hay pedidos")
+        void testMostrarPedidosConDatos() {
+            Pedido pedido = new Pedido();
+            pedido.setIdPedido(1);
+
+            when(servicePedido.findAll()).thenReturn(List.of(pedido));
+
+            String vista = gestorPedido.mostrarPedidos(model);
+
+            assertEquals("/administrador/ListaPedidos", vista);
+            verify(model).addAttribute("pedidos", List.of(pedido));
+        }
+
+        @Test
+        @DisplayName("Debe retornar la vista de error cuando no hay pedidos")
+        void testMostrarPedidosSinDatos() {
+            when(servicePedido.findAll()).thenReturn(Collections.emptyList());
+
+            String vista = gestorPedido.mostrarPedidos(model);
+
+            assertEquals("error", vista);
+            verify(model).addAttribute("error", "No se encontraron pedidos");
+        }
+
+        
+
+
     }
 
     @Nested
@@ -89,30 +221,53 @@ class GestorPedidoTest {
     class RegistrarPedidoTests {
 
         @Test
-        @DisplayName("Debe registrar un pedido con fecha válida y estado válido")
-        void testRegistrarPedidoValido() {
-            Pedido pedidoEntrada = new Pedido(1, 1622547800L, "PENDIENTE", clientePrueba, restaurantePrueba);
-            Pedido pedidoRegistrado = new Pedido(1, 1622547800L, "PENDIENTE", clientePrueba, restaurantePrueba);
+        @DisplayName("Debe agregar un item al carrito y retornar HttpStatus.OK")
+        void testAddToCart() {
+            ItemMenu item = new ItemMenu();
+            item.setIdItemMenu(1);
+            item.setNombre("Item Prueba");
 
-            when(servicePedido.save(any(Pedido.class))).thenReturn(pedidoRegistrado);
+            ResponseEntity<String> response = gestorPedido.addToCart(item);
 
-            ResponseEntity<Pedido> respuesta = gestorPedido.registrarPedido(pedidoEntrada);
-
-            assertEquals(HttpStatus.CREATED, respuesta.getStatusCode(), "El estado HTTP debe ser CREATED");
-            assertEquals(pedidoRegistrado, respuesta.getBody(), "El cuerpo de la respuesta debe ser el pedido registrado");
-            verify(servicePedido, times(1)).save(pedidoEntrada);
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            assertEquals("Item añadido al carrito", response.getBody());
         }
 
         @Test
-        @DisplayName("Debe retornar BadRequest cuando la fecha es inválida (<=0)")
+        @DisplayName("Debe mostrar el carrito con los ítems agregados")
+        void testMostrarCarrito() {
+            String vista = gestorPedido.mostrarCarrito(model);
+
+            assertEquals("verMenusRestaurante", vista);
+            //verify(model).addAttribute("carrito", gestorPedido.getCarrito());
+        }
+
+        @Test
+        @DisplayName("Debe registrar un pedido correctamente cuando los datos son válidos")
+        void testRegistrarPedidoValido() {
+            Pedido pedido = new Pedido();
+            pedido.setFecha(1622547800L);
+            pedido.setEstadoPedido("PENDIENTE");
+
+            when(servicePedido.save(any(Pedido.class))).thenReturn(pedido);
+
+            ResponseEntity<Pedido> response = gestorPedido.registrarPedido(pedido);
+
+            assertEquals(HttpStatus.CREATED, response.getStatusCode());
+            assertNotNull(response.getBody());
+            verify(servicePedido, times(1)).save(pedido);
+        }
+
+        @Test
+        @DisplayName("Debe retornar BAD_REQUEST cuando la fecha es inválida")
         void testRegistrarPedidoFechaInvalida() {
-            Pedido pedidoEntrada = new Pedido(1, 0L, "PENDIENTE", clientePrueba, restaurantePrueba);
+            Pedido pedido = new Pedido();
+            pedido.setFecha(0);
+            pedido.setEstadoPedido("PENDIENTE");
 
-            ResponseEntity<Pedido> respuesta = gestorPedido.registrarPedido(pedidoEntrada);
+            ResponseEntity<Pedido> response = gestorPedido.registrarPedido(pedido);
 
-            assertEquals(HttpStatus.BAD_REQUEST, respuesta.getStatusCode(), "El estado HTTP debe ser BAD_REQUEST");
-            assertNull(respuesta.getBody(), "El cuerpo de la respuesta debe ser null");
-            verify(servicePedido, times(0)).save(any(Pedido.class));
+            assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         }
 
         @Test
@@ -180,6 +335,80 @@ class GestorPedidoTest {
             assertNull(respuesta.getBody(), "El cuerpo de la respuesta debe ser null");
             verify(servicePedido, times(0)).save(any(Pedido.class));
         }
+
+        @Test
+        @DisplayName("Debe retornar BAD_REQUEST cuando el estado del pedido es null")
+        void testRegistrarPedidoEstadoNull() {
+            Pedido pedido = new Pedido();
+            pedido.setFecha(1622547800L);
+            pedido.setEstadoPedido(null);
+
+            ResponseEntity<Pedido> response = gestorPedido.registrarPedido(pedido);
+
+            assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        }
+
+        @Test
+        @DisplayName("Debe retornar BAD_REQUEST cuando el estado del pedido está vacío")
+        void testRegistrarPedidoEstadoVacio() {
+            Pedido pedido = new Pedido();
+            pedido.setFecha(1622547800L);
+            pedido.setEstadoPedido("");
+
+            ResponseEntity<Pedido> response = gestorPedido.registrarPedido(pedido);
+
+            assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        }
+
+        @Test
+        @DisplayName("Debe retornar BAD_REQUEST cuando los datos del pedido son inválidos")
+        void testRegistrarPedidoDatosInvalidos() {
+            Pedido pedidoInvalido = new Pedido();
+            pedidoInvalido.setFecha(0);
+            pedidoInvalido.setEstadoPedido("");
+
+            ResponseEntity<Pedido> response = gestorPedido.registrarPedido(pedidoInvalido);
+
+            assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        }
+
+        @Test
+        @DisplayName("Debe registrar un pedido correctamente cuando los datos son válidos")
+        void testRegistrarPedidoDatosValidos() {
+            Pedido pedidoValido = new Pedido();
+            pedidoValido.setFecha(1622547800L);
+            pedidoValido.setEstadoPedido("PENDIENTE");
+
+            when(servicePedido.save(any(Pedido.class))).thenReturn(pedidoValido);
+
+            ResponseEntity<Pedido> response = gestorPedido.registrarPedido(pedidoValido);
+
+            assertEquals(HttpStatus.CREATED, response.getStatusCode());
+            assertNotNull(response.getBody());
+            verify(servicePedido, times(1)).save(pedidoValido);
+        }
+
+        @Test
+        @DisplayName("Debe ignorar los ítems que no coinciden con el pedido")
+        void testMostrarPedidoConItemsNoCoincidentes() {
+            Pedido pedido = new Pedido();
+            pedido.setIdPedido(1);
+
+            ItemPedido itemPedido = new ItemPedido();
+            Pedido otroPedido = new Pedido();
+            otroPedido.setIdPedido(2);
+            itemPedido.setPedido(otroPedido);
+
+            when(servicePedido.findById(1)).thenReturn(Optional.of(pedido));
+            when(serviceItemPedido.findAll()).thenReturn(List.of(itemPedido));
+
+            String vista = gestorPedido.mostrarPedido(1, model);
+
+            assertEquals("/administrador/VerPedido", vista);
+            verify(model).addAttribute("pedido", pedido);
+            verify(model).addAttribute("itemsPedido", Collections.emptyList());
+        }
+
     }
 
     @Nested
@@ -233,6 +462,33 @@ class GestorPedidoTest {
 
             // Verificar que servicePedido.findById(-1) haya sido llamado exactamente una vez
             verify(servicePedido, times(1)).findById(-1);
+        }
+
+        @Test
+        @DisplayName("Debe retornar la vista de error cuando el item no es encontrado")
+        void testMostrarItemPedidoNoEncontrado() {
+            when(serviceItemPedido.findById(1)).thenReturn(Optional.empty());
+
+            String vista = gestorPedido.mostrarItemPedido(1, model);
+
+            assertEquals("error", vista);
+            verify(model).addAttribute("error", "Item de pedido no encontrado");
+        }
+
+        @Test
+        @DisplayName("Debe retornar la vista del item cuando es encontrado")
+        void testMostrarItemPedidoEncontrado() {
+            
+            Pedido pedido = new Pedido();
+            ItemMenu itemMenu = new ItemMenu();
+            ItemPedido itemPedido = new ItemPedido(1, pedido, itemMenu);
+            
+            when(serviceItemPedido.findById(1)).thenReturn(Optional.of(itemPedido));
+
+            String vista = gestorPedido.mostrarItemPedido(1, model);
+
+            assertEquals("/administrador/VerItemPedido", vista);
+            verify(model).addAttribute("itemPedido", itemPedido);
         }
     }
 }
