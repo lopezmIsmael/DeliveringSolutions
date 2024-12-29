@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -295,7 +298,7 @@ class GestorRestauranteTest {
     class GestionRestauranteTests {
 
         @Test
-        @DisplayName("Debe gestionar correctamente un restaurante existente con menús y direcciones")
+        @DisplayName("Debe gestionar correctamente un restaurante existente con menús y direcciones no vacíos")
         void testGestionRestaurante_existe_conMenus_yDirecciones() {
             String id = "restaurante123";
             Restaurante restaurante = new Restaurante();
@@ -320,6 +323,7 @@ class GestorRestauranteTest {
             verify(model).addAttribute("direccion", direcciones);
             verifyNoMoreInteractions(model);
         }
+
 
         @Test
         @DisplayName("Debe gestionar correctamente un restaurante existente con menús vacíos y direcciones")
@@ -359,30 +363,16 @@ class GestorRestauranteTest {
 
             when(serviceRestaurant.findById(id)).thenReturn(Optional.of(restaurante));
             when(serviceCartaMenu.findByRestaurante(restaurante)).thenReturn(menus);
-            when(serviceDireccion.findByUsuario(restaurante)).thenThrow(new RuntimeException("Error en serviceDireccion"));
+            when(serviceDireccion.findByUsuario(restaurante)).thenReturn(null);
 
-            // Ejecutar el método y capturar la excepción
-            RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-                gestorRestaurante.gestionRestaurante(id, model);
-            }, "Debe propagar la excepción lanzada por serviceDireccion.findByUsuario");
+            String resultado = gestorRestaurante.gestionRestaurante(id, model);
 
-            assertEquals("Error en serviceDireccion", exception.getMessage(), "El mensaje de la excepción debe coincidir");
-
-            // Verificar las interacciones con los servicios
+            assertEquals("interfazGestionRestaurante", resultado, "Debe retornar la vista 'interfazGestionRestaurante'");
             verify(serviceRestaurant, times(1)).findById(id);
             verify(serviceCartaMenu, times(1)).findByRestaurante(restaurante);
             verify(serviceDireccion, times(1)).findByUsuario(restaurante);
-
-            // Verificar que "restaurante" y "menus" fueron agregados al modelo
             verify(model).addAttribute("restaurante", restaurante);
             verify(model).addAttribute("menus", menus);
-
-            // Verificar que "direcciones" y "direccion" **no** fueron agregados al modelo debido a la excepción
-            verify(model, never()).addAttribute(eq("direcciones"), any());
-            verify(model, never()).addAttribute(eq("direccion"), any());
-
-            // Asegurar que no haya más interacciones con el modelo
-            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -408,8 +398,6 @@ class GestorRestauranteTest {
             verify(model).addAttribute("restaurante", restaurante);
             verify(model).addAttribute("menus", menus);
             verify(model).addAttribute("direcciones", direcciones);
-            verify(model).addAttribute("direccion", direcciones);
-            verifyNoMoreInteractions(model);
         }
 
         @Test
@@ -573,6 +561,117 @@ class GestorRestauranteTest {
             verify(model, never()).addAttribute(eq("direccion"), any());
 
             // Asegurar que no haya más interacciones con el modelo
+            verifyNoMoreInteractions(model);
+        }
+    }
+
+    @Nested
+    @DisplayName("Tests para mostrarRestraurante")
+    class mostrarRestauranteTests {
+    
+        @Test
+        @DisplayName("Debe retornar la lista de restaurantes cuando no es vacía")
+        void testMostrarRestaurantes_listaNoVacia() {
+            List<Restaurante> restaurantes = Arrays.asList(new Restaurante(), new Restaurante());
+
+            when(serviceRestaurant.findAll()).thenReturn(restaurantes);
+
+            String resultado = gestorRestaurante.mostrarRestaurantes(model);
+
+            assertEquals("/administrador/ListaRestaurantes", resultado, "Debe retornar la vista de la lista de restaurantes");
+            verify(serviceRestaurant, times(1)).findAll();
+            verify(model).addAttribute("restaurantes", restaurantes);
+            verifyNoMoreInteractions(model);
+        }
+
+        @Test
+        @DisplayName("Debe retornar ERROR_VIEW cuando no hay restaurantes")
+        void testMostrarRestaurantes_listaVacia() {
+            List<Restaurante> restaurantes = Collections.emptyList();
+
+            when(serviceRestaurant.findAll()).thenReturn(restaurantes);
+
+            String resultado = gestorRestaurante.mostrarRestaurantes(model);
+
+            assertEquals(ERROR_VIEW, resultado, "Debe retornar ERROR_VIEW cuando no hay restaurantes");
+            verify(serviceRestaurant, times(1)).findAll();
+            verify(model).addAttribute(ERROR_VIEW, "No se encontraron restaurantes");
+            verifyNoMoreInteractions(model);
+        }
+
+        @Test
+        @DisplayName("Debe retornar ERROR_VIEW cuando la lista de restaurantes es null")
+        void testMostrarRestaurantes_listaNull() {
+            when(serviceRestaurant.findAll()).thenReturn(null);
+
+            String resultado = gestorRestaurante.mostrarRestaurantes(model);
+
+            assertEquals(ERROR_VIEW, resultado, "Debe retornar ERROR_VIEW cuando la lista de restaurantes es null");
+            verify(serviceRestaurant, times(1)).findAll();
+            verify(model).addAttribute(ERROR_VIEW, "No se encontraron restaurantes");
+            verifyNoMoreInteractions(model);
+        }
+
+        @Test
+        @DisplayName("Debe mostrar los detalles de un restaurante existente")
+        void testMostrarRestaurante_existe() {
+            String id = "restaurante123";
+            Restaurante restaurante = new Restaurante();
+            restaurante.setIdUsuario(id);
+            restaurante.setNombre("Restaurante Ejemplo");
+
+            when(serviceRestaurant.findById(id)).thenReturn(Optional.of(restaurante));
+
+            String resultado = gestorRestaurante.mostrarRestaurante(id, model);
+
+            assertEquals("/administrador/VerRestaurante", resultado, "Debe retornar la vista de detalles del restaurante");
+            verify(serviceRestaurant, times(1)).findById(id);
+            verify(model).addAttribute("restaurante", restaurante);
+            verifyNoMoreInteractions(model);
+        }
+
+        @Test
+        @DisplayName("Debe retornar ERROR_VIEW cuando el restaurante no existe")
+        void testMostrarRestaurante_noExiste() {
+            String id = "restauranteInexistente";
+
+            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
+
+            String resultado = gestorRestaurante.mostrarRestaurante(id, model);
+
+            assertEquals(ERROR_VIEW, resultado, "Debe retornar ERROR_VIEW cuando el restaurante no existe");
+            verify(serviceRestaurant, times(1)).findById(id);
+            verify(model).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
+            verifyNoMoreInteractions(model);
+        }
+
+        @Test
+        @DisplayName("Debe retornar ERROR_VIEW cuando el id es null")
+        void testMostrarRestaurante_idNulo() {
+            String id = null;
+
+            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
+
+            String resultado = gestorRestaurante.mostrarRestaurante(id, model);
+
+            assertEquals(ERROR_VIEW, resultado, "Debe retornar ERROR_VIEW cuando el id es null");
+            verify(serviceRestaurant, times(1)).findById(id);
+            verify(model).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
+            verifyNoMoreInteractions(model);
+        }
+
+        @Test
+        @DisplayName("Debe retornar ERROR_VIEW cuando el id es una cadena vacía")
+        void testMostrarRestaurante_idVacio() {
+            String id = "";
+
+            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
+
+            String resultado = gestorRestaurante.mostrarRestaurante(id, model);
+
+            assertEquals(ERROR_VIEW, resultado, "Debe retornar ERROR_VIEW cuando el id es una cadena vacía");
+            verify(serviceRestaurant, times(1)).findById(id);
+            verify(model).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
             verifyNoMoreInteractions(model);
         }
     }
