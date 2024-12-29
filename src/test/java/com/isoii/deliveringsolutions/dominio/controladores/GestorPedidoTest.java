@@ -211,7 +211,78 @@ class GestorPedidoTest {
             verify(model).addAttribute("error", "No se encontraron pedidos");
         }
 
-        
+        @Test
+        @DisplayName("Debe retornar la vista de lista de pedidos cuando hay pedidos")
+        void testMostrarPedidosConDatos2() {
+            Pedido pedido = new Pedido();
+            pedido.setIdPedido(1);
+
+            when(servicePedido.findAll()).thenReturn(List.of(pedido));
+
+            String vista = gestorPedido.mostrarPedidos(model);
+
+            assertEquals("/administrador/ListaPedidos", vista);
+            verify(model).addAttribute("pedidos", List.of(pedido));
+        }
+
+        @Test
+        @DisplayName("Debe retornar la vista de error cuando no hay pedidos")
+        void testMostrarPedidosSinDatos2() {
+            when(servicePedido.findAll()).thenReturn(Collections.emptyList());
+
+            String vista = gestorPedido.mostrarPedidos(model);
+
+            assertEquals("error", vista);
+            verify(model).addAttribute("error", "No se encontraron pedidos");
+        }
+
+        @Test
+        @DisplayName("Debe retornar la vista de error cuando la lista de pedidos es null")
+        void testMostrarPedidosListaNull() {
+            when(servicePedido.findAll()).thenReturn(null);
+
+            String vista = gestorPedido.mostrarPedidos(model);
+
+            assertEquals("error", vista);
+            verify(model).addAttribute("error", "No se encontraron pedidos");
+        }
+
+        @Test
+        @DisplayName("Debe retornar la vista de lista de ítems de pedido cuando hay ítems")
+        void testMostrarItemsPedidoConDatos() {
+            Pedido pedido = new Pedido();
+            ItemMenu itemMenu = new ItemMenu();
+            ItemPedido itemPedido = new ItemPedido(1, pedido, itemMenu);
+
+            when(serviceItemPedido.findAll()).thenReturn(List.of(itemPedido));
+
+            String vista = gestorPedido.mostrarItemsPedido(model);
+
+            assertEquals("/administrador/ListaItemsPedido", vista);
+            verify(model).addAttribute("itemsPedidos", List.of(itemPedido));
+        }
+
+        @Test
+        @DisplayName("Debe retornar la vista de error cuando no hay ítems de pedido")
+        void testMostrarItemsPedidoSinDatos() {
+            when(serviceItemPedido.findAll()).thenReturn(Collections.emptyList());
+
+            String vista = gestorPedido.mostrarItemsPedido(model);
+
+            assertEquals("error", vista);
+            verify(model).addAttribute("error", "Items de pedido no encontrados");
+        }
+
+        @Test
+        @DisplayName("Debe retornar la vista de error cuando la lista de ítems de pedido es null")
+        void testMostrarItemsPedidoListaNull() {
+            when(serviceItemPedido.findAll()).thenReturn(null);
+
+            String vista = gestorPedido.mostrarItemsPedido(model);
+
+            assertEquals("error", vista);
+            verify(model).addAttribute("error", "Items de pedido no encontrados");
+        }
 
 
     }
