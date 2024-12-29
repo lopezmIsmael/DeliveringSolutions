@@ -26,6 +26,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class GestorDireccionTest {
@@ -114,6 +118,92 @@ class GestorDireccionTest {
     @Nested
     @DisplayName("Tests para registrarDireccion")
     class RegistrarDireccionTests {
+                @Test
+        @DisplayName("Debe redirigir al formulario si 'calle' es null")
+        void testRegistrarDireccion_calleNull() {
+            Direccion direccion = new Direccion();
+            direccion.setNumero("123");
+            Integer codigoPostalId = 1;
+            String idUsuario = "usuarioValido";
+
+            String resultado = gestorDireccion.registrarDireccion(direccion, codigoPostalId, idUsuario, redirectAttributes, session);
+
+            assertEquals("redirect:/direccion/formularioRegistro", resultado);
+            verify(redirectAttributes).addFlashAttribute(ERROR, "Rellenar los campos obligatorios");
+        }
+
+        @Test
+        @DisplayName("Debe redirigir al formulario si 'calle' está vacía")
+        void testRegistrarDireccion_calleVacia() {
+            Direccion direccion = new Direccion();
+            direccion.setCalle("   ");
+            direccion.setNumero("123");
+            Integer codigoPostalId = 1;
+            String idUsuario = "usuarioValido";
+
+            String resultado = gestorDireccion.registrarDireccion(direccion, codigoPostalId, idUsuario, redirectAttributes, session);
+
+            assertEquals("redirect:/direccion/formularioRegistro", resultado);
+            verify(redirectAttributes).addFlashAttribute(ERROR, "Rellenar los campos obligatorios");
+        }
+
+        @Test
+        @DisplayName("Debe redirigir al formulario si 'numero' es null")
+        void testRegistrarDireccion_numeroNull() {
+            Direccion direccion = new Direccion();
+            direccion.setCalle("Av. Principal");
+            Integer codigoPostalId = 1;
+            String idUsuario = "usuarioValido";
+
+            String resultado = gestorDireccion.registrarDireccion(direccion, codigoPostalId, idUsuario, redirectAttributes, session);
+
+            assertEquals("redirect:/direccion/formularioRegistro", resultado);
+            verify(redirectAttributes).addFlashAttribute(ERROR, "Rellenar los campos obligatorios");
+        }
+
+        @Test
+        @DisplayName("Debe redirigir al formulario si 'numero' está vacío")
+        void testRegistrarDireccion_numeroVacio() {
+            Direccion direccion = new Direccion();
+            direccion.setCalle("Av. Principal");
+            direccion.setNumero("   ");
+            Integer codigoPostalId = 1;
+            String idUsuario = "usuarioValido";
+
+            String resultado = gestorDireccion.registrarDireccion(direccion, codigoPostalId, idUsuario, redirectAttributes, session);
+
+            assertEquals("redirect:/direccion/formularioRegistro", resultado);
+            verify(redirectAttributes).addFlashAttribute(ERROR, "Rellenar los campos obligatorios");
+        }
+
+        @Test
+        @DisplayName("Debe redirigir al formulario si 'codigoPostalId' es null")
+        void testRegistrarDireccion_codigoPostalIdNull() {
+            Direccion direccion = new Direccion();
+            direccion.setCalle("Av. Principal");
+            direccion.setNumero("123");
+            String idUsuario = "usuarioValido";
+
+            String resultado = gestorDireccion.registrarDireccion(direccion, null, idUsuario, redirectAttributes, session);
+
+            assertEquals("redirect:/direccion/formularioRegistro", resultado);
+            verify(redirectAttributes).addFlashAttribute(ERROR, "Rellenar los campos obligatorios");
+        }
+
+        @Test
+        @DisplayName("Debe redirigir al formulario si 'idUsuario' es null")
+        void testRegistrarDireccion_idUsuarioNull() {
+            Direccion direccion = new Direccion();
+            direccion.setCalle("Av. Principal");
+            direccion.setNumero("123");
+            Integer codigoPostalId = 1;
+
+            String resultado = gestorDireccion.registrarDireccion(direccion, codigoPostalId, null, redirectAttributes, session);
+
+            assertEquals("redirect:/direccion/formularioRegistro", resultado);
+            verify(redirectAttributes).addFlashAttribute(ERROR, "Rellenar los campos obligatorios");
+        }
+
 
         @Test
         @DisplayName("Debe redirigir al formulario con error si campos obligatorios están vacíos")

@@ -146,4 +146,71 @@ public class GestorServicioEntregaTest {
 
         verify(serviceServicioEntrega, times(1)).save(servicioEntrega);
     }
+
+    @Test
+    @DisplayName("Debe retornar la vista de registro de servicio de entrega")
+    public void testMostrarFormularioRegistro() {
+        String vista = gestorServicioEntrega.mostrarFormularioRegistro();
+        assertEquals("Pruebas-RegisterServicioEntrega", vista, "La vista debe coincidir con 'Pruebas-RegisterServicioEntrega'");
+    }
+
+    @Test
+    @DisplayName("Debe retornar BAD_REQUEST cuando las fechas son inválidas (0)")
+    public void testRegistrarServicioEntrega_InvalidDates() throws Exception {
+        servicioEntrega.setFechaRecepcion(0L);
+        servicioEntrega.setFechaEntrega(0L);
+
+        mockMvc.perform(post("/servicioEntrega/registrarServicioEntrega")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .flashAttr("servicioEntrega", servicioEntrega))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Debe mostrar la lista de servicios de entrega si existen")
+    public void testMostrarServiciosEntrega_ConServicios() throws Exception {
+        when(serviceServicioEntrega.findAll()).thenReturn(List.of(servicioEntrega));
+
+        mockMvc.perform(get("/servicioEntrega/mostrarServiciosEntrega"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/administrador/ListaServiciosEntrega"))
+                .andExpect(model().attributeExists("serviciosEntrega"))
+                .andExpect(model().attribute("serviciosEntrega", hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("Debe mostrar error si no existen servicios de entrega")
+    public void testMostrarServiciosEntrega_SinServicios() throws Exception {
+        when(serviceServicioEntrega.findAll()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/servicioEntrega/mostrarServiciosEntrega"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"))
+                .andExpect(model().attributeExists("error"))
+                .andExpect(model().attribute("error", "No se encontraron servicios de entrega"));
+    }
+
+    @Test
+    @DisplayName("Debe mostrar los detalles del servicio de entrega si existe")
+    public void testMostrarServicioEntrega_Existe() throws Exception {
+        when(serviceServicioEntrega.findById(1)).thenReturn(Optional.of(servicioEntrega));
+
+        mockMvc.perform(get("/servicioEntrega/mostrarServicioEntrega/1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/administrador/VerServicioEntrega"))
+                .andExpect(model().attributeExists("servicioEntrega"))
+                .andExpect(model().attribute("servicioEntrega", servicioEntrega));
+    }
+
+    @Test
+    @DisplayName("Debe mostrar error si el servicio de entrega no existe")
+    public void testMostrarServicioEntrega_NoExiste() throws Exception {
+        when(serviceServicioEntrega.findById(9999)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/servicioEntrega/mostrarServicioEntrega/9999"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"))
+                .andExpect(model().attributeExists("error"))
+                .andExpect(model().attribute("error", "Servicio de entrega no encontrado"));
+    }
 }

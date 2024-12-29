@@ -236,6 +236,29 @@ public class GestorZonaTest {
     }
 
     @Test
+        @DisplayName("mostrarZona: id válido con zona y múltiples ZonaCodigoPostal")
+        void testMostrarZonaMultiplesZonaCodigoPostal() {
+            Zona z = new Zona(1, "Talavera");
+            CodigoPostal cp1 = new CodigoPostal(2, "45002");
+            CodigoPostal cp2 = new CodigoPostal(3, "45003");
+            ZonaCodigoPostal zcp1 = new ZonaCodigoPostal(10, cp1, z);
+            ZonaCodigoPostal zcp2 = new ZonaCodigoPostal(11, cp2, new Zona(2, "Toledo"));
+
+            when(serviceZonaMock.findById(1)).thenReturn(Optional.of(z));
+            when(serviceZonaCodigoPostalMock.findAll()).thenReturn(Arrays.asList(zcp1, zcp2));
+
+            String vista = gestorZona.mostrarZona(1, model);
+            assertEquals("/administrador/VerZona", vista);
+
+            verify(model).addAttribute("zona", z);
+            verify(model).addAttribute(eq("codigosPostales"), captor.capture());
+
+            List<CodigoPostal> cpList = captor.getValue();
+            assertEquals(1, cpList.size());
+            assertEquals("45002", cpList.get(0).getCodigo());
+        }
+
+    @Test
     @DisplayName("mostrarZona: id válido con zona sin codigosPostales")
     void testMostrarZonaSinCodigos() {
         Zona z = new Zona(1, "Talavera");
