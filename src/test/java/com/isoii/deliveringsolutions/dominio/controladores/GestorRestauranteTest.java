@@ -15,6 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ui.Model;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -126,56 +129,15 @@ class GestorRestauranteTest {
             verify(serviceRestaurant, times(1)).findById(id);
         }
 
-        @Test
-        @DisplayName("Debe retornar null si el id no existe")
-        void testFindById_noExiste() {
-            String id = "nonExistentId";
-
-            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
-
-            Restaurante resultado = gestorRestaurante.findById(id);
-
-            assertNull(resultado, "El método debe retornar null cuando el restaurante no existe");
-            verify(serviceRestaurant, times(1)).findById(id);
-        }
-
-        @Test
-        @DisplayName("Debe retornar null si el id es null")
-        void testFindById_idNulo() {
-            String id = null;
-
-            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
-
-            Restaurante resultado = gestorRestaurante.findById(id);
-
-            assertNull(resultado, "El método debe retornar null cuando el id es null");
-            verify(serviceRestaurant, times(1)).findById(id);
-        }
-
-        @Test
-        @DisplayName("Debe retornar null si el id es una cadena vacía")
-        void testFindById_idVacio() {
-            String id = "";
-
-            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
-
-            Restaurante resultado = gestorRestaurante.findById(id);
-
-            assertNull(resultado, "El método debe retornar null cuando el id es una cadena vacía");
-            verify(serviceRestaurant, times(1)).findById(id);
-        }
-
-        @Test
-        @DisplayName("Debe retornar null si el id tiene formato incorrecto")
-        void testFindById_idFormatoIncorrecto() {
-            String id = "!!!";
-
-            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
-
-            Restaurante resultado = gestorRestaurante.findById(id);
-
-            assertNull(resultado, "El método debe retornar null cuando el id tiene formato incorrecto");
-            verify(serviceRestaurant, times(1)).findById(id);
+        @ParameterizedTest
+        @NullSource
+        @ValueSource(strings = {"nonExistentId", "", "!!!"})
+        @DisplayName("Debe retornar null cuando el id es nulo, inexistente, vacío o con formato incorrecto")
+        void testFindById_invalidCases(String invalidId) {
+            when(serviceRestaurant.findById(invalidId)).thenReturn(Optional.empty());
+            Restaurante resultado = gestorRestaurante.findById(invalidId);
+            assertNull(resultado, "El método debe retornar null cuando el id es " + invalidId);
+            verify(serviceRestaurant, times(1)).findById(invalidId);
         }
 
         @Test
@@ -215,62 +177,15 @@ class GestorRestauranteTest {
             verifyNoMoreInteractions(model);
         }
 
-        @Test
-        @DisplayName("Debe retornar ERROR_VIEW cuando el restaurante no existe")
-        void testBuscarRestaurante_noExiste() {
-            String nombre = "RestauranteInexistente";
-
-            when(serviceRestaurant.findById(nombre)).thenReturn(Optional.empty());
-
-            String resultado = gestorRestaurante.buscarRestaurante(nombre, model);
-
-            assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el restaurante no existe");
-            verify(serviceRestaurant, times(1)).findById(nombre);
-            verify(model, times(1)).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
-            verifyNoMoreInteractions(model);
-        }
-
-        @Test
-        @DisplayName("Debe retornar ERROR_VIEW cuando el nombre es null")
-        void testBuscarRestaurante_nombreNulo() {
-            String nombre = null;
-
-            when(serviceRestaurant.findById(nombre)).thenReturn(Optional.empty());
-
-            String resultado = gestorRestaurante.buscarRestaurante(nombre, model);
-
-            assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el nombre es null");
-            verify(serviceRestaurant, times(1)).findById(nombre);
-            verify(model, times(1)).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
-            verifyNoMoreInteractions(model);
-        }
-
-        @Test
-        @DisplayName("Debe retornar ERROR_VIEW cuando el nombre es una cadena vacía")
-        void testBuscarRestaurante_nombreVacio() {
-            String nombre = "";
-
-            when(serviceRestaurant.findById(nombre)).thenReturn(Optional.empty());
-
-            String resultado = gestorRestaurante.buscarRestaurante(nombre, model);
-
-            assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el nombre es una cadena vacía");
-            verify(serviceRestaurant, times(1)).findById(nombre);
-            verify(model, times(1)).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
-            verifyNoMoreInteractions(model);
-        }
-
-        @Test
-        @DisplayName("Debe retornar ERROR_VIEW cuando el nombre contiene caracteres especiales")
-        void testBuscarRestaurante_nombreConCaracteresEspeciales() {
-            String nombre = "!!!";
-
-            when(serviceRestaurant.findById(nombre)).thenReturn(Optional.empty());
-
-            String resultado = gestorRestaurante.buscarRestaurante(nombre, model);
-
-            assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el nombre contiene caracteres especiales");
-            verify(serviceRestaurant, times(1)).findById(nombre);
+        @ParameterizedTest
+        @NullSource
+        @ValueSource(strings = {"RestauranteInexistente", "", "!!!"})
+        @DisplayName("Debe retornar ERROR_VIEW cuando el nombre es nulo, inexistente, vacío o contiene caracteres especiales")
+        void testBuscarRestaurante_invalidNames(String invalidName) {
+            when(serviceRestaurant.findById(invalidName)).thenReturn(Optional.empty());
+            String resultado = gestorRestaurante.buscarRestaurante(invalidName, model);
+            assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el nombre es " + invalidName);
+            verify(serviceRestaurant, times(1)).findById(invalidName);
             verify(model, times(1)).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
             verifyNoMoreInteractions(model);
         }
@@ -400,80 +315,15 @@ class GestorRestauranteTest {
             verify(model).addAttribute("direcciones", direcciones);
         }
 
-        @Test
-        @DisplayName("Debe retornar ERROR_VIEW cuando el restaurante no existe")
-        void testGestionRestaurante_noExiste() {
-            String id = "restauranteInexistente";
-
-            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
-
-            String resultado = gestorRestaurante.gestionRestaurante(id, model);
-
-            assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el restaurante no existe");
-            verify(serviceRestaurant, times(1)).findById(id);
-            verify(serviceCartaMenu, never()).findByRestaurante(any());
-            verify(serviceDireccion, never()).findByUsuario(any());
-            verify(model).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
-            verify(model, never()).addAttribute(eq("restaurante"), any());
-            verify(model, never()).addAttribute(eq("menus"), any());
-            verify(model, never()).addAttribute(eq("direcciones"), any());
-            verify(model, never()).addAttribute(eq("direccion"), any());
-            verifyNoMoreInteractions(model);
-        }
-
-        @Test
-        @DisplayName("Debe manejar correctamente un id nulo")
-        void testGestionRestaurante_idNulo() {
-            String id = null;
-
-            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
-
-            String resultado = gestorRestaurante.gestionRestaurante(id, model);
-
-            assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el id es null");
-            verify(serviceRestaurant, times(1)).findById(id);
-            verify(serviceCartaMenu, never()).findByRestaurante(any());
-            verify(serviceDireccion, never()).findByUsuario(any());
-            verify(model).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
-            verify(model, never()).addAttribute(eq("restaurante"), any());
-            verify(model, never()).addAttribute(eq("menus"), any());
-            verify(model, never()).addAttribute(eq("direcciones"), any());
-            verify(model, never()).addAttribute(eq("direccion"), any());
-            verifyNoMoreInteractions(model);
-        }
-
-        @Test
-        @DisplayName("Debe manejar correctamente un id vacío")
-        void testGestionRestaurante_idVacio() {
-            String id = "";
-
-            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
-
-            String resultado = gestorRestaurante.gestionRestaurante(id, model);
-
-            assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el id es una cadena vacía");
-            verify(serviceRestaurant, times(1)).findById(id);
-            verify(serviceCartaMenu, never()).findByRestaurante(any());
-            verify(serviceDireccion, never()).findByUsuario(any());
-            verify(model).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
-            verify(model, never()).addAttribute(eq("restaurante"), any());
-            verify(model, never()).addAttribute(eq("menus"), any());
-            verify(model, never()).addAttribute(eq("direcciones"), any());
-            verify(model, never()).addAttribute(eq("direccion"), any());
-            verifyNoMoreInteractions(model);
-        }
-
-        @Test
-        @DisplayName("Debe manejar correctamente un id con caracteres especiales")
-        void testGestionRestaurante_idConCaracteresEspeciales() {
-            String id = "!!!";
-
-            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
-
-            String resultado = gestorRestaurante.gestionRestaurante(id, model);
-
-            assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el id contiene caracteres especiales");
-            verify(serviceRestaurant, times(1)).findById(id);
+        @ParameterizedTest
+        @NullSource
+        @ValueSource(strings = {"restauranteInexistente", "", "!!!"})
+        @DisplayName("Debe retornar ERROR_VIEW cuando el id es nulo, inexistente, vacío o con caracteres especiales")
+        void testGestionRestaurante_invalidIds(String invalidId) {
+            when(serviceRestaurant.findById(invalidId)).thenReturn(Optional.empty());
+            String resultado = gestorRestaurante.gestionRestaurante(invalidId, model);
+            assertEquals(ERROR_VIEW, resultado, "Debe retornar la vista de error cuando el id es " + invalidId);
+            verify(serviceRestaurant, times(1)).findById(invalidId);
             verify(serviceCartaMenu, never()).findByRestaurante(any());
             verify(serviceDireccion, never()).findByUsuario(any());
             verify(model).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
@@ -630,47 +480,15 @@ class GestorRestauranteTest {
             verifyNoMoreInteractions(model);
         }
 
-        @Test
-        @DisplayName("Debe retornar ERROR_VIEW cuando el restaurante no existe")
-        void testMostrarRestaurante_noExiste() {
-            String id = "restauranteInexistente";
-
-            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
-
-            String resultado = gestorRestaurante.mostrarRestaurante(id, model);
-
-            assertEquals(ERROR_VIEW, resultado, "Debe retornar ERROR_VIEW cuando el restaurante no existe");
-            verify(serviceRestaurant, times(1)).findById(id);
-            verify(model).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
-            verifyNoMoreInteractions(model);
-        }
-
-        @Test
-        @DisplayName("Debe retornar ERROR_VIEW cuando el id es null")
-        void testMostrarRestaurante_idNulo() {
-            String id = null;
-
-            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
-
-            String resultado = gestorRestaurante.mostrarRestaurante(id, model);
-
-            assertEquals(ERROR_VIEW, resultado, "Debe retornar ERROR_VIEW cuando el id es null");
-            verify(serviceRestaurant, times(1)).findById(id);
-            verify(model).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
-            verifyNoMoreInteractions(model);
-        }
-
-        @Test
-        @DisplayName("Debe retornar ERROR_VIEW cuando el id es una cadena vacía")
-        void testMostrarRestaurante_idVacio() {
-            String id = "";
-
-            when(serviceRestaurant.findById(id)).thenReturn(Optional.empty());
-
-            String resultado = gestorRestaurante.mostrarRestaurante(id, model);
-
-            assertEquals(ERROR_VIEW, resultado, "Debe retornar ERROR_VIEW cuando el id es una cadena vacía");
-            verify(serviceRestaurant, times(1)).findById(id);
+        @ParameterizedTest
+        @NullSource
+        @ValueSource(strings = {"restauranteInexistente", ""})
+        @DisplayName("Debe retornar ERROR_VIEW para restaurantes no existentes, id nulo o vacío")
+        void testMostrarRestaurante_invalidIds(String invalidId) {
+            when(serviceRestaurant.findById(invalidId)).thenReturn(Optional.empty());
+            String resultado = gestorRestaurante.mostrarRestaurante(invalidId, model);
+            assertEquals(ERROR_VIEW, resultado, "Debe retornar ERROR_VIEW cuando el restaurante no existe o el id es nulo o vacío");
+            verify(serviceRestaurant, times(1)).findById(invalidId);
             verify(model).addAttribute(ERROR_VIEW, RESTAURANTE_NO_ENCONTRADO);
             verifyNoMoreInteractions(model);
         }

@@ -28,6 +28,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import java.util.stream.Stream;
+
 class GestorPedidoTest {
 
     @Mock
@@ -182,31 +187,6 @@ class GestorPedidoTest {
         }
 
         @Test
-        @DisplayName("Debe retornar la vista de error cuando no hay pedidos")
-        void testMostrarPedidosSinDatos() {
-            when(servicePedido.findAll()).thenReturn(Collections.emptyList());
-
-            String vista = gestorPedido.mostrarPedidos(model);
-
-            assertEquals("error", vista);
-            verify(model).addAttribute("error", "No se encontraron pedidos");
-        }
-
-        @Test
-        @DisplayName("Debe retornar la vista de lista de pedidos cuando hay pedidos")
-        void testMostrarPedidosConDatos2() {
-            Pedido pedido = new Pedido();
-            pedido.setIdPedido(1);
-
-            when(servicePedido.findAll()).thenReturn(List.of(pedido));
-
-            String vista = gestorPedido.mostrarPedidos(model);
-
-            assertEquals("/administrador/ListaPedidos", vista);
-            verify(model).addAttribute("pedidos", List.of(pedido));
-        }
-
-        @Test
         @DisplayName("Debe retornar la vista de error cuando la lista de pedidos es null")
         void testMostrarPedidosListaNull() {
             when(servicePedido.findAll()).thenReturn(null);
@@ -280,7 +260,6 @@ class GestorPedidoTest {
             String vista = gestorPedido.mostrarCarrito(model);
 
             assertEquals("verMenusRestaurante", vista);
-            //verify(model).addAttribute("carrito", gestorPedido.getCarrito());
         }
 
         @Test
@@ -311,16 +290,23 @@ class GestorPedidoTest {
             assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         }
 
-        @Test
-        @DisplayName("Debe retornar BadRequest cuando la fecha es nula")
-        void testRegistrarPedidoFechaNula() {
-            Pedido pedidoEntrada = new Pedido(1, 0L, null, clientePrueba, restaurantePrueba); // Asumiendo que fecha 0 representa null o inválido
-
+        @DisplayName("Prueba parametrizada para entradas inválidas en registrarPedido")
+        @ParameterizedTest(name = "{index} => fecha={0}, estado={1}")
+        @MethodSource("invalidDataProvider")
+        void testRegistrarPedidoInvalido(long fecha, String estado) {
+            Pedido pedidoEntrada = new Pedido(1, fecha, estado, clientePrueba, restaurantePrueba);
             ResponseEntity<Pedido> respuesta = gestorPedido.registrarPedido(pedidoEntrada);
-
-            assertEquals(HttpStatus.BAD_REQUEST, respuesta.getStatusCode(), "El estado HTTP debe ser BAD_REQUEST");
-            assertNull(respuesta.getBody(), "El cuerpo de la respuesta debe ser null");
+            assertEquals(HttpStatus.BAD_REQUEST, respuesta.getStatusCode());
+            assertNull(respuesta.getBody());
             verify(servicePedido, times(0)).save(any(Pedido.class));
+        }
+
+        static Stream<Arguments> invalidDataProvider() {
+            return Stream.of(
+                Arguments.of(0L, null),          // fecha = 0, estado = null
+                Arguments.of(1622547800L, ""),   // fecha válida, estado vacío
+                Arguments.of(0L, "")            // fecha = 0, estado vacío
+            );
         }
 
         @Test
@@ -339,18 +325,6 @@ class GestorPedidoTest {
         }
 
         @Test
-        @DisplayName("Debe retornar BadRequest cuando el estadoPedido es inválido (cadena vacía)")
-        void testRegistrarPedidoEstadoInvalidoVacio() {
-            Pedido pedidoEntrada = new Pedido(1, 1622547800L, "", clientePrueba, restaurantePrueba);
-
-            ResponseEntity<Pedido> respuesta = gestorPedido.registrarPedido(pedidoEntrada);
-
-            assertEquals(HttpStatus.BAD_REQUEST, respuesta.getStatusCode(), "El estado HTTP debe ser BAD_REQUEST");
-            assertNull(respuesta.getBody(), "El cuerpo de la respuesta debe ser null");
-            verify(servicePedido, times(0)).save(any(Pedido.class));
-        }
-
-        @Test
         @DisplayName("Debe registrar correctamente un objeto Pedido válido")
         void testRegistrarPedidoObjetoValido() {
             Pedido pedidoEntrada = new Pedido(1, 1622547800L, "PAGADO", clientePrueba, restaurantePrueba);
@@ -363,18 +337,6 @@ class GestorPedidoTest {
             assertEquals(HttpStatus.CREATED, respuesta.getStatusCode(), "El estado HTTP debe ser CREATED");
             assertEquals(pedidoRegistrado, respuesta.getBody(), "El cuerpo de la respuesta debe ser el pedido registrado");
             verify(servicePedido, times(1)).save(pedidoEntrada);
-        }
-
-        @Test
-        @DisplayName("Debe retornar BadRequest cuando el objeto Pedido es inválido (fecha y estado nulos)")
-        void testRegistrarPedidoObjetoNoValido() {
-            Pedido pedidoEntrada = new Pedido(1, 0L, null, clientePrueba, restaurantePrueba);
-
-            ResponseEntity<Pedido> respuesta = gestorPedido.registrarPedido(pedidoEntrada);
-
-            assertEquals(HttpStatus.BAD_REQUEST, respuesta.getStatusCode(), "El estado HTTP debe ser BAD_REQUEST");
-            assertNull(respuesta.getBody(), "El cuerpo de la respuesta debe ser null");
-            verify(servicePedido, times(0)).save(any(Pedido.class));
         }
 
         @Test
