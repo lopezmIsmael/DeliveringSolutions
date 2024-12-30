@@ -12,10 +12,9 @@ import com.isoii.deliveringsolutions.dominio.entidades.Usuario;
 import com.isoii.deliveringsolutions.dominio.service.ServiceGroup;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import jakarta.servlet.http.HttpSession;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +28,16 @@ import org.springframework.ui.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// Controlador para gestionar los pagos
 @Controller
 @RequestMapping("/pago")
 public class GestorPago {
-    private static final String ERROR = "error";
-    private final ServiceGroup serviceGroup;
+
     private static final Logger logger = LoggerFactory.getLogger(GestorPago.class);
+
+    private static final String ERROR = "error";
     private static final String USUARIO = "usuario";
+
+    private final ServiceGroup serviceGroup;
 
     @Autowired
     public GestorPago(ServiceGroup serviceGroup) {
@@ -45,19 +46,19 @@ public class GestorPago {
 
     // Método para listar todos los pagos
     @GetMapping("/findAll")
-    
     public List<Pago> findAll() {
         return serviceGroup.getServicePago().findAll();
     }
 
-    // Método para registrar un pago
+    // Método para registrar un pago (mostrar formulario)
     @PostMapping("/register")
     public String mostrarFormularioRegistro(@RequestParam("cartData") String cartData,
-            @RequestParam("restauranteId") String restauranteId, Model model, HttpSession session) {
+                                            @RequestParam("restauranteId") String restauranteId,
+                                            Model model, HttpSession session) {
+
         logger.info("<<RestauranteId>>: {}", restauranteId);
 
         Usuario usuario = (Usuario) session.getAttribute(USUARIO);
-
         if (usuario == null) {
             return "redirect:/usuarios/login";
         }
@@ -68,29 +69,17 @@ public class GestorPago {
 
         Restaurante restaurante = serviceGroup.getServiceRestaurant().findById(restauranteId).orElse(null);
         if (restaurante == null) {
-            return "redirect:/error"; // or any appropriate error handling
+            return "redirect:/error"; // Manejo de error apropiado
         }
 
         logger.info("<<Restaurante>>: {}", restaurante.getNombre());
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        List<ItemMenu> carrito = new ArrayList<>();
-
-        try {
-            carrito = objectMapper.readValue(cartData, new TypeReference<List<ItemMenu>>() {
-            });
-        } catch (Exception e) {
-            logger.error("<<Error al convertir el carrito>>: {}", e);
-        }
-
+        List<ItemMenu> carrito = convertirJsonACarrito(cartData);
         logger.info("<<Carrito size>>: {}", carrito.size());
-        for (ItemMenu item : carrito) {
-            logger.info("<<Item>>: {}, Precio: {}", item.getNombre(), item.getPrecio());
-        }
 
         double totalPrice = 0;
         for (ItemMenu item : carrito) {
+            logger.info("<<Item>>: {}, Precio: {}", item.getNombre(), item.getPrecio());
             totalPrice += item.getPrecio();
         }
         logger.info("<<Total Price>>: {}", totalPrice);
@@ -108,131 +97,247 @@ public class GestorPago {
         return "RegistrarPedidos";
     }
 
-    // Metodo para buscar un pago por ID
+    // Método para convertir el JSON del carrito en una lista de ItemMenu
+    private List<ItemMenu> convertirJsonACarrito(String cartData) {
+        List<ItemMenu> carrito = new ArrayList<>();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            carrito = objectMapper.readValue(cartData, new TypeReference<List<ItemMenu>>() {});
+        } catch (Exception e) {
+            logger.error("<<Error al convertir el carrito>>: {}", e.getMessage(), e);
+        }
+        return carrito;
+    }
+
+    // Método para buscar un pago por ID
     @GetMapping("/findById/{id}")
-    
     public Pago findById(@PathVariable Integer id) {
         return serviceGroup.getServicePago().findById(id).orElse(null);
     }
 
-    // Metodo para registrar un pedido
+    // Método principal para registrar un pedido
     @PostMapping("/registrarPedido")
-    public String registrarPedido(
-            @RequestParam("metodoPago") String metodoPago,
-            @RequestParam("restauranteId") String restauranteId,
-            @RequestParam("direccion") Long direccion,
-            HttpSession session,
-            @RequestParam("itemIds") List<Integer> itemIds,
-            Model model,
-            RedirectAttributes redirectAttributes) {
-        try{
+    public String registrarPedido(@RequestParam("metodoPago") String metodoPago,
+                                  @RequestParam("restauranteId") String restauranteId,
+                                  @RequestParam("direccion") Long direccionId,
+                                  HttpSession session,
+                                  @RequestParam("itemIds") List<Integer> itemIds,
+                                  Model model,
+                                  RedirectAttributes redirectAttributes) {
+        logger.info("<<ESTOY EN REGISTRAR PEDIDO: GestorPago>>");
 
-            logger.info("<<ESTOY EN REGISTRAR PEDIDO: GestorPago>>");
-            // Validar carrito vacío
-            if (itemIds == null || itemIds.isEmpty()) {
-                logger.error("<<Error: carrito vacío>>");
-                redirectAttributes.addFlashAttribute("error", "El carrito está vacío.");
+        try {
+            // 1. Validaciones iniciales
+            if (!validarCarrito(itemIds, redirectAttributes)) {
+                return "redirect:/error";
+            }
+            if (!validarMetodoPago(metodoPago, redirectAttributes)) {
                 return "redirect:/error";
             }
 
-            // Validar método de pago nulo
-            if (metodoPago == null || metodoPago.isEmpty()) {
-                logger.error("<<Error: método de pago no especificado>>");
-                redirectAttributes.addFlashAttribute("error", "El método de pago es inválido.");
-                return "redirect:/error";
-            }
-
-            // Validar restaurante
-            Restaurante restaurante = serviceGroup.getServiceRestaurant().findById(restauranteId).orElse(null);
+            // 2. Obtener restaurante y dirección
+            Restaurante restaurante = obtenerRestaurante(restauranteId, redirectAttributes);
             if (restaurante == null) {
-                logger.error("<<Error: Restaurante no encontrado>>");
-                redirectAttributes.addFlashAttribute("error", "El restaurante no existe.");
                 return "redirect:/error";
             }
-
-            // Validar dirección
-            Direccion direccionEntrega = serviceGroup.getServiceDireccion().findById(direccion).orElse(null);
+            Direccion direccionEntrega = obtenerDireccion(direccionId, redirectAttributes);
             if (direccionEntrega == null) {
-                logger.error("<<Error: Dirección no válida>>");
-                redirectAttributes.addFlashAttribute("error", "La dirección de entrega no existe.");
                 return "redirect:/error";
             }
 
             logger.info("<<Metodo de pago>>: {}", metodoPago);
             logger.info("<<RestauranteId>>: {}", restauranteId);
-            logger.info("<<DireccionId>>: {}", direccion);
+            logger.info("<<DireccionId>>: {}", direccionId);
 
+            // 3. Obtener cliente (usuario logueado)
             Cliente cliente = (Cliente) session.getAttribute(USUARIO);
 
-            Pedido pedido = new Pedido();
-            pedido.setFecha(System.currentTimeMillis());
-            pedido.setEstadoPedido("Pendiente");
-            pedido.setCliente(cliente);
-            pedido.setRestaurante(restaurante);
-            serviceGroup.getServicePedido().save(pedido);
-            logger.info("<<Pedido registrado>>: {}", pedido);
+            // 4. Crear y guardar el pedido
+            Pedido pedido = crearPedido(cliente, restaurante);
 
-            Double total = 0.0;
+            // 5. Registrar ítems del pedido
             List<ItemMenu> items = new ArrayList<>();
-            for (Integer itemId : itemIds) {
-                logger.info("<<Item ID>>: {}", itemId);
-                Optional<ItemMenu> optionalItem = serviceGroup.getServiceItemMenu().findById(itemId);
-                if (optionalItem.isPresent()) {
-                    ItemPedido itemPedido = new ItemPedido();
-                    items.add(optionalItem.get());
-                    total += optionalItem.get().getPrecio();
-                    logger.info("<<Item encontrado>>: {}", optionalItem);
-                    itemPedido.setItemMenu(optionalItem.get());
-                    itemPedido.setPedido(pedido);
-                    serviceGroup.getServiceItemPedido().save(itemPedido);
-                    logger.info("<<ItemPedido registrado>>: {}", itemPedido);
-                }
-            }
+            double total = registrarItems(itemIds, pedido, items);
 
-            Pago pago = new Pago();
-            pago.setMetodoPago(metodoPago);
-            pago.setPedido(pedido);
-            serviceGroup.getServicePago().save(pago);
+            // 6. Crear y guardar el pago
+            Pago pago = crearPago(metodoPago, pedido);
 
-            logger.info("<<Pago registrado>>: {}", pago);
+            // 7. Actualizar estado del pedido y preparar datos de confirmación
             if (restaurante != null) {
                 pedido.setEstadoPedido("Pagado");
                 serviceGroup.getServicePedido().save(pedido);
-                logger.info("<<Pedido registrado>>: {}", pedido);
+                logger.info("<<Pedido actualizado (Pagado)>>: {}", pedido);
 
-                Usuario usuarioRestaurante = serviceGroup.getServiceUsuario().findById(restaurante.getIdUsuario()).orElse(null);
-                List<Direccion> direccionesRecogida = serviceGroup.getServiceDireccion().findByUsuario(usuarioRestaurante);
-                Direccion direccionRecogida = !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
+                Direccion direccionRecogida = obtenerDireccionRecogidaRestaurante(restaurante);
+                logger.info("<<DireccionRecogida>>: {}", 
+                            direccionRecogida != null ? direccionRecogida : "No encontrada");
 
-                if (direccionRecogida != null) {
-                    logger.info("<<Direccion de recogida>>: {}", direccionRecogida);
-                } else {
-                    logger.info("<<Direccion de recogida no encontrada>>");
-                }
-
-                redirectAttributes.addFlashAttribute("pedido", pedido);
-                redirectAttributes.addFlashAttribute("items", items);
-                redirectAttributes.addFlashAttribute("pago", pago);
-                redirectAttributes.addFlashAttribute("restaurante", restaurante);
-                redirectAttributes.addFlashAttribute("cliente", cliente);
-                redirectAttributes.addFlashAttribute("total", total);
-                redirectAttributes.addFlashAttribute("direccionRecogida", direccionRecogida);
-                redirectAttributes.addFlashAttribute("direccionEntrega", direccionEntrega);
+                agregarAtributosConfirmacion(redirectAttributes, pedido, items, pago, 
+                                             restaurante, cliente, total, 
+                                             direccionRecogida, direccionEntrega);
             }
 
             return "redirect:/pago/confirmacion";
+
         } catch (Exception e) {
             logger.error("<<Error inesperado>>: {}", e.getMessage(), e);
-            redirectAttributes.addFlashAttribute("error", "Ocurrió un error inesperado al procesar el pedido.");
+            redirectAttributes.addFlashAttribute(ERROR, 
+                "Ocurrió un error inesperado al procesar el pedido.");
             return "redirect:/error";
         }
     }
 
-    // Método para mostrar el formulario de registro de un pago
+    /** ======================== MÉTODOS PRIVADOS DE APOYO ======================== **/
+
+    /**
+     * Valida que el carrito (lista de itemIds) no esté vacío.
+     * @return true si es válido, false en caso contrario
+     */
+    private boolean validarCarrito(List<Integer> itemIds, RedirectAttributes redirectAttributes) {
+        if (itemIds == null || itemIds.isEmpty()) {
+            logger.error("<<Error: carrito vacío>>");
+            redirectAttributes.addFlashAttribute(ERROR, "El carrito está vacío.");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Valida que el método de pago no sea nulo o vacío.
+     * @return true si es válido, false en caso contrario
+     */
+    private boolean validarMetodoPago(String metodoPago, RedirectAttributes redirectAttributes) {
+        if (metodoPago == null || metodoPago.isEmpty()) {
+            logger.error("<<Error: método de pago no especificado>>");
+            redirectAttributes.addFlashAttribute(ERROR, "El método de pago es inválido.");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Obtiene el restaurante a partir de su ID. Regresa null si no existe.
+     */
+    private Restaurante obtenerRestaurante(String restauranteId, RedirectAttributes redirectAttributes) {
+        Restaurante restaurante = serviceGroup.getServiceRestaurant()
+                                              .findById(restauranteId)
+                                              .orElse(null);
+        if (restaurante == null) {
+            logger.error("<<Error: Restaurante no encontrado>>");
+            redirectAttributes.addFlashAttribute(ERROR, "El restaurante no existe.");
+        }
+        return restaurante;
+    }
+
+    /**
+     * Obtiene la dirección a partir de su ID. Regresa null si no existe.
+     */
+    private Direccion obtenerDireccion(Long direccionId, RedirectAttributes redirectAttributes) {
+        Direccion direccionEntrega = serviceGroup.getServiceDireccion()
+                                                 .findById(direccionId)
+                                                 .orElse(null);
+        if (direccionEntrega == null) {
+            logger.error("<<Error: Dirección no válida>>");
+            redirectAttributes.addFlashAttribute(ERROR, "La dirección de entrega no existe.");
+        }
+        return direccionEntrega;
+    }
+
+    /**
+     * Crea un nuevo pedido y lo persiste.
+     */
+    private Pedido crearPedido(Cliente cliente, Restaurante restaurante) {
+        Pedido pedido = new Pedido();
+        pedido.setFecha(System.currentTimeMillis());
+        pedido.setEstadoPedido("Pendiente");
+        pedido.setCliente(cliente);
+        pedido.setRestaurante(restaurante);
+        serviceGroup.getServicePedido().save(pedido);
+        logger.info("<<Pedido registrado>>: {}", pedido);
+        return pedido;
+    }
+
+    /**
+     * Registra los items en el pedido y devuelve el total acumulado.
+     */
+    private double registrarItems(List<Integer> itemIds, Pedido pedido, List<ItemMenu> items) {
+        double total = 0.0;
+        for (Integer itemId : itemIds) {
+            logger.info("<<Item ID>>: {}", itemId);
+            Optional<ItemMenu> optionalItem = serviceGroup.getServiceItemMenu().findById(itemId);
+            if (optionalItem.isPresent()) {
+                ItemMenu itemMenu = optionalItem.get();
+                items.add(itemMenu);
+                total += itemMenu.getPrecio();
+                logger.info("<<Item encontrado>>: {}", itemMenu);
+
+                ItemPedido itemPedido = new ItemPedido();
+                itemPedido.setItemMenu(itemMenu);
+                itemPedido.setPedido(pedido);
+                serviceGroup.getServiceItemPedido().save(itemPedido);
+                logger.info("<<ItemPedido registrado>>: {}", itemPedido);
+            }
+        }
+        return total;
+    }
+
+    /**
+     * Crea y persiste un pago vinculado al pedido.
+     */
+    private Pago crearPago(String metodoPago, Pedido pedido) {
+        Pago pago = new Pago();
+        pago.setMetodoPago(metodoPago);
+        pago.setPedido(pedido);
+        serviceGroup.getServicePago().save(pago);
+        logger.info("<<Pago registrado>>: {}", pago);
+        return pago;
+    }
+
+    /**
+     * Obtiene la dirección de recogida del restaurante (la primera que exista).
+     */
+    private Direccion obtenerDireccionRecogidaRestaurante(Restaurante restaurante) {
+        Usuario usuarioRestaurante = serviceGroup.getServiceUsuario()
+                                                .findById(restaurante.getIdUsuario())
+                                                .orElse(null);
+
+        if (usuarioRestaurante == null) {
+            return null;
+        }
+
+        List<Direccion> direccionesRecogida = serviceGroup.getServiceDireccion()
+                                                          .findByUsuario(usuarioRestaurante);
+        return !direccionesRecogida.isEmpty() ? direccionesRecogida.get(0) : null;
+    }
+
+    /**
+     * Agrega al RedirectAttributes todos los objetos que se requieren para la vista de confirmación.
+     */
+    private void agregarAtributosConfirmacion(RedirectAttributes redirectAttributes,
+                                              Pedido pedido,
+                                              List<ItemMenu> items,
+                                              Pago pago,
+                                              Restaurante restaurante,
+                                              Cliente cliente,
+                                              double total,
+                                              Direccion direccionRecogida,
+                                              Direccion direccionEntrega) {
+
+        redirectAttributes.addFlashAttribute("pedido", pedido);
+        redirectAttributes.addFlashAttribute("items", items);
+        redirectAttributes.addFlashAttribute("pago", pago);
+        redirectAttributes.addFlashAttribute("restaurante", restaurante);
+        redirectAttributes.addFlashAttribute("cliente", cliente);
+        redirectAttributes.addFlashAttribute("total", total);
+        redirectAttributes.addFlashAttribute("direccionRecogida", direccionRecogida);
+        redirectAttributes.addFlashAttribute("direccionEntrega", direccionEntrega);
+    }
+
+    // Método para mostrar el formulario de confirmación
     @GetMapping("/confirmacion")
     public String mostrarConfirmacion(HttpSession session, Model model) {
         Usuario usuario = (Usuario) session.getAttribute(USUARIO);
-    
         if (usuario == null) {
             logger.error("<<Error: sesión inválida o usuario no autenticado>>");
             return "redirect:/login";
@@ -242,7 +347,7 @@ public class GestorPago {
         return "ConfirmacionPedido";
     }
 
-    // Método para listar todos los pagos
+    // Método para listar todos los pagos (administrador)
     @GetMapping("/mostrarPagos")
     public String mostrarPagos(Model model) {
         List<Pago> pagos = serviceGroup.getServicePago().findAll();
@@ -255,7 +360,7 @@ public class GestorPago {
         }
     }
 
-    // Método para mostrar los detalles de un pago específico
+    // Método para mostrar el detalle de un pago específico (administrador)
     @GetMapping("/mostrarPago/{id}")
     public String mostrarPago(@PathVariable Integer id, Model model) {
         Optional<Pago> optionalPago = serviceGroup.getServicePago().findById(id);
@@ -267,5 +372,4 @@ public class GestorPago {
             return ERROR;
         }
     }
-
 }

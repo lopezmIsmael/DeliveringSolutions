@@ -119,14 +119,14 @@ public class GestorMenu {
             BindingResult result) {
 
         if (itemMenu.getCartamenu() == null) {
-            redirectAttributes.addFlashAttribute("error", "Carta no válida");
+            redirectAttributes.addFlashAttribute(ERROR, "Carta no válida");
             return "redirect:/cartas/modificar/null";
         }
 
         Integer cartaMenuID = itemMenu.getCartamenu().getIdCarta();
 
         if (cartaMenuID == 0) {
-            redirectAttributes.addFlashAttribute("error", "ID de Carta no puede ser 0");
+            redirectAttributes.addFlashAttribute(ERROR, "ID de Carta no puede ser 0");
             return "redirect:/cartas/modificar/0";
         }
 
