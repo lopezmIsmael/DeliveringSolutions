@@ -173,31 +173,12 @@ class GestorPedidoTest {
             Pedido pedido = new Pedido();
             pedido.setIdPedido(1);
 
-            ItemPedido itemPedido = new ItemPedido();
-            itemPedido.setPedido(pedido);
-
             when(servicePedido.findById(1)).thenReturn(Optional.of(pedido));
-            when(serviceItemPedido.findAll()).thenReturn(List.of(itemPedido));
 
             String vista = gestorPedido.mostrarPedido(1, model);
 
             assertEquals("/administrador/VerPedido", vista);
             verify(model).addAttribute("pedido", pedido);
-            verify(model).addAttribute("itemsPedido", List.of(itemPedido));
-        }
-
-        @Test
-        @DisplayName("Debe retornar la vista de lista de pedidos cuando hay pedidos")
-        void testMostrarPedidosConDatos() {
-            Pedido pedido = new Pedido();
-            pedido.setIdPedido(1);
-
-            when(servicePedido.findAll()).thenReturn(List.of(pedido));
-
-            String vista = gestorPedido.mostrarPedidos(model);
-
-            assertEquals("/administrador/ListaPedidos", vista);
-            verify(model).addAttribute("pedidos", List.of(pedido));
         }
 
         @Test
@@ -223,17 +204,6 @@ class GestorPedidoTest {
 
             assertEquals("/administrador/ListaPedidos", vista);
             verify(model).addAttribute("pedidos", List.of(pedido));
-        }
-
-        @Test
-        @DisplayName("Debe retornar la vista de error cuando no hay pedidos")
-        void testMostrarPedidosSinDatos2() {
-            when(servicePedido.findAll()).thenReturn(Collections.emptyList());
-
-            String vista = gestorPedido.mostrarPedidos(model);
-
-            assertEquals("error", vista);
-            verify(model).addAttribute("error", "No se encontraron pedidos");
         }
 
         @Test

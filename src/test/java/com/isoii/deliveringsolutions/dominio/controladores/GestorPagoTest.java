@@ -115,9 +115,6 @@ class GestorPagoTest {
         }
     }
 
-    // --------------------------------------------------------------------------------------
-    //                             TESTS PARA /pago/findById/{id}
-    // --------------------------------------------------------------------------------------
     @Nested
     @DisplayName("GET /pago/findById/{id}")
     class FindByIdTests {

@@ -94,7 +94,6 @@ class GestorMenuTest {
         assertNull(result);
     }
 
-    // Test: register/{id}
     @Test
     void testMostrarFormularioRegistro_ValidId() {
         when(serviceRestaurant.findById("rest1")).thenReturn(Optional.of(new Restaurante()));
