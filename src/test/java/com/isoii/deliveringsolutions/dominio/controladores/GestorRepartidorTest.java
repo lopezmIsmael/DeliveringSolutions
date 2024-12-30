@@ -94,7 +94,7 @@ class GestorRepartidorTest {
             String vista = gestorRepartidor.mostrarFormularioRegistro(model);
 
             assertEquals("Pruebas-RegisterRepartidor", vista);
-            verify(model).addAttribute(eq("zonas"), eq(List.of(z1, z2)));
+            verify(model).addAttribute("zonas", List.of(z1, z2));
         }
     }
 

@@ -210,12 +210,12 @@ class GestorPagoTest {
 
             assertAll(
                 () -> assertEquals("RegistrarPedidos", resultado),
-                () -> verify(model).addAttribute(eq("direcciones"), anyList()),
-                () -> verify(model).addAttribute(eq("restaurante"), eq(restaurantePrueba)),
-                () -> verify(model).addAttribute(eq("carrito"), anyList()),
-                () -> verify(model).addAttribute(eq("total"), eq(18.0)),
-                () -> verify(model).addAttribute(eq("usuario"), eq(clientePrueba)),
-                () -> verify(model).addAttribute(eq("codigosPostales"), anyList())
+                () -> verify(model).addAttribute("direcciones", anyList()),
+                () -> verify(model).addAttribute("restaurante", restaurantePrueba),
+                () -> verify(model).addAttribute("carrito", anyList()),
+                () -> verify(model).addAttribute("total", 18.0),
+                () -> verify(model).addAttribute("usuario", clientePrueba),
+                () -> verify(model).addAttribute("codigosPostales", anyList())
             );
         }
 
@@ -258,7 +258,7 @@ class GestorPagoTest {
             // Caso carrito nulo
             String resultadoNulo = gestorPago.registrarPedido("TARJETA", "1", 1L, session, null, model, redirectAttributes);
             assertEquals("redirect:/error", resultadoNulo);
-            verify(redirectAttributes, times(2)).addFlashAttribute(eq("error"), anyString());
+            verify(redirectAttributes, times(2)).addFlashAttribute("error", "El carrito está vacío.");
         }
 
         @Test
@@ -276,7 +276,7 @@ class GestorPagoTest {
             // Caso método de pago vacío
             String resultadoVacio = gestorPago.registrarPedido("", "1", 1L, session, List.of(1), model, redirectAttributes);
             assertEquals("redirect:/error", resultadoVacio);
-            verify(redirectAttributes, times(2)).addFlashAttribute(eq("error"), anyString());
+            verify(redirectAttributes, times(2)).addFlashAttribute("error", "El método de pago es inválido.");
         }
 
         @Test
