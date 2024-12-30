@@ -35,6 +35,7 @@ public class GestorPago {
     private static final Logger logger = LoggerFactory.getLogger(GestorPago.class);
 
     private static final String ERROR = "error";
+    private static final String REDIRECT_ERROR = "redirect:/error";
     private static final String USUARIO = "usuario";
 
     private final ServiceGroup serviceGroup;
@@ -69,7 +70,7 @@ public class GestorPago {
 
         Restaurante restaurante = serviceGroup.getServiceRestaurant().findById(restauranteId).orElse(null);
         if (restaurante == null) {
-            return "redirect:/error"; // Manejo de error apropiado
+            return REDIRECT_ERROR; // Manejo de error apropiado
         }
 
         logger.info("<<Restaurante>>: {}", restaurante.getNombre());
@@ -130,20 +131,20 @@ public class GestorPago {
         try {
             // 1. Validaciones iniciales
             if (!validarCarrito(itemIds, redirectAttributes)) {
-                return "redirect:/error";
+                return REDIRECT_ERROR;
             }
             if (!validarMetodoPago(metodoPago, redirectAttributes)) {
-                return "redirect:/error";
+                return REDIRECT_ERROR;
             }
 
             // 2. Obtener restaurante y dirección
             Restaurante restaurante = obtenerRestaurante(restauranteId, redirectAttributes);
             if (restaurante == null) {
-                return "redirect:/error";
+                return REDIRECT_ERROR;
             }
             Direccion direccionEntrega = obtenerDireccion(direccionId, redirectAttributes);
             if (direccionEntrega == null) {
-                return "redirect:/error";
+                return REDIRECT_ERROR;
             }
 
             logger.info("<<Metodo de pago>>: {}", metodoPago);
@@ -164,19 +165,17 @@ public class GestorPago {
             Pago pago = crearPago(metodoPago, pedido);
 
             // 7. Actualizar estado del pedido y preparar datos de confirmación
-            if (restaurante != null) {
-                pedido.setEstadoPedido("Pagado");
-                serviceGroup.getServicePedido().save(pedido);
-                logger.info("<<Pedido actualizado (Pagado)>>: {}", pedido);
+            pedido.setEstadoPedido("Pagado");
+            serviceGroup.getServicePedido().save(pedido);
+            logger.info("<<Pedido actualizado (Pagado)>>: {}", pedido);
 
-                Direccion direccionRecogida = obtenerDireccionRecogidaRestaurante(restaurante);
-                logger.info("<<DireccionRecogida>>: {}", 
-                            direccionRecogida != null ? direccionRecogida : "No encontrada");
+            Direccion direccionRecogida = obtenerDireccionRecogidaRestaurante(restaurante);
+            logger.info("<<DireccionRecogida>>: {}", 
+                        direccionRecogida != null ? direccionRecogida : "No encontrada");
 
-                agregarAtributosConfirmacion(redirectAttributes, pedido, items, pago, 
-                                             restaurante, cliente, total, 
-                                             direccionRecogida, direccionEntrega);
-            }
+            agregarAtributosConfirmacion(redirectAttributes, pedido, items, pago, 
+                                            restaurante, cliente, total, 
+                                            direccionRecogida, direccionEntrega);
 
             return "redirect:/pago/confirmacion";
 
@@ -184,7 +183,7 @@ public class GestorPago {
             logger.error("<<Error inesperado>>: {}", e.getMessage(), e);
             redirectAttributes.addFlashAttribute(ERROR, 
                 "Ocurrió un error inesperado al procesar el pedido.");
-            return "redirect:/error";
+            return REDIRECT_ERROR;
         }
     }
 
@@ -373,3 +372,4 @@ public class GestorPago {
         }
     }
 }
+
