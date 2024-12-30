@@ -1,229 +1,215 @@
 # Documentación Sprint 5
 **Fecha**: 13 de noviembre de 2024
 
-Durante este sprint nos hemos encargado de realizar los cambios solicitados por el cliente, así como mejoras del sistema que hemos visto necesarias.
-La auditoría con el cliente se realizó el día 6 de noviembre. Se dan las siguientes solicitudes de cambio (CR):
-1. Formato de los precios con dos decimales y notación europea (puntos en los millares, comas en los decimales)
-2. Seleccion de distintas direcciones del usuario a la hora de hacer el pedido, o registrar una nueva
-3. Visualizar el estado del pedido en el rol de cliente
-4. El repartidor debe asignarse en función de las zonas que tenga establecidas
+Durante este sprint nos hemos encargado de realizar los cambios solicitados por el cliente, así como mejoras del sistema que hemos considerado necesarias.
 
-Con el objetivo de mejorar la experiencia del usuario, también se propone el siguiente cambio:
+La auditoría con el cliente se realizó el día 6 de noviembre. Se recibieron las siguientes solicitudes de cambio (CR):
 
-5. Establecer un estilo más amigable y llamativo a las interfaces.
+1. Formato de los precios con dos decimales y notación europea (puntos en los millares, comas en los decimales).
+2. Selección de distintas direcciones del usuario a la hora de hacer el pedido, o registrar una nueva.
+3. Visualizar el estado del pedido en el rol de cliente.
+4. El repartidor debe asignarse en función de las zonas que tenga establecidas.
+
+Adicionalmente, para mejorar la experiencia del usuario, se propuso el siguiente cambio:
+
+5. Establecer un estilo más amigable y llamativo para las interfaces.
+
+---
 
 ## Roles y Responsabilidades
 Cada miembro del equipo asume roles específicos para asegurar el cumplimiento de los objetivos del sprint:
 
-- **Gestor de Configuración**: Supervisará el cumplimiento de los procedimientos de configuración y mantendrá el repositorio organizado.
-- **Desarrolladores**: Implementarán los cambios en el código, gestionarán las ramas correspondientes y documentarán cada modificación en el repositorio.
-- **Equipo de Calidad (QA)**: Verificará que los cambios cumplan con los requisitos de calidad y participará en las auditorías de configuración.
-- **CCB**: Revisará y aprobará los cambios propuestos, evaluando su viabilidad e impacto.
+- **Gestor de Configuración**: Supervisó el cumplimiento de los procedimientos de configuración y mantuvo el repositorio organizado.
+- **Desarrolladores**: Implementaron los cambios en el código, gestionaron las ramas correspondientes y documentaron cada modificación en el repositorio.
+- **Equipo de Calidad (QA)**: Verificó que los cambios cumplieran con los requisitos de calidad y participó en las auditorías de configuración.
+- **CCB (Change Control Board)**: Revisó y aprobó los cambios propuestos, evaluando su viabilidad e impacto.
 
+---
 
+## Cambios Solicitados en el Sprint
 
-<div style="text-align: center;">
-    <img src="/doc/imagenesSprint/Imagen32.png" alt="Ilustración 32. Inicio del Sprint 5" width="100%">
-    <p><em>Ilustración 32. Inicio del Sprint 5</em></p>
-</div>
-
-Las CR solicitados en este sprint son:
-
-- **Formato de Precios**.
-- **Visualizar estado pedido**.
-- **Seleccion de direccion en pedido**.
-- **Establecer repartidor en funcion de la zona**.
-- **Mejorar estilo interfaces**.
-- **Documentación de este Sprint 5**.
+1. **Formato de precios**.
+2. **Visualizar estado del pedido**.
+3. **Selección de dirección en pedido**.
+4. **Asignación de repartidor en función de la zona**.
+5. **Mejorar estilo de interfaces**.
+6. **Documentación de este Sprint 5**.
 
 ---
 
 ## 5.1 Formato de Precios
-### Evaluación del cambio
-<div style="text-align: center;">
-    <img src="/doc/imagenesSprint/Imagen33.png" alt="Ilustración 33. Visualizar estado pedido" width="100%">
-    <p><em>Ilustración 33. Visualizar estado pedido</em></p>
-</div>
 
-**Análisis de impacto:**
-Este cambio implica modificaciones en la presentación de datos y ajustes en la interfaz de usuario. La experiencia del usuario se verá incrementada de manera significativa, así como la satisfacción del cliente final.
+### Evaluación del Cambio
+
+**Análisis de Impacto:**
+- Este cambio implicó modificaciones en la presentación de datos y ajustes en la interfaz de usuario.
+- La experiencia del usuario se incrementó significativamente, así como la satisfacción del cliente final.
 
 **Riesgos:**
-- Se ha de tener cuidado con las inconsistencias y errores en la presentación y manipulación de datos.
-- Se deben realizar pruebas para asegurar que no se almacenan incongruencias en la base de datos, así como que no se muestran valores erróneos al cliente.
+- Posibles inconsistencias en la presentación y manipulación de datos.
+- Necesidad de pruebas para asegurar que no se almacenen datos incorrectos en la base de datos ni se muestren valores erróneos al cliente.
 
-### Aprobación del cambio
-- **Viable:** Sí
-- **Impacto:** Medio
-- **Prioridad:** Baja
-- **CCB determina:** Válido
+**Aprobación del Cambio:**
+- **Viable:** Sí.
+- **Impacto:** Medio.
+- **Prioridad:** Baja.
+- **CCB determina:** Válido.
 
-### Implementacion
-Se han corregido todas las interfaces para mostrar los precios en formato europeo.
-Se ha refactorizado el proyecto para mover el pom.xml de vuelta a la raiz.
-Se han movido los precios a la derecha en todos los tickets, mejorando la visualización de los mismos.
+### Implementación
+- Se corrigieron todas las interfaces para mostrar los precios en formato europeo.
+- Se movió el archivo `pom.xml` de vuelta a la raíz del proyecto.
+- Los precios fueron alineados a la derecha en todos los tickets, mejorando su visualización.
 
-### Revisión y cierre
+### Revisión y Cierre
 
-#### **1. Validación de los requisitos implementados**
-Se realizaron pruebas para garantizar que los precios se muestran correctamente en todas las interfaces según el formato europeo (puntos en los millares, comas en los decimales). Estas pruebas incluyeron:
-- Visualización de precios en tickets.
-- Pruebas con valores atípicos (precios muy altos, muy bajos, o con decimales).
+#### Validación de los Requisitos Implementados
+- Pruebas realizadas para garantizar que los precios se muestren correctamente en formato europeo.
+  - Visualización de precios en tickets.
+  - Pruebas con valores atípicos (muy altos, bajos, o con decimales).
 
-**Resultado:**  
-Los precios se muestran correctamente en todos los casos probados.
+**Resultado:** Los precios se muestran correctamente en todos los casos probados.
 
----
+#### Validación de la Integridad de los Datos
+- Confirmación de que las modificaciones no afecten la manipúlación o el almacenamiento de datos.
+  - **Base de datos:** Datos almacenados correctamente según el formato europeo.
+  - **Operaciones internas:** Cálculos y sumas sin valores erróneos.
 
-#### **2. Validación de la integridad de los datos**
-Se revisó que la modificación de los formatos no afecte la manipulación o almacenamiento de los datos. Las pruebas se realizaron en:
-- **Base de datos:** Los datos se almacenaron correctamente en la base de datos de acuerdo al formato europeo.
-- **Operaciones internas:** Los cálculos y sumas internas no arrojan valores extraños.
+**Resultado:** Datos consistentes y sin errores.
 
-**Resultado:**  
-Los datos en la base de datos y las operaciones internas no presentan inconsistencias.
+#### Revisión de Código
+- Auditoría del código realizada para asegurar que el cambio esté aislado y siga las mejores prácticas.
 
----
-
-#### **3. Revisión de código**
-Se realizó una auditoría del código para:
-- Validar que el cambio esté aislado y no afecte otras funcionalidades.
-- Confirmar que se sigan las mejores prácticas de desarrollo.
-
-**Resultado:**  
-Código revisado, aprobado y puesto en marcha al pase a producción.
+**Resultado:** Código revisado, aprobado y puesto en producción.
 
 ---
 
-#### **5. Aprobación final del Equipo de Calidad (QA)**
-El Equipo de Calidad confirma que los cambios han sido probados exhaustivamente y cumplen con los requisitos establecidos.
+## 5.2 Visualizar Estado del Pedido
 
-- **Estado del Cambio:** Cerrado.
+### Evaluación del Cambio
 
-## 5.2 Visualizar estado pedido
-### Evaluación del cambio
-<div style="text-align: center;">
-    <img src="/doc/imagenesSprint/Imagen34.png" alt="Ilustración 34. Formato de Precios" width="100%">
-    <p><em>Ilustración 34. Formato de Precios</em></p>
-</div>
-
-**Análisis de impacto:**
-Implementar esta funcionalidad requerirá ajustes en la presentación de datos y en la interfaz de usuario, para mostrar el estado del pedido de manera clara y accesible. El equipo de desarrollo deberá asegurar que esta información se actualice en tiempo real o en intervalos adecuados, y que sea fácilmente comprensible para el usuario final.
+**Análisis de Impacto:**
+- Ajustes necesarios en la presentación de datos y en la interfaz de usuario.
+- Información del estado del pedido debe actualizarse en tiempo real o en intervalos adecuados.
 
 **Riesgos:**
-- **Inconsistencias de datos:** Existe el riesgo de mostrar estados incorrectos o desactualizados, lo cual podría generar confusión o frustración en el cliente.
-- **Errores en la interfaz:** La visualización del estado podría verse afectada por problemas de diseño o bugs, afectando la experiencia del usuario.
-- **Pruebas exhaustivas:** Será necesario realizar pruebas para asegurar que los datos mostrados sean precisos y que no se produzcan inconsistencias en la base de datos.
+- Posibles inconsistencias en los datos mostrados al cliente.
+- Problemas de diseño o bugs en la interfaz que afecten la experiencia del usuario.
 
-### Aprobación del cambio
-- **Viable:** Sí
-- **Impacto:** Alto
-- **Prioridad:** Media
-- **CCB determina:** Válido
+**Aprobación del Cambio:**
+- **Viable:** Sí.
+- **Impacto:** Alto.
+- **Prioridad:** Media.
+- **CCB determina:** Válido.
 
-### Implementacion
-Se ha creado un boton en el menu inicial del cliente que permite ver los pedidos realizados
-Se pueden ver detalles del pedido, así como actualizaciones del mismo
+### Implementación
+- Se agregó un botón en el menú inicial del cliente para visualizar los pedidos realizados.
+- Se incluyó la posibilidad de ver detalles del pedido y actualizaciones en tiempo real.
 
-### Revisión y cierre
+### Revisión y Cierre
 
-#### **1. Validación de los requisitos implementados**
-Se realizaron pruebas para garantizar que el estado de los pedidos se visualiza correctamente en la interfaz del cliente. Estas pruebas incluyeron:
-- Acceso al botón en el menú inicial del cliente para visualizar pedidos.
-- Verificación de los detalles del pedido, incluyendo actualizaciones en tiempo real o en intervalos definidos.
-- Validación de la claridad y comprensión de los estados mostrados.
+#### Validación de los Requisitos Implementados
+- Pruebas realizadas para garantizar que el estado de los pedidos se visualice correctamente.
+  - Acceso al botón en el menú inicial del cliente.
+  - Verificación de detalles del pedido y actualizaciones consistentes.
 
-**Resultado:**  
-El estado de los pedidos se visualiza correctamente, con actualizaciones consistentes y una interfaz amigable.
+**Resultado:** Los estados de los pedidos se visualizan correctamente, con actualizaciones consistentes.
 
----
+#### Validación de la Integridad de los Datos
+- Confirmación de que los estados mostrados sean consistentes con los datos de la base de datos.
 
-#### **2. Validación de la integridad de los datos**
-Se revisó que la información mostrada en la interfaz sea consistente con la almacenada en la base de datos. Las pruebas incluyeron:
-- Actualización de los estados en la base de datos y verificación de su reflejo en la interfaz.
-- Pruebas de casos extremos, como pedidos cancelados, pendientes o completados.
+**Resultado:** Datos precisos y consistentes.
 
-**Resultado:**  
-Los datos mostrados en la interfaz son precisos y consistentes con la base de datos.
+#### Revisión de Código
+- Auditoría del código realizada para garantizar que los cambios no afecten otras funcionalidades.
+
+**Resultado:** Código revisado y aprobado.
 
 ---
 
-#### **3. Revisión de código**
-Se realizó una auditoría del código para:
-- Validar que las actualizaciones del estado no introduzcan errores en otras funcionalidades.
-- Confirmar que se sigan las mejores prácticas de desarrollo y que el código sea escalable para futuros cambios.
+## 5.3 Selección de Dirección en Pedido
 
-**Resultado:**  
-Código revisado y aprobado.
+### Evaluación del Cambio
+
+**Análisis de Impacto:**
+- Ajustes en la interfaz de usuario y en la lógica de backend para manejar la selección de múltiples direcciones.
+
+**Riesgos:**
+- Posibles inconsistencias al seleccionar direcciones desactualizadas o inválidas.
+- Necesidad de pruebas exhaustivas para asegurar el correcto funcionamiento.
+
+**Aprobación del Cambio:**
+- **Viable:** Sí.
+- **Impacto:** Medio.
+- **Prioridad:** Alta.
+- **CCB determina:** Válido.
+
+### Revisión y Cierre
+
+#### Validación de los Requisitos Implementados
+- Pruebas realizadas para garantizar que los clientes puedan:
+  - Seleccionar direcciones registradas.
+  - Registrar nuevas direcciones durante el pedido.
+
+**Resultado:** Funcionalidad implementada correctamente.
+
+#### Validación de la Integridad de los Datos
+- Confirmación de que las direcciones seleccionadas o registradas se almacenan correctamente en la base de datos.
+
+**Resultado:** Sin inconsistencias ni errores.
 
 ---
 
-#### **5. Aprobación final del Equipo de Calidad (QA)**
-El Equipo de Calidad confirma que los cambios han sido probados exhaustivamente y cumplen con los requisitos establecidos.
+## 5.4 Asignación de Repartidor en Función de la Zona
 
-- **Estado del Cambio:** Cerrado.
+### Evaluación del Cambio
 
-
-## 5.3 Selección de dirección en pedido
-### Evaluación del cambio
-<div style="text-align: center;">
-    <img src="/doc/imagenesSprint/Imagen35.png" alt="Ilustración 35. Selección de dirección en pedido" width="100%">
-    <p><em>Ilustración 35. Selección de dirección en pedido</em></p>
-</div>
-
-**Análisis de impacto:**
-Esta modificación implicará ajustes tanto en la interfaz de usuario como en la lógica de backend para manejar la selección de múltiples direcciones. Se requiere una verificación adicional en la base de datos para confirmar que las direcciones seleccionadas son válidas y están actualizadas.
+**Análisis de Impacto:**
+- Ajustes en la lógica de asignación de pedidos, restringiendo su visualización según las zonas configuradas.
 
 **Riesgos:**
-- **Inconsistencias de datos:** Existe la posibilidad de que se seleccione una dirección desactualizada o inválida. Es fundamental implementar validaciones adecuadas para evitar errores.
-- **Pruebas exhaustivas:** Se necesitan pruebas para asegurar que la funcionalidad de selección y registro de direcciones no introduce errores en la interfaz o en el almacenamiento de datos.
+- Pedidos sin asignar si no coinciden con ninguna zona disponible.
 
-### Aprobación del cambio
-- **Viable:** Sí
-- **Impacto:** Media
-- **Prioridad:** Alta
-- **CCB determina:** Válido
+**Aprobación del Cambio:**
+- **Viable:** Sí.
+- **Impacto:** Alto.
+- **Prioridad:** Alta.
+- **CCB determina:** Válido.
 
-## 5.4 Establecer repartidor en función de la zona
-### Evaluación del cambio
-<div style="text-align: center;">
-    <img src="/doc/imagenesSprint/Imagen36.png" alt="Ilustración 36. Establecer repartidor en función de la zona" width="100%">
-    <p><em>Ilustración 36. Establecer repartidor en función de la zona</em></p>
-</div>
+### Revisión y Cierre
 
-**Análisis de impacto:**
-Este cambio implica ajustes en la lógica de asignación de pedidos, restringiendo la visualización de pedidos para los repartidores en función de sus zonas registradas. Esto también requerirá un control adicional para validar que los pedidos cumplan con la ubicación establecida en la configuración de cada repartidor.
+#### Validación de los Requisitos Implementados
+- Pruebas realizadas para garantizar que:
+  - Solo se muestren pedidos correspondientes a las zonas del repartidor.
+  - No se puedan seleccionar pedidos fuera de la zona asignada.
 
-**Riesgos:**
-- **Errores de asignación:** Existe el riesgo de que algunos pedidos queden sin asignar si la zona del pedido no coincide con la de ningún repartidor disponible.
-- **Validación de zonas:** Es fundamental realizar pruebas para asegurar que la asignación de pedidos funcione de acuerdo a las zonas configuradas y no presente inconsistencias en la lógica de negocio.
+**Resultado:** Asignación correcta y funcionalidad implementada.
 
-### Aprobación del cambio
-- **Viable:** Sí
-- **Impacto:** Alto
-- **Prioridad:** Alta
-- **CCB determina:** Válido
+---
 
-## 5.5 Mejorar estilo interfaces
-### Evaluación del cambio
-<div style="text-align: center;">
-    <img src="/doc/imagenesSprint/Imagen37.png" alt="Ilustración 37. Mejorar estilo interfaces" width="100%">
-    <p><em>Ilustración 37. Mejorar estilo interfaces</em></p>
-</div>
+## 5.5 Mejorar Estilo de Interfaces
 
-**Análisis de impacto:**
-Este cambio implica modificaciones en los elementos de diseño y estilo de la interfaz. Será necesario trabajar en la consistencia visual, asegurar que los colores, tipografías y componentes mantengan una armonía general, y realizar pruebas de usabilidad para validar que el rediseño mejora efectivamente la experiencia del usuario.
+### Evaluación del Cambio
+
+**Análisis de Impacto:**
+- Ajustes en diseño y estilo para mejorar la consistencia visual y la experiencia del usuario.
 
 **Riesgos:**
-- **Incompatibilidades en dispositivos:** Algunos elementos visuales pueden no renderizarse adecuadamente en todos los dispositivos, por lo que es necesario realizar pruebas en múltiples plataformas.
-- **Rendimiento:** Incrementar el uso de elementos gráficos avanzados podría afectar el rendimiento en dispositivos con menor capacidad de procesamiento.
+- Incompatibilidades en dispositivos.
+- Posible impacto en el rendimiento.
 
-### Aprobación del cambio
-- **Viable:** Sí
-- **Impacto:** Alto
-- **Prioridad:** Baja
-- **CCB determina:** No Válido
+**Aprobación del Cambio:**
+- **Viable:** Sí.
+- **Impacto:** Alto.
+- **Prioridad:** Baja.
+- **CCB determina:** No Válido.
 
-## 5.6 Documentación de Sprint 5
+### Revisión y Cierre
 
-Este archivo cubre toda la documentación de **Sprint 5**.
+**Resultado:** Cierre sin cambios.
+
+---
+
+## 5.6 Documentación del Sprint 5
+
+Este documento resume todas las actividades realizadas durante el **Sprint 5**. La documentación ha sido validada y aprobada por los responsables del proyecto.
+
