@@ -2,6 +2,7 @@ package com.isoii.deliveringsolutions.dominio.controladores;
 
 import com.isoii.deliveringsolutions.dominio.entidades.Cliente;
 import com.isoii.deliveringsolutions.dominio.entidades.CodigoPostal;
+import com.isoii.deliveringsolutions.dominio.entidades.ConfirmacionPedidoDTO;
 import com.isoii.deliveringsolutions.dominio.entidades.Direccion;
 import com.isoii.deliveringsolutions.dominio.entidades.ItemMenu;
 import com.isoii.deliveringsolutions.dominio.entidades.ItemPedido;
@@ -170,18 +171,27 @@ public class GestorPago {
             logger.info("<<Pedido actualizado (Pagado)>>: {}", pedido);
 
             Direccion direccionRecogida = obtenerDireccionRecogidaRestaurante(restaurante);
-            logger.info("<<DireccionRecogida>>: {}", 
+            logger.info("<<DireccionRecogida>>: {}",
                         direccionRecogida != null ? direccionRecogida : "No encontrada");
 
-            agregarAtributosConfirmacion(redirectAttributes, pedido, items, pago, 
-                                            restaurante, cliente, total, 
-                                            direccionRecogida, direccionEntrega);
+            // 8. Construir el DTO y agregar los atributos de confirmación
+            ConfirmacionPedidoDTO dto = new ConfirmacionPedidoDTO();
+            dto.setPedido(pedido);
+            dto.setItems(items);
+            dto.setPago(pago);
+            dto.setRestaurante(restaurante);
+            dto.setCliente(cliente);
+            dto.setTotal(total);
+            dto.setDireccionRecogida(direccionRecogida);
+            dto.setDireccionEntrega(direccionEntrega);
+
+            agregarAtributosConfirmacion(redirectAttributes, dto);
 
             return "redirect:/pago/confirmacion";
 
         } catch (Exception e) {
             logger.error("<<Error inesperado>>: {}", e.getMessage(), e);
-            redirectAttributes.addFlashAttribute(ERROR, 
+            redirectAttributes.addFlashAttribute(ERROR,
                 "Ocurrió un error inesperado al procesar el pedido.");
             return REDIRECT_ERROR;
         }
@@ -312,25 +322,18 @@ public class GestorPago {
 
     /**
      * Agrega al RedirectAttributes todos los objetos que se requieren para la vista de confirmación.
+     * Ahora recibe un objeto ConfirmacionPedidoDTO para no tener tantos parámetros en el método.
      */
     private void agregarAtributosConfirmacion(RedirectAttributes redirectAttributes,
-                                              Pedido pedido,
-                                              List<ItemMenu> items,
-                                              Pago pago,
-                                              Restaurante restaurante,
-                                              Cliente cliente,
-                                              double total,
-                                              Direccion direccionRecogida,
-                                              Direccion direccionEntrega) {
-
-        redirectAttributes.addFlashAttribute("pedido", pedido);
-        redirectAttributes.addFlashAttribute("items", items);
-        redirectAttributes.addFlashAttribute("pago", pago);
-        redirectAttributes.addFlashAttribute("restaurante", restaurante);
-        redirectAttributes.addFlashAttribute("cliente", cliente);
-        redirectAttributes.addFlashAttribute("total", total);
-        redirectAttributes.addFlashAttribute("direccionRecogida", direccionRecogida);
-        redirectAttributes.addFlashAttribute("direccionEntrega", direccionEntrega);
+                                              ConfirmacionPedidoDTO dto) {
+        redirectAttributes.addFlashAttribute("pedido", dto.getPedido());
+        redirectAttributes.addFlashAttribute("items", dto.getItems());
+        redirectAttributes.addFlashAttribute("pago", dto.getPago());
+        redirectAttributes.addFlashAttribute("restaurante", dto.getRestaurante());
+        redirectAttributes.addFlashAttribute("cliente", dto.getCliente());
+        redirectAttributes.addFlashAttribute("total", dto.getTotal());
+        redirectAttributes.addFlashAttribute("direccionRecogida", dto.getDireccionRecogida());
+        redirectAttributes.addFlashAttribute("direccionEntrega", dto.getDireccionEntrega());
     }
 
     // Método para mostrar el formulario de confirmación
@@ -372,4 +375,3 @@ public class GestorPago {
         }
     }
 }
-
