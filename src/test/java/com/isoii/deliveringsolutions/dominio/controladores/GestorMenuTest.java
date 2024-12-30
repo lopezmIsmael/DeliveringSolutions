@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class GestorMenuTest {
@@ -98,7 +99,7 @@ class GestorMenuTest {
         when(serviceRestaurant.findById("rest1")).thenReturn(Optional.of(new Restaurante()));
         String result = gestorMenu.mostrarFormularioRegistro("rest1", model);
         assertEquals("Pruebas-RegisterMenu", result);
-        verify(model).addAttribute("restaurante", any());
+        verify(model).addAttribute(eq("restaurante"), any());
     }
 
     @Test
@@ -156,7 +157,7 @@ class GestorMenuTest {
         when(serviceItemMenu.findAll()).thenReturn(List.of(new ItemMenu()));
         String result = gestorMenu.mostrarItems(model);
         assertEquals("/administrador/ListaItemsMenu", result);
-        verify(model).addAttribute("items", anyList());
+        verify(model).addAttribute(eq("items"), anyList());
     }
 
     @Test
@@ -188,7 +189,7 @@ class GestorMenuTest {
     void testMostrarFormularioRegistroItem() {
         String viewName = gestorMenu.mostrarFormularioRegistroItem(model);
         assertEquals("Pruebas-RegisterItemMenu", viewName);
-        verify(model).addAttribute("itemMenu", any(ItemMenu.class));
+        verify(model).addAttribute(eq("itemMenu"), any(ItemMenu.class));
     }
 
     @Test
@@ -270,7 +271,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.mostrarItems(model);
 
         assertEquals("/administrador/ListaItemsMenu", viewName);
-        verify(model).addAttribute("items", anyList());
+        verify(model).addAttribute(eq("items"), anyList());
     }
 
     @Test
@@ -322,7 +323,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
 
         assertEquals("redirect:/cartas/modificar/1", viewName);
-        verify(model).addAttribute("error", "Carta no encontrada");
+        verify(model).addAttribute(eq("error"), eq("Carta no encontrada"));
     }
 
     @Test
@@ -338,7 +339,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
 
         assertEquals("redirect:/cartas/modificar/1", viewName);
-        verify(model).addAttribute("error", "Carta no válida, nombre no puede estar vacío");
+        verify(model).addAttribute(eq("error"), eq("Carta no válida, nombre no puede estar vacío"));
     }
 
     @Test
@@ -355,7 +356,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
 
         assertEquals("redirect:/cartas/modificar/1", viewName);
-        verify(model).addAttribute("error", "Carta no válida, tipo no puede estar vacío");
+        verify(model).addAttribute(eq("error"), eq("Carta no válida, tipo no puede estar vacío"));
     }
 
     @Test
@@ -373,7 +374,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
 
         assertEquals("redirect:/cartas/modificar/1", viewName);
-        verify(redirectAttributes).addFlashAttribute("error", "El precio debe ser mayor que 0");
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("El precio debe ser mayor que 0"));
     }
 
     @Test
@@ -392,7 +393,7 @@ class GestorMenuTest {
 
         assertEquals("redirect:/cartas/modificar/1", viewName);
         verify(serviceItemMenu).save(itemMenu); // Verifica que se guardó el item
-        verify(model).addAttribute("success", "Item registrado exitosamente.");
+        verify(model).addAttribute(eq("success"), eq("Item registrado exitosamente."));
     }
 
     @Test
@@ -402,7 +403,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.registrarCarta(cartaMenu, redirectAttributes);
 
         assertEquals("redirect:/cartas/register", viewName);
-        verify(redirectAttributes).addFlashAttribute("error", "Restaurante no válido");
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("Restaurante no válido"));
     }
 
     @Test
@@ -414,7 +415,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.registrarCarta(cartaMenu, redirectAttributes);
 
         assertEquals("redirect:/cartas/register", viewName);
-        verify(redirectAttributes).addFlashAttribute("error", "Restaurante no válido");
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("Restaurante no válido"));
     }
 
     @Test
@@ -427,7 +428,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.registrarCarta(cartaMenu, redirectAttributes);
 
         assertEquals("redirect:/cartas/register", viewName);
-        verify(redirectAttributes).addFlashAttribute("error", "El nombre de la carta no puede estar vacío");
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("El nombre de la carta no puede estar vacío"));
     }
 
     @Test
@@ -442,7 +443,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.registrarCarta(cartaMenu, redirectAttributes);
 
         assertEquals("redirect:/cartas/register", viewName);
-        verify(redirectAttributes).addFlashAttribute("error", "Restaurante no encontrado");
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("Restaurante no encontrado"));
     }
 
     @Test
@@ -458,7 +459,7 @@ class GestorMenuTest {
 
         assertEquals("redirect:/restaurantes/gestion/1", viewName);
         verify(serviceCartaMenu).save(cartaMenu); // Verifica que se guardó la carta
-        verify(redirectAttributes).addFlashAttribute("success", "Carta registrada exitosamente.");
+        verify(redirectAttributes).addFlashAttribute(eq("success"), eq("Carta registrada exitosamente."));
     }
 
 
@@ -471,7 +472,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.mostrarItem(id, model);
 
         assertEquals("/administrador/VerItemMenu", viewName);
-        verify(model).addAttribute("itemMenu", itemMenu);
+        verify(model).addAttribute(eq("itemMenu"), eq(itemMenu));
     }
 
     @Test
@@ -482,7 +483,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.mostrarItem(id, model);
 
         assertEquals("error", viewName);
-        verify(model).addAttribute("error", "Item no encontrado");
+        verify(model).addAttribute(eq("error"), eq("Item no encontrado"));
     }
 
     @Test
@@ -493,7 +494,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.mostrarMenus(model);
 
         assertEquals("/administrador/ListaMenus", viewName);
-        verify(model).addAttribute("cartas", cartas);
+        verify(model).addAttribute(eq("cartas"), eq(cartas));
     }
 
     @Test
@@ -503,7 +504,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.mostrarMenus(model);
 
         assertEquals("error", viewName);
-        verify(model).addAttribute("error", "No se encontraron menús");
+        verify(model).addAttribute(eq("error"), eq("No se encontraron menús"));
     }
 
 
@@ -514,7 +515,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
 
         assertEquals("redirect:/cartas/modificar/null", viewName);
-        verify(redirectAttributes).addFlashAttribute("error", "Carta no válida");
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("Carta no válida"));
     }
 
     @Test
@@ -527,7 +528,7 @@ class GestorMenuTest {
         String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
 
         assertEquals("redirect:/cartas/modificar/0", viewName);
-        verify(redirectAttributes).addFlashAttribute("error", "ID de Carta no puede ser 0");
+        verify(redirectAttributes).addFlashAttribute(eq("error"), eq("ID de Carta no puede ser 0"));
     }
 
 

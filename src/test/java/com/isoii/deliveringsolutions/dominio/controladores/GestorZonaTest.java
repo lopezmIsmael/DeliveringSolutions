@@ -226,7 +226,7 @@ class GestorZonaTest {
 
         String vista = gestorZona.mostrarZona(1, model);
         assertEquals("/administrador/VerZona", vista);
-        verify(model).addAttribute("zona", z);
+        verify(model).addAttribute(eq("zona"), eq(z));
 
         verify(model).addAttribute(eq("codigosPostales"), captor.capture());
 
@@ -268,7 +268,7 @@ class GestorZonaTest {
         String vista = gestorZona.mostrarZona(1, model);
         assertEquals("/administrador/VerZona", vista);
         verify(model).addAttribute("zona", z);
-        verify(model).addAttribute("codigosPostales", Collections.emptyList());
+        verify(model).addAttribute(eq("codigosPostales"), eq(Collections.emptyList()));
     }
 
     @Test
