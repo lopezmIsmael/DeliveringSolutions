@@ -74,7 +74,7 @@ Las CR solicitadas en este sprint fueron:
 ### Aprobación del Cambio
 - **Viable:** Sí.
 - **Impacto:** Medio.
-- **Prioridad:** Alta.
+- **Prioridad:** Media.
 - **CCB determina:** Válido.
 
 ### Implementación
