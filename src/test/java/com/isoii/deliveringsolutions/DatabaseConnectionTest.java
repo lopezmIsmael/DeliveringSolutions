@@ -7,13 +7,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class DatabaseConnectionTest {
+class DatabaseConnectionTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    public void testConnection() {
+    void testConnection() {
         // Intentamos realizar una simple consulta para comprobar la conexión
         String query = "SELECT 1";
         

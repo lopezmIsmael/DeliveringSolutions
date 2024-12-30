@@ -19,7 +19,7 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceCodigoPostal;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Pruebas del controlador GestorCodigoPostal")
-public class GestorCodigoPostalTest {
+class GestorCodigoPostalTest {
 
     private static final String ERROR_VIEW = "error";
 

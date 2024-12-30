@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 import java.util.List;
 
 @WebMvcTest(GestorServicioEntrega.class)
-public class GestorServicioEntregaTest {
+class GestorServicioEntregaTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,7 +41,7 @@ public class GestorServicioEntregaTest {
     private GestorServicioEntrega gestorServicioEntrega;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
 
         // Instancia del controlador (si es necesaria)
@@ -69,7 +69,7 @@ public class GestorServicioEntregaTest {
     // Prueba 1: findAll - Lista vacía
     @Test
     @DisplayName("Debe retornar una lista vacía cuando no hay entregas")
-    public void testFindAllEmptyList() {
+    void testFindAllEmptyList() {
         when(serviceServicioEntrega.findAll()).thenReturn(Collections.emptyList());
         List<ServicioEntrega> servicios = gestorServicioEntrega.findAll();
         assertNotNull(servicios, "La lista no debe ser nula");
@@ -77,10 +77,9 @@ public class GestorServicioEntregaTest {
         verify(serviceServicioEntrega, times(1)).findAll();
     }
 
-    // Prueba 2: findAll - Lista con elementos
     @Test
     @DisplayName("Debe retornar una lista con entregas existentes")
-    public void testFindAllWithElements() {
+    void testFindAllWithElements() {
         when(serviceServicioEntrega.findAll()).thenReturn(List.of(servicioEntrega));
         List<ServicioEntrega> servicios = gestorServicioEntrega.findAll();
         assertNotNull(servicios, "La lista no debe ser nula");
@@ -89,10 +88,9 @@ public class GestorServicioEntregaTest {
         verify(serviceServicioEntrega, times(1)).findAll();
     }
 
-    // Prueba 3: findById - ID válido
     @Test
     @DisplayName("Debe retornar un servicio de entrega válido cuando el ID existe")
-    public void testFindByIdValid() {
+    void testFindByIdValid() {
         when(serviceServicioEntrega.findById(1)).thenReturn(Optional.of(servicioEntrega));
         ServicioEntrega result = gestorServicioEntrega.findById(1);
         assertNotNull(result, "El servicio no debe ser nulo");
@@ -100,20 +98,18 @@ public class GestorServicioEntregaTest {
         verify(serviceServicioEntrega, times(1)).findById(1);
     }
 
-    // Prueba 4: findById - ID inexistente
     @Test
     @DisplayName("Debe retornar null cuando el ID no existe")
-    public void testFindByIdNonExistent() {
+    void testFindByIdNonExistent() {
         when(serviceServicioEntrega.findById(9999)).thenReturn(Optional.empty());
         ServicioEntrega result = gestorServicioEntrega.findById(9999);
         assertNull(result, "El resultado debe ser nulo");
         verify(serviceServicioEntrega, times(1)).findById(9999);
     }
 
-    // Prueba 5: registrarServicioEntrega - Datos válidos
     @Test
     @DisplayName("Debe registrar un servicio de entrega con datos válidos")
-    public void testRegistrarServicioEntregaValid() {
+    void testRegistrarServicioEntregaValid() {
         when(serviceServicioEntrega.save(any(ServicioEntrega.class))).thenReturn(servicioEntrega);
         ServicioEntrega result = gestorServicioEntrega.registrarServicioEntrega(servicioEntrega).getBody();
         assertNotNull(result, "El servicio registrado no debe ser nulo");
@@ -121,10 +117,9 @@ public class GestorServicioEntregaTest {
         verify(serviceServicioEntrega, times(1)).save(servicioEntrega);
     }
 
-    // Prueba 6: registrarServicioEntrega - Datos inválidos (fechas)
     @Test
     @DisplayName("Debe manejar correctamente las fechas inválidas")
-    public void testRegistrarServicioEntregaInvalidDates() {
+    void testRegistrarServicioEntregaInvalidDates() {
         servicioEntrega.setFechaRecepcion(0L);
         servicioEntrega.setFechaEntrega(-1L);
 
@@ -137,10 +132,9 @@ public class GestorServicioEntregaTest {
         verify(serviceServicioEntrega, times(1)).save(servicioEntrega);
     }
 
-    // Prueba 7: registrarServicioEntrega - Datos nulos
     @Test
     @DisplayName("Debe manejar correctamente un objeto nulo")
-    public void testRegistrarServicioEntregaNull() {
+    void testRegistrarServicioEntregaNull() {
         when(serviceServicioEntrega.save(null)).thenThrow(NullPointerException.class);
 
         assertThrows(NullPointerException.class, () -> {
@@ -150,10 +144,9 @@ public class GestorServicioEntregaTest {
         verify(serviceServicioEntrega, times(1)).save(null);
     }
 
-    // Prueba 8: registrarServicioEntrega - Fechas incoherentes
     @Test
     @DisplayName("Debe rechazar fechas incoherentes (fechaEntrega < fechaRecepcion)")
-    public void testRegistrarServicioEntregaIncoherentDates() {
+    void testRegistrarServicioEntregaIncoherentDates() {
         servicioEntrega.setFechaRecepcion(20L);
         servicioEntrega.setFechaEntrega(10L);
         when(serviceServicioEntrega.save(any(ServicioEntrega.class))).thenThrow(IllegalArgumentException.class);
@@ -165,7 +158,7 @@ public class GestorServicioEntregaTest {
 
     @Test
     @DisplayName("Debe retornar la vista de registro de servicio de entrega")
-    public void testMostrarFormularioRegistro() {
+    void testMostrarFormularioRegistro() {
         String result = gestorServicioEntrega.mostrarFormularioRegistro();
         assertEquals("Pruebas-RegisterServicioEntrega", result,
                 "La vista debe coincidir con 'Pruebas-RegisterServicioEntrega'");
@@ -173,7 +166,7 @@ public class GestorServicioEntregaTest {
 
     @Test
     @DisplayName("Debe retornar BAD_REQUEST cuando las fechas son inválidas (0)")
-    public void testRegistrarServicioEntrega_InvalidDates() throws Exception {
+    void testRegistrarServicioEntrega_InvalidDates() throws Exception {
         servicioEntrega.setFechaRecepcion(0L);
         servicioEntrega.setFechaEntrega(0L);
 
@@ -185,7 +178,7 @@ public class GestorServicioEntregaTest {
 
     @Test
     @DisplayName("Debe mostrar la lista de servicios de entrega si existen")
-    public void testMostrarServiciosEntrega_ConServicios() throws Exception {
+    void testMostrarServiciosEntrega_ConServicios() throws Exception {
         when(serviceServicioEntrega.findAll()).thenReturn(List.of(servicioEntrega));
         mockMvc.perform(get("/servicioEntrega/mostrarServiciosEntrega"))
                 .andExpect(status().isOk())
@@ -196,7 +189,7 @@ public class GestorServicioEntregaTest {
 
     @Test
     @DisplayName("Debe mostrar error si no existen servicios de entrega")
-    public void testMostrarServiciosEntrega_SinServicios() throws Exception {
+    void testMostrarServiciosEntrega_SinServicios() throws Exception {
         when(serviceServicioEntrega.findAll()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/servicioEntrega/mostrarServiciosEntrega"))
@@ -208,7 +201,7 @@ public class GestorServicioEntregaTest {
 
     @Test
     @DisplayName("Debe mostrar los detalles del servicio de entrega si existe")
-    public void testMostrarServicioEntrega_Existe() throws Exception {
+    void testMostrarServicioEntrega_Existe() throws Exception {
         when(serviceServicioEntrega.findById(1)).thenReturn(Optional.of(servicioEntrega));
         mockMvc.perform(get("/servicioEntrega/mostrarServicioEntrega/1"))
                 .andExpect(status().isOk())
@@ -219,7 +212,7 @@ public class GestorServicioEntregaTest {
 
     @Test
     @DisplayName("Debe mostrar error si el servicio de entrega no existe")
-    public void testMostrarServicioEntrega_NoExiste() throws Exception {
+    void testMostrarServicioEntrega_NoExiste() throws Exception {
         when(serviceServicioEntrega.findById(9999)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/servicioEntrega/mostrarServicioEntrega/9999"))

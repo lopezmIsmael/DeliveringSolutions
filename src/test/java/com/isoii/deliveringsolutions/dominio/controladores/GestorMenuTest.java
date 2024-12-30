@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-public class GestorMenuTest {
+class GestorMenuTest {
 
     @InjectMocks
     private GestorMenu gestorMenu;
@@ -50,13 +50,13 @@ public class GestorMenuTest {
     private BindingResult bindingResult;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     // Test: findAll()
     @Test
-    public void testFindAll_WithResults() {
+    void testFindAll_WithResults() {
         when(serviceCartaMenu.findAll()).thenReturn(List.of(new CartaMenu()));
         List<CartaMenu> result = gestorMenu.findAll();
         assertFalse(result.isEmpty());
@@ -64,7 +64,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testFindAll_EmptyList() {
+    void testFindAll_EmptyList() {
         when(serviceCartaMenu.findAll()).thenReturn(List.of());
         List<CartaMenu> result = gestorMenu.findAll();
         assertTrue(result.isEmpty());
@@ -73,7 +73,7 @@ public class GestorMenuTest {
 
     // Test: findById()
     @Test
-    public void testFindById_ValidId() {
+    void testFindById_ValidId() {
         when(serviceCartaMenu.findById(1)).thenReturn(Optional.of(new CartaMenu()));
         CartaMenu result = gestorMenu.findById(1);
         assertNotNull(result);
@@ -81,7 +81,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testFindById_NotFound() {
+    void testFindById_NotFound() {
         when(serviceCartaMenu.findById(999)).thenReturn(Optional.empty());
         CartaMenu result = gestorMenu.findById(999);
         assertNull(result);
@@ -89,14 +89,14 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testFindById_NullId() {
+    void testFindById_NullId() {
         CartaMenu result = gestorMenu.findById(null);
         assertNull(result);
     }
 
     // Test: register/{id}
     @Test
-    public void testMostrarFormularioRegistro_ValidId() {
+    void testMostrarFormularioRegistro_ValidId() {
         when(serviceRestaurant.findById("rest1")).thenReturn(Optional.of(new Restaurante()));
         String result = gestorMenu.mostrarFormularioRegistro("rest1", model);
         assertEquals("Pruebas-RegisterMenu", result);
@@ -104,7 +104,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testMostrarFormularioRegistro_InvalidId() {
+    void testMostrarFormularioRegistro_InvalidId() {
         when(serviceRestaurant.findById("999")).thenReturn(Optional.empty());
         String result = gestorMenu.mostrarFormularioRegistro("999", model);
         assertEquals("error", result);
@@ -112,15 +112,14 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testMostrarFormularioRegistro_NullId() {
+    void testMostrarFormularioRegistro_NullId() {
         String result = gestorMenu.mostrarFormularioRegistro(null, model);
         assertEquals("error", result);
         verify(model).addAttribute("error", "Restaurante no encontrado");
     }
 
-    // Test: eliminarCarta/{id}
     @Test
-    public void testEliminarCarta_ValidId() {
+    void testEliminarCarta_ValidId() {
         CartaMenu cartaMenu = new CartaMenu();
         when(serviceCartaMenu.findById(1)).thenReturn(Optional.of(cartaMenu));
         ResponseEntity<CartaMenu> response = gestorMenu.eliminarCarta(1);
@@ -129,16 +128,15 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testEliminarCarta_NotFound() {
+    void testEliminarCarta_NotFound() {
         when(serviceCartaMenu.findById(999)).thenReturn(Optional.empty());
         ResponseEntity<CartaMenu> response = gestorMenu.eliminarCarta(999);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(serviceCartaMenu, never()).deleteById(anyInt());
     }
 
-    // Test: eliminarItem/{id}
     @Test
-    public void testEliminarItem_ValidId() {
+    void testEliminarItem_ValidId() {
         ItemMenu itemMenu = new ItemMenu();
         when(serviceItemMenu.findById(1)).thenReturn(Optional.of(itemMenu));
         ResponseEntity<Void> response = gestorMenu.eliminarItem(1);
@@ -148,16 +146,15 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testEliminarItem_NotFound() {
+    void testEliminarItem_NotFound() {
         when(serviceItemMenu.findById(999)).thenReturn(Optional.empty());
         ResponseEntity<Void> response = gestorMenu.eliminarItem(999);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(serviceItemMenu, never()).deleteById(anyInt());
     }
 
-    // Test: mostrarItems()
     @Test
-    public void testMostrarItems_WithResults() {
+    void testMostrarItems_WithResults() {
         when(serviceItemMenu.findAll()).thenReturn(List.of(new ItemMenu()));
         String result = gestorMenu.mostrarItems(model);
         assertEquals("/administrador/ListaItemsMenu", result);
@@ -165,16 +162,15 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testMostrarItems_EmptyList() {
+    void testMostrarItems_EmptyList() {
         when(serviceItemMenu.findAll()).thenReturn(List.of());
         String result = gestorMenu.mostrarItems(model);
         assertEquals("error", result);
         verify(model).addAttribute("error", "No se encontraron items");
     }
 
-    // Test: mostrarMenu/{id}
     @Test
-    public void testMostrarMenu_ValidId() {
+    void testMostrarMenu_ValidId() {
         CartaMenu cartaMenu = new CartaMenu();
         when(serviceCartaMenu.findById(1)).thenReturn(Optional.of(cartaMenu));
         String result = gestorMenu.mostrarMenu(1, model);
@@ -183,7 +179,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testMostrarMenu_NotFound() {
+    void testMostrarMenu_NotFound() {
         when(serviceCartaMenu.findById(999)).thenReturn(Optional.empty());
         String result = gestorMenu.mostrarMenu(999, model);
         assertEquals("error", result);
@@ -191,14 +187,14 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testMostrarFormularioRegistroItem() {
+    void testMostrarFormularioRegistroItem() {
         String viewName = gestorMenu.mostrarFormularioRegistroItem(model);
         assertEquals("Pruebas-RegisterItemMenu", viewName);
         verify(model).addAttribute(eq("itemMenu"), any(ItemMenu.class));
     }
 
     @Test
-    public void testMostrarFormularioModificar_CartaMenuExists() {
+    void testMostrarFormularioModificar_CartaMenuExists() {
         Integer id = 1;
         CartaMenu cartaMenu = new CartaMenu();
         when(serviceCartaMenu.findById(id)).thenReturn(Optional.of(cartaMenu));
@@ -211,7 +207,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testMostrarFormularioModificar_CartaMenuNotFound() {
+    void testMostrarFormularioModificar_CartaMenuNotFound() {
         Integer id = 999;
         when(serviceCartaMenu.findById(id)).thenReturn(Optional.empty());
 
@@ -222,11 +218,11 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testRegistrarItem_Success() {
+    void testRegistrarItem_Success() {
         // Configuración del objeto ItemMenu
         ItemMenu itemMenu = new ItemMenu();
         CartaMenu cartaMenu = new CartaMenu();
-        cartaMenu.setIdCarta(1); // Asegúrate de que ID sea válido
+        cartaMenu.setIdCarta(1); 
         itemMenu.setCartamenu(cartaMenu);
         itemMenu.setNombre("Test Item");
         itemMenu.setTipo("Main Course");
@@ -246,7 +242,7 @@ public class GestorMenuTest {
 
 
     @Test
-    public void testRegistrarItem_CartaMenuNotFound() {
+    void testRegistrarItem_CartaMenuNotFound() {
         ItemMenu itemMenu = new ItemMenu();
         itemMenu.setCartamenu(new CartaMenu());
 
@@ -255,11 +251,10 @@ public class GestorMenuTest {
         String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
 
         assertEquals("redirect:/cartas/modificar/" + itemMenu.getCartamenu().getIdCarta(), viewName);
-        //verify(model).addAttribute("error", "Carta no válida");
     }
 
     @Test
-    public void testRegistrarCarta_RestauranteNotFound() {
+    void testRegistrarCarta_RestauranteNotFound() {
         CartaMenu cartaMenu = new CartaMenu();
 
         when(serviceRestaurant.findById(any())).thenReturn(Optional.empty());
@@ -271,7 +266,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testMostrarItems_ItemsFound() {
+    void testMostrarItems_ItemsFound() {
         when(serviceItemMenu.findAll()).thenReturn(List.of(new ItemMenu()));
 
         String viewName = gestorMenu.mostrarItems(model);
@@ -281,7 +276,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testMostrarItems_ItemsNotFound() {
+    void testMostrarItems_ItemsNotFound() {
         when(serviceItemMenu.findAll()).thenReturn(List.of());
 
         String viewName = gestorMenu.mostrarItems(model);
@@ -291,7 +286,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testFindAllItems_WithResults() {
+    void testFindAllItems_WithResults() {
         // Mock del comportamiento del servicio para devolver una lista de ItemMenu
         List<ItemMenu> items = List.of(new ItemMenu(), new ItemMenu());
         when(serviceItemMenu.findAll()).thenReturn(items);
@@ -301,11 +296,11 @@ public class GestorMenuTest {
 
         // Verifica que se devuelve la lista esperada
         assertEquals(2, result.size());
-        verify(serviceItemMenu).findAll(); // Verifica que el método del servicio fue llamado
+        verify(serviceItemMenu).findAll(); 
     }
 
     @Test
-    public void testFindAllItems_EmptyList() {
+    void testFindAllItems_EmptyList() {
         // Mock del comportamiento del servicio para devolver una lista vacía
         when(serviceItemMenu.findAll()).thenReturn(List.of());
 
@@ -314,11 +309,11 @@ public class GestorMenuTest {
 
         // Verifica que se devuelve una lista vacía
         assertTrue(result.isEmpty());
-        verify(serviceItemMenu).findAll(); // Verifica que el método del servicio fue llamado
+        verify(serviceItemMenu).findAll(); 
     }
 
     @Test
-    public void testRegistrarItem_CartamenuNoEncontrado() {
+    void testRegistrarItem_CartamenuNoEncontrado() {
         ItemMenu itemMenu = new ItemMenu();
         CartaMenu cartaMenu = new CartaMenu();
         cartaMenu.setIdCarta(1);
@@ -333,12 +328,12 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testRegistrarItem_NombreVacio() {
+    void testRegistrarItem_NombreVacio() {
         ItemMenu itemMenu = new ItemMenu();
         CartaMenu cartaMenu = new CartaMenu();
         cartaMenu.setIdCarta(1);
         itemMenu.setCartamenu(cartaMenu);
-        itemMenu.setNombre(""); // Nombre vacío
+        itemMenu.setNombre(""); 
 
         when(serviceCartaMenu.findById(1)).thenReturn(Optional.of(cartaMenu));
 
@@ -349,7 +344,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testRegistrarItem_TipoVacio() {
+    void testRegistrarItem_TipoVacio() {
         ItemMenu itemMenu = new ItemMenu();
         CartaMenu cartaMenu = new CartaMenu();
         cartaMenu.setIdCarta(1);
@@ -366,7 +361,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testRegistrarItem_PrecioInvalido() {
+    void testRegistrarItem_PrecioInvalido() {
         ItemMenu itemMenu = new ItemMenu();
         CartaMenu cartaMenu = new CartaMenu();
         cartaMenu.setIdCarta(1);
@@ -384,7 +379,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testRegistrarItem_Success2() {
+    void testRegistrarItem_Success2() {
         ItemMenu itemMenu = new ItemMenu();
         CartaMenu cartaMenu = new CartaMenu();
         cartaMenu.setIdCarta(1);
@@ -403,7 +398,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testRegistrarCarta_RestauranteNulo() {
+    void testRegistrarCarta_RestauranteNulo() {
         CartaMenu cartaMenu = new CartaMenu(); // Sin restaurante asociado
 
         String viewName = gestorMenu.registrarCarta(cartaMenu, redirectAttributes);
@@ -413,7 +408,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testRegistrarCarta_IdUsuarioNulo() {
+    void testRegistrarCarta_IdUsuarioNulo() {
         CartaMenu cartaMenu = new CartaMenu();
         Restaurante restaurante = new Restaurante();
         cartaMenu.setRestaurante(restaurante); // Restaurante sin ID
@@ -425,7 +420,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testRegistrarCarta_NombreVacio() {
+    void testRegistrarCarta_NombreVacio() {
         CartaMenu cartaMenu = new CartaMenu();
         Restaurante restaurante = new Restaurante("1", "pass", "restaurante", "cif", "nombre");
         cartaMenu.setRestaurante(restaurante); // Restaurante válido
@@ -438,7 +433,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testRegistrarCarta_RestauranteNoEncontrado() {
+    void testRegistrarCarta_RestauranteNoEncontrado() {
         CartaMenu cartaMenu = new CartaMenu();
         Restaurante restaurante = new Restaurante("1", "pass", "restaurante", "cif", "nombre");
         cartaMenu.setRestaurante(restaurante);
@@ -453,7 +448,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testRegistrarCarta_Success() {
+    void testRegistrarCarta_Success() {
         CartaMenu cartaMenu = new CartaMenu();
         Restaurante restaurante = new Restaurante("1", "pass", "restaurante", "cif", "nombre");
         cartaMenu.setRestaurante(restaurante);
@@ -470,7 +465,7 @@ public class GestorMenuTest {
 
 
     @Test
-    public void testMostrarItem_ItemExists() {
+    void testMostrarItem_ItemExists() {
         Integer id = 1;
         ItemMenu itemMenu = new ItemMenu();
         when(serviceItemMenu.findById(id)).thenReturn(Optional.of(itemMenu));
@@ -482,7 +477,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testMostrarItem_ItemNotFound() {
+    void testMostrarItem_ItemNotFound() {
         Integer id = 1;
         when(serviceItemMenu.findById(id)).thenReturn(Optional.empty());
 
@@ -493,7 +488,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testMostrarMenus_MenusFound() {
+    void testMostrarMenus_MenusFound() {
         List<CartaMenu> cartas = List.of(new CartaMenu(), new CartaMenu());
         when(serviceCartaMenu.findAll()).thenReturn(cartas);
 
@@ -504,7 +499,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testMostrarMenus_NoMenusFound() {
+    void testMostrarMenus_NoMenusFound() {
         when(serviceCartaMenu.findAll()).thenReturn(List.of());
 
         String viewName = gestorMenu.mostrarMenus(model);
@@ -515,7 +510,7 @@ public class GestorMenuTest {
 
 
     @Test
-    public void testRegistrarItem_CartamenuEsNull() {
+    void testRegistrarItem_CartamenuEsNull() {
         ItemMenu itemMenu = new ItemMenu(); // No se establece cartamenu
 
         String viewName = gestorMenu.registrarItem(itemMenu, model, redirectAttributes, bindingResult);
@@ -525,7 +520,7 @@ public class GestorMenuTest {
     }
 
     @Test
-    public void testRegistrarItem_IdCartaEsCero() {
+    void testRegistrarItem_IdCartaEsCero() {
         ItemMenu itemMenu = new ItemMenu();
         CartaMenu cartaMenu = new CartaMenu();
         cartaMenu.setIdCarta(0); // ID inválido

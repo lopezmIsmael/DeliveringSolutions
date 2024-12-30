@@ -24,7 +24,7 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceZonaCodigoPostal;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Pruebas del controlador GestorZonaCodigoPostal")
-public class GestorZonaCodigoPostalTest {
+class GestorZonaCodigoPostalTest {
 
     private static final String ERROR_VIEW = "error";
 

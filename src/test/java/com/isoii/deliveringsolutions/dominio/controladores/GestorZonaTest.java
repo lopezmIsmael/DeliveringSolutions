@@ -22,7 +22,7 @@ import com.isoii.deliveringsolutions.dominio.service.ServiceZonaCodigoPostal;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Pruebas del controlador GestorZona")
-public class GestorZonaTest {
+class GestorZonaTest {
 
     private static final String ERROR_VIEW = "error";
 

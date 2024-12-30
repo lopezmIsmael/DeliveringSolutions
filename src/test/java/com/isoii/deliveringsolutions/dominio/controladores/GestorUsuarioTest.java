@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class GestorUsuarioTest {
+class GestorUsuarioTest {
 
     @InjectMocks
     private GestorUsuario gestorUsuario;
@@ -37,12 +37,12 @@ public class GestorUsuarioTest {
     private Logger logger;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testFindById_ValidId() {
+    void testFindById_ValidId() {
         Usuario usuario = new Usuario();
         when(serviceUsuario.findById("1")).thenReturn(Optional.of(usuario));
         Usuario result = gestorUsuario.findById("1");
@@ -51,20 +51,20 @@ public class GestorUsuarioTest {
     }
 
     @Test
-    public void testFindById_InvalidId() {
+    void testFindById_InvalidId() {
         when(serviceUsuario.findById("-1")).thenReturn(Optional.empty());
         Usuario result = gestorUsuario.findById("-1");
         assertNull(result);
     }
 
     @Test
-    public void testFindById_NullId() {
+    void testFindById_NullId() {
         assertThrows(NullPointerException.class, () -> gestorUsuario.findById(null));
     }
 
 
     @Test
-    public void testFindAll_WithResults() {
+    void testFindAll_WithResults() {
         when(serviceUsuario.findAll()).thenReturn(List.of(new Usuario()));
         List<Usuario> result = gestorUsuario.findAll();
         assertFalse(result.isEmpty());
@@ -72,20 +72,20 @@ public class GestorUsuarioTest {
     }
 
     @Test
-    public void testFindAll_EmptyList() {
+    void testFindAll_EmptyList() {
         when(serviceUsuario.findAll()).thenReturn(List.of());
         List<Usuario> result = gestorUsuario.findAll();
         assertTrue(result.isEmpty());
     }
 
     @Test
-    public void testMostrarFormularioRegistro() {
+    void testMostrarFormularioRegistro() {
         String result = gestorUsuario.mostrarFormularioRegistro();
         assertEquals("rol", result);
     }
 
     @Test
-    public void testRegistrarUsuario_ValidUser() {
+    void testRegistrarUsuario_ValidUser() {
         Usuario usuario = new Usuario();
         usuario.setPass("1234");
         when(serviceUsuario.save(usuario)).thenReturn(usuario);
@@ -94,7 +94,7 @@ public class GestorUsuarioTest {
     }
 
     @Test
-    public void testRegistrarUsuario_NullPassword() {
+    void testRegistrarUsuario_NullPassword() {
         Usuario usuario = new Usuario();
         usuario.setPass(null);
         String result = gestorUsuario.registrarUsuario(usuario);
@@ -102,7 +102,7 @@ public class GestorUsuarioTest {
     }
 
     @Test
-    public void testDeleteById_ValidId() {
+    void testDeleteById_ValidId() {
         ResponseEntity<String> response = gestorUsuario.deleteById("1");
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Usuario eliminado", response.getBody());
@@ -110,7 +110,7 @@ public class GestorUsuarioTest {
     }
 
     @Test
-    public void testDeleteById_NullId() {
+    void testDeleteById_NullId() {
         assertThrows(IllegalArgumentException.class, () -> gestorUsuario.deleteById(null));
 
         // Verificar que el método deleteById del servicio no se llama
@@ -120,7 +120,7 @@ public class GestorUsuarioTest {
 
 
     @Test
-    public void testLoginUsuario_ValidClient() {
+    void testLoginUsuario_ValidClient() {
         Usuario usuario = new Usuario();
         usuario.setPass("1234");
         usuario.settipoUsuario("CLIENTE");
@@ -133,7 +133,7 @@ public class GestorUsuarioTest {
     }
 
     @Test
-    public void testLoginUsuario_InvalidPassword() {
+    void testLoginUsuario_InvalidPassword() {
         Usuario usuario = new Usuario();
         usuario.setPass("1234");
         when(serviceUsuario.findById("cliente1")).thenReturn(Optional.of(usuario));
@@ -144,7 +144,7 @@ public class GestorUsuarioTest {
     }
 
     @Test
-    public void testLoginUsuario_UserNotFound() {
+    void testLoginUsuario_UserNotFound() {
         when(serviceUsuario.findById("noExiste")).thenReturn(Optional.empty());
         String result = gestorUsuario.loginUsuario("noExiste", "1234", redirectAttributes, session);
         assertEquals("redirect:/", result);
@@ -152,14 +152,14 @@ public class GestorUsuarioTest {
     }
 
     @Test
-    public void testLoginUsuario_NullUsername() {
+    void testLoginUsuario_NullUsername() {
         String result = gestorUsuario.loginUsuario(null, "1234", redirectAttributes, session);
         assertEquals("redirect:/", result);
         verify(redirectAttributes).addFlashAttribute("error", "Usuario o contraseña incorrectos.");
     }
 
     @Test
-    public void testLoginUsuario_NullPassword() {
+    void testLoginUsuario_NullPassword() {
         Usuario usuario = new Usuario();
         usuario.setPass("1234");
 
@@ -173,7 +173,7 @@ public class GestorUsuarioTest {
 
 
     @Test
-    public void testLoginUsuario_RestaurantRedirect() {
+    void testLoginUsuario_RestaurantRedirect() {
         Usuario usuario = new Usuario();
         usuario.setPass("1234");
         usuario.settipoUsuario("RESTAURANTE");
@@ -184,26 +184,26 @@ public class GestorUsuarioTest {
     }
 
     @Test
-    public void testMostrarFormularioLogin() {
+    void testMostrarFormularioLogin() {
         String result = gestorUsuario.mostrarFormularioLogin();
         assertEquals("index", result);
     }
 
     @Test
-    public void testMostrarAboutUs() {
+    void testMostrarAboutUs() {
         String result = gestorUsuario.mostrarAboutUs();
         assertEquals("aboutUs", result);
     }
 
     @Test
-    public void testRegistrarUsuario_EmptyPassword() {
+    void testRegistrarUsuario_EmptyPassword() {
         Usuario usuario = new Usuario();
         usuario.setPass(""); // Contraseña vacía
         String result = gestorUsuario.registrarUsuario(usuario);
         assertEquals("redirect:/usuarios/registrarUsuario", result);
     }
     @Test
-    public void testLoginUsuario_RepartidorRedirect() {
+    void testLoginUsuario_RepartidorRedirect() {
         Usuario usuario = new Usuario();
         usuario.setPass("1234");
         usuario.settipoUsuario("REPARTIDOR");
@@ -216,7 +216,7 @@ public class GestorUsuarioTest {
     }
 
     @Test
-    public void testLoginUsuario_InvalidUsernameOrPassword() {
+    void testLoginUsuario_InvalidUsernameOrPassword() {
         when(serviceUsuario.findById("invalido")).thenReturn(Optional.empty());
         String result = gestorUsuario.loginUsuario("invalido", "wrongPass", redirectAttributes, session);
         assertEquals("redirect:/", result);
