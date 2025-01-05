@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Editar Datos del Cliente</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/editarDatosCliente.css}">
 </head>
+
 <body>
     <form th:action="@{/clientes/modificarDireccion/{idUsuario}(idUsuario=${cliente.idUsuario})}" method="post">
         <table>
@@ -29,16 +31,21 @@
                 <td><label for="direccion">Dirección:</label></td>
                 <td>
                     <select id="direccion" name="direccion">
-                        <option th:each="direccion : ${direcciones}" th:value="${direccion.id}" th:text="${direccion.calle + ', ' + direccion.numero + ', ' + direccion.municipio}"></option>
+                        <option th:each="direccion : ${direcciones}" th:value="${direccion.id}"
+                            th:text="${direccion.calle + ', ' + direccion.numero + ', ' + direccion.municipio}">
+                        </option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: center;">
-                    <button type="button" onclick="location.href='/direccion/formularioRegistro'">Registrar Nueva Dirección</button>
+                    <button type="button" onclick="location.href='/direccion/formularioRegistro'">Registrar Nueva
+                        Dirección</button>
                 </td>
             </tr>
         </table>
+        <button type="button" class="back-button" onclick="window.history.back();">&larr;</button>
     </form>
 </body>
+
 </html>

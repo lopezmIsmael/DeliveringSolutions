@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="/css/gestorItems.css">
     <script src="/js/gestorItems.js"></script>
 </head>
+
 <body>
     <div class="container mt-5">
         <h1 class="mb-4" th:text="'Gestor de ' + ${cartaMenu.nombre}">Gestor de Items</h1>
@@ -17,11 +19,13 @@
         <ul class="list-group mb-4" id="item-list">
             <li th:each="item : ${items}" class="list-group-item d-flex justify-content-between align-items-center">
                 <span>
-                    <span th:text="${item.nombre}">Nombre del Item</span> - 
-                    <span th:text="${item.precio}">Precio del Item</span> - 
+                    <span th:text="${item.nombre}">Nombre del Item</span> -
+                    <span th:text="${#numbers.formatDecimal(item.precio, 1, 'POINT', 2, 'COMMA')} + ' €'">Precio del
+                        Item</span> -
                     <span th:text="${item.tipo}">Tipo del Item</span>
                 </span>
-                <button class="btn btn-danger btn-sm" th:attr="data-id=${item.idItemMenu}" onclick="eliminarItem(this)">Eliminar</button>
+                <button class="btn btn-danger btn-sm" th:attr="data-id=${item.idItemMenu}"
+                    onclick="eliminarItem(this)">Eliminar</button>
             </li>
         </ul>
 
@@ -32,16 +36,18 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="nombre">Nombre</label>
-                    <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ingrese el nombre del item" required>
+                    <input type="text" th:field="*{nombre}" class="form-control"
+                        placeholder="Ingrese el nombre del item" required>
                     <div th:if="${#fields.hasErrors('nombre')}" class="text-danger" th:errors="*{nombre}"></div>
                 </div>
-            
+
                 <div class="form-group col-md-4">
                     <label for="precio">Precio</label>
-                    <input type="number" th:field="*{precio}" class="form-control" step="0.01" placeholder="Ingrese el precio" required>
+                    <input type="number" th:field="*{precio}" class="form-control" step="0.01"
+                        placeholder="Ingrese el precio" required>
                     <div th:if="${#fields.hasErrors('precio')}" class="text-danger" th:errors="*{precio}"></div>
                 </div>
-            
+
                 <div class="form-group col-md-4">
                     <label for="tipo">Tipo</label>
                     <input type="text" th:field="*{tipo}" class="form-control" placeholder="Ingrese el tipo" required>
@@ -49,9 +55,12 @@
                 </div>
             </div>
 
-            <input type="hidden" th:field="*{cartamenu.idCarta}" th:value="${cartaMenu.idCarta}">            
+            <input type="hidden" th:field="*{cartamenu.idCarta}" th:value="${cartaMenu.idCarta}">
             <button type="submit" class="btn btn-success">Añadir Item</button>
         </form>
     </div>
+    <button type="button" class="back-button" 
+        th:attr="data-href=@{/restaurantes/gestion/{id}(id=${cartaMenu.restaurante.idUsuario})}" 
+        onclick="location.href=this.getAttribute('data-href')">&larr;</button>
 </body>
 </html>

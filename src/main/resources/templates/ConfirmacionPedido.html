@@ -12,7 +12,7 @@
             <h2 th:text="${restaurante != null ? restaurante.nombre : 'Nombre no disponible'}"></h2>
         </div>
         <hr/>
-        <p>Cliente: <span th:text="${cliente.idUsuario}"></span> <span th:text="${cliente.apellido}"></span></p>
+        <p>Cliente: <span th:text="${cliente.nombre}"></span> <span th:text="${cliente.apellido}"></span></p>
         <p>Fecha: <span th:text="${#dates.format(new java.util.Date(pedido.fecha), 'dd/MM/yyyy HH:mm')}"></span></p>
         <p>Dirección de Recogida:
             <span th:text="${direccionRecogida.calle}"></span>
@@ -37,16 +37,17 @@
             <div th:each="item : ${items}">
                 <div class="item">
                     <span th:text="${item.nombre}"></span>
-                    <span th:text="${item.precio}"></span>
+                    <td th:text="${#numbers.formatDecimal(item.precio, 1, 'POINT', 2, 'COMMA')} + ' €'"></td>
                 </div>
             </div>
         </div>
         <hr/>
         <div class="total">
             <span>Total:</span>
-            <span th:text="${total}"></span>
+            <td th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')} + ' €'"></td>
         </div>
-        <p>Método de Pago: <span th:text="${pago.metodoPago}"></span></p>
+        <p class="pago">Método de Pago: <span th:text="${pago.metodoPago}"></span></p>
     </div>
+    <button onclick="location.href='/clientes/verRestaurantes'" class="user-action-button">📦</button>
 </body>
 </html>

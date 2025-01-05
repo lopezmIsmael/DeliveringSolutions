@@ -29,7 +29,7 @@
                     <tbody>
                         <tr th:each="item : ${menu.items}">
                             <td th:text="${item.nombre}"></td>
-                            <td th:text="${item.precio}"></td>
+                            <td th:text="${#numbers.formatDecimal(item.precio, 1, 'POINT', 2, 'COMMA')} + ' €'"></td>
                             <td th:text="${item.tipo}"></td>
                             <td>
                                 <form onsubmit="addToCart(event, this)">
@@ -52,10 +52,10 @@
     <div id="cart" onclick="toggleCart()">
         <h3>Carrito</h3>
         <ul id="cart-items"></ul>
-        <div id="cart-total">Total: $0.00</div>
+        <div id="cart-total">Total: 0,00€</div>
         <button onclick="finalizePurchase()">Finalizar compra</button>
     </div>
-
+    <button type="button" class="back-button" onclick="location.href='/clientes/verRestaurantes';">&larr;</button>
     <script src="/js/verMenusRestaurante.js"></script>
 </body>
 </html>

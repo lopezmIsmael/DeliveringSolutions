@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -28,7 +29,8 @@ body, html {
     text-align: center;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     padding: 12px;
     border-bottom: 1px solid #dddddd;
 }
@@ -37,7 +39,9 @@ body, html {
     background-color: #f2f2f2;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     color: #333333;
 }
 
@@ -48,7 +52,7 @@ label {
 }
 
 select {
-    width: 100%;
+    width: calc(100% - 22px);
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #cccccc;
@@ -57,8 +61,8 @@ select {
 }
 
 button {
-    width: 100%;
-    padding: 15px;
+    width: auto; 
+    padding: 10px; 
     background-color: #28a745;
     color: #ffffff;
     border: none;
@@ -66,8 +70,96 @@ button {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-bottom: 10px;
 }
 
 button:hover {
     background-color: #218838;
+}
+
+input[type="text"],
+select {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+button.btn-finalizar {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px; 
+}
+
+.info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.info-container h3 {
+    margin: 0;
+}
+
+.formulario-flotante {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 30%;
+    height: 100%;
+    background-color: #f9f9f9;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    padding: 20px;
+    transition: right 0.3s ease-in-out;
+    z-index: 2; /* Ensure the form is above the overlay */
+}
+
+.formulario-flotante.mostrar {
+    right: 0;
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1;
+}
+
+.overlay.mostrar {
+    display: block;
+}
+
+.back-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px;
+    background-color: #45a049;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.back-button:hover {
+    background-color: #1f4b02; 
 }
