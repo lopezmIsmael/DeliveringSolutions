@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos</title>
+    <link rel="stylesheet" href="/css/verMenusRestaurante.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Pedidos de <span th:text="${cliente.idUsuario}"></span></h1>
+        </header>
+        <main>
+            <section id="pedidos">
+                <h2>Lista de Pedidos</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Restaurante</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pedido : ${pedidos}">
+                            <td th:text="${pedido.restaurante.nombre}"></td>
+                            <td th:text="${#dates.format(new java.util.Date(pedido.fecha), 'dd/MM/yyyy HH:mm')}"></td>
+                            <td th:text="${pedido.estadoPedido}"></td>
+                            <td>
+                                <a th:href="@{/pedido/mostrarPedido/{id}(id=${pedido.idPedido})}">Ver Detalles</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <button type="button" class="back-button" onclick="location.href='/clientes/verRestaurantes';">&larr;</button>
+</body>
+
+</html>
