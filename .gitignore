@@ -32,3 +32,43 @@ build/
 ### VS Code ###
 .vscode/
 src/main/resources/DeliveringSolutionsDB
+
+### Security - Environment Variables ###
+.env
+.env.local
+.env.*.local
+*.env
+application-local.properties
+application-dev.properties
+
+### Security - Sensitive Files ###
+*.key
+*.pem
+*.p12
+*.jks
+keystore.*
+credentials.*
+secrets.*
+
+### Database ###
+*.db
+*.sql
+bbdd/DeliveringSolutionsDB
+
+### Logs ###
+*.log
+logs/
+*.log.*
+
+### OS ###
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+### Temporary Files ###
+*.tmp
+*.temp
+*.bak
+*.backup
