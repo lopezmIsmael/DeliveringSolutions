@@ -81,7 +81,7 @@ public class Repartidor extends Usuario {
         this.zona = zona;
     }
     
-    // toString
+    // toString - NO EXPONE LA CONTRASEÑA
     @Override
     public String toString() {
         return super.toString() + "Repartidor{" +

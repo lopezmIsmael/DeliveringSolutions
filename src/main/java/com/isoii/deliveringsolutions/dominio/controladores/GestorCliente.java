@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,18 +53,20 @@ public class GestorCliente {
     private final ServiceClient serviceClient;
     private final ServiceRestaurant serviceRestaurant;
     private final ServicePedido servicePedido;
+    private final PasswordEncoder passwordEncoder;
 
     Logger logger = LoggerFactory.getLogger(GestorCliente.class);
 
     @Autowired
     public GestorCliente(ServiceCartaMenu serviceCartaMenu, ServiceDireccion serviceDireccion, 
                          ServiceClient serviceClient, ServiceRestaurant serviceRestaurant, 
-                         ServicePedido servicePedido) {
+                         ServicePedido servicePedido, PasswordEncoder passwordEncoder) {
         this.serviceCartaMenu = serviceCartaMenu;
         this.serviceDireccion = serviceDireccion;
         this.serviceClient = serviceClient;
         this.serviceRestaurant = serviceRestaurant;
         this.servicePedido = servicePedido;
+        this.passwordEncoder = passwordEncoder;
     }
 
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
@@ -130,10 +133,18 @@ public class GestorCliente {
         model.addAttribute("vistaFavoritos", false);
 
         List<Restaurante> restaurantes = serviceRestaurant.findAll();
+        
+        // SEGURIDAD: Validar entrada - solo permitir caracteres seguros
         if (nombre != null && !nombre.trim().isEmpty()) {
-            restaurantes = restaurantes.stream()
-                    .filter(r -> r.getNombre() != null && r.getNombre().toLowerCase().contains(nombre.toLowerCase()))
-                    .toList();
+            // Validar que no contenga caracteres peligrosos
+            if (nombre.matches("^[a-zA-Z0-9\\s\\-áéíóúñ]*$")) {
+                restaurantes = restaurantes.stream()
+                        .filter(r -> r.getNombre() != null && r.getNombre().toLowerCase().contains(nombre.toLowerCase()))
+                        .toList();
+            } else {
+                model.addAttribute(ERROR, "Parámetro de búsqueda inválido");
+                return ERROR;
+            }
         }
 
         model.addAttribute(RESTAURANTES, restaurantes);
@@ -229,6 +240,9 @@ public class GestorCliente {
         if (cliente.getPass() == null || cliente.getPass().isEmpty()) {
             return "redirect:/clientes/register";
         }
+
+        // SEGURIDAD: Encriptar contraseña con BCrypt antes de guardar
+        cliente.setPass(passwordEncoder.encode(cliente.getPass()));
 
         Cliente clienteRegistrado = serviceClient.save(cliente);
         logger.info("Cliente registrado: {}", clienteRegistrado);

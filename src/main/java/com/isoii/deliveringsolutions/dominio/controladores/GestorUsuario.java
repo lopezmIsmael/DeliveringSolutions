@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,10 +35,12 @@ public class GestorUsuario {
     RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
     private final ServiceUser serviceUsuario;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public GestorUsuario(ServiceUser serviceUsuario) {
+    public GestorUsuario(ServiceUser serviceUsuario, PasswordEncoder passwordEncoder) {
         this.serviceUsuario = serviceUsuario;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/findAll")
@@ -75,8 +78,11 @@ public class GestorUsuario {
             return REDIRECT_PREFIX + "usuarios/registrarUsuario"; 
         }
 
+        // SEGURIDAD: Encriptar contraseña con BCrypt antes de guardar
+        usuario.setPass(passwordEncoder.encode(usuario.getPass()));
+
         Usuario usuarioRegistrado = serviceUsuario.save(usuario);
-        logger.info("Usuario registrado: {}", usuarioRegistrado);
+        logger.info("Usuario registrado con éxito (ID: {})", usuarioRegistrado.getIdUsuario());
         return REDIRECT_PREFIX;
     }
 
@@ -93,7 +99,11 @@ public class GestorUsuario {
     public String loginUsuario(@RequestParam String username, @RequestParam String password,
             RedirectAttributes redirectAttributes, HttpSession session) {
         Usuario usuarioLogueado = serviceUsuario.findById(username).orElse(null);
-        if (usuarioLogueado != null && usuarioLogueado.getPass().equals(password)) {
+        
+        // SEGURIDAD: Usar passwordEncoder.matches() en lugar de equals()
+        // Esto previene timing attacks y verifica el hash BCrypt correctamente
+        if (usuarioLogueado != null && passwordEncoder.matches(password, usuarioLogueado.getPass())) {
+            // NO almacenar la contraseña en sesión
             session.setAttribute("usuario", usuarioLogueado);
             redirectAttributes.addFlashAttribute("mensaje", "Inicio de sesión exitoso.");
             if(usuarioLogueado.gettipoUsuario().equals("CLIENTE"))

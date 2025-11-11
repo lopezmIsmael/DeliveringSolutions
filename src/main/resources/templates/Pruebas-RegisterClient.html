@@ -8,6 +8,9 @@
 </head>
 <body>
     <form action="/clientes/registrarCliente" method="post">
+        <!-- SEGURIDAD: Token CSRF para prevenir ataques de falsificación de solicitudes -->
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        
         <table>
             <tr>
                 <td colspan="2" style="text-align: center;"><h2>Registro de Cliente</h2></td>
@@ -18,7 +21,7 @@
             </tr>
             <tr>
                 <td><label for="pass">Contraseña:</label></td>
-                <td><input type="password" id="pass" name="pass" required></td>
+                <td><input type="password" id="pass" name="pass" required minlength="8"></td>
             </tr>
             <tr>
                 <td><label for="nombre">Nombre:</label></td>
@@ -30,7 +33,7 @@
             </tr>
             <tr>
                 <td><label for="dni">DNI:</label></td>
-                <td><input type="text" id="dni" name="dni" required></td>
+                <td><input type="text" id="dni" name="dni" required pattern="[0-9]{8}[A-Za-z]"></td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: center;">

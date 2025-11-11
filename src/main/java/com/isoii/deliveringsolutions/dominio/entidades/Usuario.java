@@ -19,7 +19,9 @@ public class Usuario implements Serializable {
     @Column(name = "idUsuario", nullable = false, length = 50)
     protected String idUsuario;
 
-    @Column(name = "pass", nullable = false, length = 50)
+    // IMPORTANTE: Se aumenta longitud a 255 para almacenar hash BCrypt
+    // Los hashes BCrypt tienen longitud de 60 caracteres, pero se usa 255 para futuras migraciones
+    @Column(name = "pass", nullable = false, length = 255)
     protected String pass;
 
     @Column(name = "tipoUsuario", nullable = false, length = 20)
@@ -59,12 +61,12 @@ public class Usuario implements Serializable {
         this.tipoUsuario = tipoUsuario;
     }
 
-    // toString
+    // toString - NO EXPONE LA CONTRASEÑA
     @Override
     public String toString() {
         return "Usuario{" +
                 "idUsuario='" + idUsuario + '\'' +
-                ", pass='" + pass + '\'' +
+                ", pass='[REDACTED]'" +
                 ", tipoUsuario='" + tipoUsuario + '\'' +
                 '}';
     }

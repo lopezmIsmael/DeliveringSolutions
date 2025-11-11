@@ -42,7 +42,7 @@ public class Restaurante extends Usuario {
         this.nombre = nombre;
     }
 
-    // toString
+    // toString - NO EXPONE LA CONTRASEÑA
     @Override
     public String toString() {
         return super.toString() + "Restaurante{" +

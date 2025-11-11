@@ -75,10 +75,10 @@ public class Cliente extends Usuario {
         this.favoritos.remove(restaurante);
     }
 
-    // toString
+    // toString - NO EXPONE LA CONTRASEÑA
     @Override
     public String toString() {
-        return "Cliente [idUsuario=" + idUsuario + ", pass=" + pass + ", tipoUsuario=" + tipoUsuario + ", nombre="
+        return "Cliente [idUsuario=" + idUsuario + ", pass=[REDACTED], tipoUsuario=" + tipoUsuario + ", nombre="
                 + nombre + ", apellido=" + apellido + ", dni=" + dni + "]";
     }
 }
